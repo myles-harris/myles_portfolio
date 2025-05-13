@@ -1,0 +1,34 @@
+﻿Myles C. Harris
+mylescharris18@gmail.com – cell: (678) 951-7549
+EXPERIENCE
+Dell Technologies (Acq. Moogsoft)         
+Software Engineer II        Sept 2023 – Present
+* Designed and shipped a real‑time incident‑correlation microservice (Java, Python, Kafka) that ingests 2 B+ events/day and cut mean‑time‑to‑resolve by up to 900% across Fortune 100 customers.
+* Spearheaded an in-house performance-monitoring platform (metrics dashboards + scripted load generation with JMeter) that trimmed developer’s manual test cycles 75% and enabled data-backed product strategy.
+* Built, refactored, and tested high throughput REST APIs across several enterprise microservices. Increased test coverage to >90%.
+Software Quality Assurance Engineer II (Moogsoft)         Nov 2022 – Sept 2023
+* Designed/Implemented automated testing frameworks for enterprise microservices.
+Northrop Grumman Corp. (top 30% performer 2021-2022)
+Embedded Software Engineer        Oct 2021 – Oct 2022
+* Led / Evaluated software and firmware development for a team of 6 - 12 engineers. Consistently met DO-178C standards while implementing sensor / radar libraries for a GPS / Inertial Navigation System product line.
+* Led Scrum-of-Scrums for 8 cross-functional teams (~80 engineers), using backlog analytics to clear blockers and sustain velocity. Drove timeline forecasts and priority management with senior program leadership through successful field testing.
+Software Engineer        Sept 2020 – Oct 2021
+* Developed JavaFX UI and C++ back‑end for satellite defense application, capable of making real-time classification decisions and reducing operator planning time 35 %.
+Associate Mechanical Engineer        July 2019 – September 2020
+* Engineered flight‑qualified electro‑mechanical assemblies using FEA & 3D modeling; 2x and modernized parts library while meeting MIL‑STD specifications.
+PROJECTS
+ML Stock Screener — Personal Project
+* Trained Gradient‑Boosting & LSTM models (Scikit‑learn/TensorFlow) achieving ~0.92 F1 on 10 yrs of S&P 500 data; utilized alongside K-Means Clustering algorithm; deployed in Jupyter Notebooks, serving 1 k+ weekly queries.
+Electric Prosthetic Arm — Mercer Engineering Expo
+* Led interdisciplinary team to deliver EMG‑controlled prosthetic prototype 98% cheaper than commercial devices.
+SKILLS
+Languages: Java, C / C++, Python, HTML / CSS
+Frameworks: Node.js, React, Express.js, Scikit-Learn, TensorFlow, NumPy / SciPy / Pandas
+Other Tools: PostgreSQL, AWS, Jenkins / Maven, Atlassian suite, Git, GitHub
+INVOLVEMENT
+National Society of Black Engineers (Atlanta Professionals Chapter)        2023 - Present
+NGC Mentoring the Technical Professional Program (Mentee)        Dec 2021 - Oct 2022
+NGC African American Task Group (Communications Lead / Vice-Chair)         2019 - 2022
+EDUCATION
+Mercer University        Master of Science – Software Engineering
+Mercer University        Bachelor of Science – Mechanical Engineering
