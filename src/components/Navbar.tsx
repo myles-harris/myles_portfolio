@@ -11,11 +11,9 @@ const MENU = [
 
 const LINE_HEIGHT = 4; // px
 const LINE_GAP = 8; // px
-const TOTAL_LINES = 5;
 const PRONG_WIDTHS = [176, 144, 112, 80, 48].map(w => w * 1.75 * 2); // px, top is longest, bottom is shortest, all 200% longer than previous
 const PRONG_TRANSITION = 900; // ms
 const PRONG_STAGGER = 80; // ms
-const LABEL_GAP = 24; // px, horizontal gap between labels
 
 export default function Navbar() {
   const [hovered, setHovered] = useState(false);
