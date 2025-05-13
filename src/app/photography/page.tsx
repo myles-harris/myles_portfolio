@@ -20,16 +20,16 @@ export default function Photography() {
     async function loadImages() {
       try {
         setLoading(true);
-        const response = await fetch('/api/film-images');
+        const response = await fetch('/film/images.json');
         if (!response.ok) {
           throw new Error('Failed to fetch images');
         }
         const data = await response.json();
-        if (!data.images || !data.images.length) {
+        if (!Array.isArray(data)) {
           throw new Error('No images found');
         }
-        console.log('Fetched images:', data.images);
-        setImages(shuffleArray(data.images));
+        // Prepend /film/ to each filename
+        setImages(shuffleArray(data.map((f: string) => `/film/${f}`)));
       } catch (error) {
         console.error('Error loading images:', error);
         setError(error instanceof Error ? error.message : 'Failed to load images');
