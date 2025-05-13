@@ -1,68 +1,13 @@
 "use client";
 import { useState, useEffect } from 'react';
 
-interface VisibilityState {
-  header: boolean;
-  experience: boolean;
-  skills: boolean;
-  education: boolean;
-  projects: boolean;
-  involvement: boolean;
-}
-
 export default function Resume() {
   const [isStyledView, setIsStyledView] = useState(false);
-  const [isVisible, setIsVisible] = useState<VisibilityState>({
-    header: true,
-    experience: true,
-    skills: true,
-    education: true,
-    projects: true,
-    involvement: true
-  });
 
   // Set styled view as default after initial render
   useEffect(() => {
     setIsStyledView(true);
   }, []);
-
-  useEffect(() => {
-    if (!isStyledView) {
-      setIsVisible({
-        header: true,
-        experience: true,
-        skills: true,
-        education: true,
-        projects: true,
-        involvement: true
-      });
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          console.log('Intersection observed:', entry.target.id, entry.isIntersecting);
-          setIsVisible((prev) => ({
-            ...prev,
-            [entry.target.id as keyof VisibilityState]: entry.isIntersecting
-          }));
-        });
-      },
-      { 
-        threshold: [0, 0.1, 0.5, 1],
-        rootMargin: '0px 0px -10% 0px'
-      }
-    );
-
-    const elements = document.querySelectorAll('[data-animate]');
-    console.log('Found animate elements:', elements.length);
-    elements.forEach((el) => {
-      observer.observe(el);
-    });
-
-    return () => observer.disconnect();
-  }, [isStyledView]);
 
   return (
     <main className="w-full text-[#3a2c1a] font-serif">

@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 interface VisibilityState {
   header: boolean;
@@ -323,7 +324,7 @@ export default function Projects() {
                 className="w-full h-full"
                 frameBorder="0"
               >
-                <p>It appears your browser doesn't support embedded PDFs. You can <a href="/mylesHarris_Resume_v3.pdf" className="text-[#a67c52] underline">download the PDF</a> instead.</p>
+                <p>It appears your browser doesn&apos;t support embedded PDFs. You can <a href="/mylesHarris_Resume_v3.pdf" className="text-[#a67c52] underline">download the PDF</a> instead.</p>
               </iframe>
             </div>
           )}

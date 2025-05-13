@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 export default function Home() {
   return (
     <main className="flex flex-col items-start justify-start min-h-screen pt-[50vh] px-24 text-[#3a2c1a] font-serif">
