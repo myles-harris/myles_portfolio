@@ -90,7 +90,7 @@ export default function Projects() {
               </div>
               <ul className="text-lg opacity-80 leading-relaxed font-light pl-4 space-y-3 border-l border-[#e2c48d]">
                 <li>Designed and shipped a real‑time incident‑correlation microservice (Java, Python, Kafka) that ingests 2 B+ events/day and cut mean‑time‑to‑resolve by up to 900% across Fortune 100 customers.</li>
-                <li>Spearheaded an in-house performance-monitoring platform that trimmed developer's manual test cycles 75% and enabled data-backed product strategy.</li>
+                <li>Spearheaded an in-house performance-monitoring platform that trimmed developer&aposs manual test cycles 75% and enabled data-backed product strategy.</li>
                 <li>Built, refactored, and tested high throughput REST APIs across several enterprise microservices. Increased test coverage to &gt;90%.</li>
               </ul>
             </div>
