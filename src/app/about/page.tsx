@@ -118,29 +118,29 @@ export default function About() {
               {/* Introduction */}
               <div className="space-y-8 text-2xl opacity-90">
                 <h2 className="text-4xl font-bold tracking-wide text-[#e2c48d] font-[var(--font-cinzel)] italic">Who</h2>
-                <p className="text-2xl">I'm Myles</p>
+                <p className="text-2xl">I&apos;m Myles</p>
 
                 <h2 className="text-4xl font-bold tracking-wide text-[#e2c48d] mt-16 font-[var(--font-cinzel)] italic">What</h2>
                 <p className="text-2xl">Software Engineer, Photographer, Distance Runner, Furniture Enthusiast, Gospel Listener, Atlanta Hawks Fan, Amateur Botanist, Dog Father, Former Lego Kid</p>
 
                 <h2 className="text-4xl font-bold tracking-wide text-[#e2c48d] mt-16 font-[var(--font-cinzel)] italic">Why</h2>
                 <p className="text-2xl leading-relaxed">
-                  I learned very young how strong the Lego kid to engineer adult pipeline was, so I think a lot of my family and childhood friends could've seen this coming. But the urge to build bled into every area of my life. I love telling people that I'm a third generation engineer, but I actually wanted to be an architect first because I was worried engineering would be boring. But having some <span className="text-[#e2c48d]">patience</span>, a <span className="text-[#e2c48d]">willingness to fail</span>, an <span className="text-[#e2c48d]">eye for good work</span>, and the <span className="text-[#e2c48d]">spirit of competition</span> served me through my realization that everything is engineering in some form. And now I'm not just building software - I'm bulding stories, a healthy mind and body, and a blueprint for the next Lego kid to follow.
+                  I learned very young how strong the Lego kid to engineer adult pipeline was, so I think a lot of my family and childhood friends could&apos;ve seen this coming. But the urge to build bled into every area of my life. I love telling people that I&apos;m a third generation engineer, but I actually wanted to be an architect first because I was worried engineering would be boring. But having some <span className="text-[#e2c48d]">patience</span>, a <span className="text-[#e2c48d]">willingness to fail</span>, an <span className="text-[#e2c48d]">eye for good work</span>, and the <span className="text-[#e2c48d]">spirit of competition</span> served me through my realization that everything is engineering in some form. And now I&apos;m not just building software - I&apos;m building stories, a healthy mind and body, and a blueprint for the next Lego kid to follow.
                 </p>
                 <p className="text-2xl leading-relaxed">
-                  As I grew up, documentation became more and more important to me and my footprint on the world. I've been blessed to build prosthetic arms, run a marathon, travel all over the world, photograph a documentary, and now I'm restoring a 1990 Cadillac Eldorado - so this portfolio is meant to be a way to share some of my favorite milestones with others.
+                  As I grew up, documentation became more and more important to me and my footprint on the world. I&apos;ve been blessed to build prosthetic arms, run a marathon, travel all over the world, photograph a documentary, and now I&apos;m restoring a 1990 Cadillac Eldorado - so this portfolio is meant to be a way to share some of my favorite milestones with others.
                 </p>
                 <p className="text-2xl leading-relaxed">
-                  Also in 8th grade I was voted 'Most Likely to Succeed' by my class and I just can't let my middle school peers down.
+                  Also in 8th grade I was voted &apos;Most Likely to Succeed&apos; by my class and I just can&apos;t let my middle school peers down.
                 </p>
 
                 <h2 className="text-4xl font-bold tracking-wide text-[#e2c48d] mt-16 font-[var(--font-cinzel)] italic">Where</h2>
-                <p className="text-2xl">Born in <span className="text-[#e2c48d]">South Atlanta</span>, but I've really been all over.</p>
+                <p className="text-2xl">Born in <span className="text-[#e2c48d]">South Atlanta</span>, but I&apos;ve really been all over.</p>
                 <p className="text-2xl leading-relaxed">
-                  I went to college in <span className="text-[#e2c48d]">Middle Georgia</span> → spent time studying in <span className="text-[#e2c48d]">South Korea</span> and the <span className="text-[#e2c48d]">Dominican Republic</span> → Spent my first internship in <span className="text-[#e2c48d]">Topeka, Kansas</span> → Moved to <span className="text-[#e2c48d]">Huntsville, Alabama</span> for my first job out of college → relocated to <span className="text-[#e2c48d]">Woodland Hills</span>, just outside of LA → came back to <span className="text-[#e2c48d]">Atlanta</span> → and now I'm back in <span className="text-[#e2c48d]">Los Angeles</span>.
+                  I went to college in <span className="text-[#e2c48d]">Middle Georgia</span> → spent time studying in <span className="text-[#e2c48d]">South Korea</span> and the <span className="text-[#e2c48d]">Dominican Republic</span> → Spent my first internship in <span className="text-[#e2c48d]">Topeka, Kansas</span> → Moved to <span className="text-[#e2c48d]">Huntsville, Alabama</span> for my first job out of college → relocated to <span className="text-[#e2c48d]">Woodland Hills</span>, just outside of LA → came back to <span className="text-[#e2c48d]">Atlanta</span> → and now I&apos;m back in <span className="text-[#e2c48d]">Los Angeles</span>.
                 </p>
                 <p className="text-2xl">
-                  Couldn't tell you where to next, but my coast is currently West and my hospitality is always Southern.
+                  Couldn&apos;t tell you where to next, but my coast is currently West and my hospitality is always Southern.
                 </p>
 
                 <h2 className="text-4xl font-bold tracking-wide text-[#e2c48d] mt-16 font-[var(--font-cinzel)] italic">When</h2>
