@@ -336,9 +336,4 @@ export default function Projects() {
       </main>
     </>
   );
-} 
-
-export const metadata = {
-  title: "Myles Harris | Portfolio",
-  description: "Myles Harris | Portfolio",
-};
+}
