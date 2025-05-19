@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from 'react';
 import FilmStrip from '@/components/FilmStrip';
+import NavLogo from '@/components/NavLogo';
 
 function shuffleArray<T>(array: T[]): T[] {
   const newArray = [...array];
@@ -77,34 +78,37 @@ export default function Photography() {
   });
 
   return (
-    <main className="min-h-screen relative overflow-hidden bg-[#3a2c1a]/5">
-      <div className="absolute inset-0 flex flex-col justify-between py-16">
-        {/* Horizontal Strips */}
-        <div className="space-y-32">
-          {strips.slice(0, numStrips).map((stripImages, index) => (
+    <>
+      <NavLogo />
+      <main className="min-h-screen relative overflow-hidden bg-[#3a2c1a]/5">
+        <div className="absolute inset-0 flex flex-col justify-between py-16">
+          {/* Horizontal Strips */}
+          <div className="space-y-32">
+            {strips.slice(0, numStrips).map((stripImages, index) => (
+              <FilmStrip
+                key={`h-${index}`}
+                images={stripImages}
+                direction="horizontal"
+                scrollDirection={index % 2 === 0 ? 'forward' : 'backward'}
+                speed={30 + (index * 5)}
+              />
+            ))}
+          </div>
+        </div>
+        
+        {/* Vertical Strips */}
+        <div className="absolute inset-0 flex justify-between px-16">
+          {strips.slice(numStrips).map((stripImages, index) => (
             <FilmStrip
-              key={`h-${index}`}
+              key={`v-${index}`}
               images={stripImages}
-              direction="horizontal"
+              direction="vertical"
               scrollDirection={index % 2 === 0 ? 'forward' : 'backward'}
               speed={30 + (index * 5)}
             />
           ))}
         </div>
-      </div>
-      
-      {/* Vertical Strips */}
-      <div className="absolute inset-0 flex justify-between px-16">
-        {strips.slice(numStrips).map((stripImages, index) => (
-          <FilmStrip
-            key={`v-${index}`}
-            images={stripImages}
-            direction="vertical"
-            scrollDirection={index % 2 === 0 ? 'forward' : 'backward'}
-            speed={30 + (index * 5)}
-          />
-        ))}
-      </div>
-    </main>
+      </main>
+    </>
   );
 } 

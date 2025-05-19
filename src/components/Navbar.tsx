@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 
 const MENU = [
-  { label: "About", href: "/" },
+  { label: "About", href: "/about" },
   { label: "Resume", href: "/resume" },
   { label: "Photography", href: "/photography" },
   { label: "Contact", href: "/contact" },

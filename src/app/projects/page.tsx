@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import NavLogo from '@/components/NavLogo';
 
 interface VisibilityState {
   header: boolean;
@@ -266,70 +267,78 @@ export default function Projects() {
   );
 
   return (
-    <main className="max-w-4xl mx-auto py-16 px-4 text-[#3a2c1a] font-serif">
-      {/* Resume Section */}
-      <section className="mb-16">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold tracking-tight">Resume</h2>
-          
-          {/* Toggle Switch */}
-          <div className="flex items-center gap-3">
-            <span className="text-sm opacity-80">Simple</span>
-            <button
-              onClick={() => setIsStyledView(!isStyledView)}
-              className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300"
-              style={{ backgroundColor: isStyledView ? '#e2c48d' : '#d1d5db' }}
-            >
-              <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 ${
-                  isStyledView ? 'translate-x-6' : 'translate-x-1'
-                }`}
-              />
-            </button>
-            <span className="text-sm opacity-80">Styled</span>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-4">
-          {/* Download button */}
-          <div className="flex items-center gap-4 p-6 border border-[#e2c48d] rounded-lg hover:border-[#a67c52] transition-colors">
-            <Image
-              src="/file.svg"
-              alt="Resume file icon"
-              width={32}
-              height={32}
-              className="opacity-80"
-            />
-            <div className="flex-1">
-              <h3 className="text-xl mb-2">Myles Harris - Resume</h3>
-              <p className="text-lg opacity-80 mb-4">Software Engineer</p>
-            </div>
-            <a
-              href="/mylesHarris_Resume_v3.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-4 py-2 bg-[#e2c48d] text-[#3a2c1a] rounded hover:bg-[#a67c52] transition-colors"
-            >
-              Download PDF
-            </a>
-          </div>
-          
-          {/* Resume Display */}
-          {isStyledView ? (
-            <StyledResume />
-          ) : (
-            <div className="w-full h-[1200px] border border-[#e2c48d] rounded-lg overflow-hidden">
-              <iframe
-                src={`/mylesHarris_Resume_v3.pdf#view=FitH`}
-                className="w-full h-full"
-                frameBorder="0"
+    <>
+      <NavLogo />
+      <main className="max-w-4xl mx-auto py-16 px-4 text-[#3a2c1a] font-serif">
+        {/* Resume Section */}
+        <section className="mb-16">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold tracking-tight">Resume</h2>
+            
+            {/* Toggle Switch */}
+            <div className="flex items-center gap-3">
+              <span className="text-sm opacity-80">Simple</span>
+              <button
+                onClick={() => setIsStyledView(!isStyledView)}
+                className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300"
+                style={{ backgroundColor: isStyledView ? '#e2c48d' : '#d1d5db' }}
               >
-                <p>It appears your browser doesn&apos;t support embedded PDFs. You can <a href="/mylesHarris_Resume_v3.pdf" className="text-[#a67c52] underline">download the PDF</a> instead.</p>
-              </iframe>
+                <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 ${
+                    isStyledView ? 'translate-x-6' : 'translate-x-1'
+                  }`}
+                />
+              </button>
+              <span className="text-sm opacity-80">Styled</span>
             </div>
-          )}
-        </div>
-      </section>
-    </main>
+          </div>
+
+          <div className="flex flex-col gap-4">
+            {/* Download button */}
+            <div className="flex items-center gap-4 p-6 border border-[#e2c48d] rounded-lg hover:border-[#a67c52] transition-colors">
+              <Image
+                src="/file.svg"
+                alt="Resume file icon"
+                width={32}
+                height={32}
+                className="opacity-80"
+              />
+              <div className="flex-1">
+                <h3 className="text-xl mb-2">Myles Harris - Resume</h3>
+                <p className="text-lg opacity-80 mb-4">Software Engineer</p>
+              </div>
+              <a
+                href="/mylesHarris_Resume_v3.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2 bg-[#e2c48d] text-[#3a2c1a] rounded hover:bg-[#a67c52] transition-colors"
+              >
+                Download PDF
+              </a>
+            </div>
+            
+            {/* Resume Display */}
+            {isStyledView ? (
+              <StyledResume />
+            ) : (
+              <div className="w-full h-[1200px] border border-[#e2c48d] rounded-lg overflow-hidden">
+                <iframe
+                  src={`/mylesHarris_Resume_v3.pdf#view=FitH`}
+                  className="w-full h-full"
+                  frameBorder="0"
+                >
+                  <p>It appears your browser doesn&apos;t support embedded PDFs. You can <a href="/mylesHarris_Resume_v3.pdf" className="text-[#a67c52] underline">download the PDF</a> instead.</p>
+                </iframe>
+              </div>
+            )}
+          </div>
+        </section>
+      </main>
+    </>
   );
 } 
+
+export const metadata = {
+  title: "Myles Harris | Portfolio",
+  description: "Myles Harris | Portfolio",
+};
