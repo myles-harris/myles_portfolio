@@ -6,6 +6,7 @@ import Navbar from "../components/Navbar";
 import BackgroundVideo from "../components/BackgroundVideo";
 import MobileWarningDialog from "../components/MobileWarningDialog";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,6 +44,7 @@ export default function RootLayout({
         <MobileWarningDialog />
         {children}
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
