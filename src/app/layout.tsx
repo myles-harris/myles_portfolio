@@ -5,6 +5,7 @@ import "./globals.css";
 import Navbar from "../components/Navbar";
 import BackgroundVideo from "../components/BackgroundVideo";
 import MobileWarningDialog from "../components/MobileWarningDialog";
+import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,6 +42,7 @@ export default function RootLayout({
         <Navbar />
         <MobileWarningDialog />
         {children}
+        <Analytics />
       </body>
     </html>
   );
