@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState, useCallback } from 'react';
+import Image from 'next/image';
 
 interface FilmStripProps {
   images: string[];
@@ -43,7 +44,7 @@ export default function FilmStrip({ images = [], direction, scrollDirection, spe
     if (!images || images.length === 0) return;
     
     const initialImages: Array<{ src: string; zIndex: number }> = [];
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < 12; i++) { // Reduced from 15 to 12 for better performance
       // For each position, get a random image different from the previous one
       const prevImage = i > 0 ? initialImages[i - 1].src : undefined;
       initialImages.push({
@@ -55,7 +56,7 @@ export default function FilmStrip({ images = [], direction, scrollDirection, spe
     setImageSlots(initialImages);
   }, [getRandomImage, getRandomZIndex, images]);
 
-  // Periodically update z-indices
+  // Periodically update z-indices with better performance
   useEffect(() => {
     if (!images || images.length === 0) return;
 
@@ -64,7 +65,7 @@ export default function FilmStrip({ images = [], direction, scrollDirection, spe
         ...slot,
         zIndex: getRandomZIndex()
       })));
-    }, 2000); // Update every 2 seconds
+    }, 3000); // Increased from 2 seconds to 3 seconds for better performance
 
     return () => clearInterval(updateInterval);
   }, [getRandomZIndex, images]);
@@ -131,6 +132,9 @@ export default function FilmStrip({ images = [], direction, scrollDirection, spe
         cancelAnimationFrame(animationRef.current);
         animationRef.current = null;
       }
+      // Clean up position reference
+      positionRef.current = 0;
+      lastTimeRef.current = 0;
     };
   }, [direction, scrollDirection, speed, getRandomImage, getRandomZIndex, images]);
 
@@ -142,7 +146,9 @@ export default function FilmStrip({ images = [], direction, scrollDirection, spe
     <div className="overflow-hidden" style={{ 
       height: direction === 'vertical' ? '100vh' : 'auto',
       width: direction === 'horizontal' ? '100%' : 'auto',
-      perspective: '1000px'
+      perspective: '1000px',
+      contain: 'layout style paint',
+      willChange: 'transform'
     }}>
       <div 
         ref={containerRef} 
@@ -178,16 +184,21 @@ export default function FilmStrip({ images = [], direction, scrollDirection, spe
                 zIndex: slot.zIndex
               }}
             >
-              <img
+              <Image
                 src={slot.src}
                 alt={`Film photo ${index + 1}`}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 style={{
-                  maxHeight: '100%',
-                  maxWidth: '100%',
-                  objectFit: 'contain'
+                  objectFit: 'contain',
+                  willChange: 'transform',
+                  backfaceVisibility: 'hidden',
+                  WebkitBackfaceVisibility: 'hidden'
                 }}
-                loading="lazy"
-                decoding="async"
+                priority={index < 6}
+                quality={85}
+                placeholder="blur"
+                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
               />
             </div>
           ))}
