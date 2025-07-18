@@ -78,7 +78,7 @@ export default function Contact() {
             {/* Strava Profile Picture */}
             <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-[#e2c48d] shadow-lg">
               <Image
-                src="/contact/social/strava_profile_pic.JPG"
+                src="/contact/social/strava_profile_pic.jpg"
                 alt="Strava Profile"
                 fill
                 className="object-cover"
