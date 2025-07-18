@@ -186,7 +186,8 @@ export default function FilmStrip({ images = [], direction, scrollDirection, spe
                   maxWidth: '100%',
                   objectFit: 'contain'
                 }}
-                loading="eager"
+                loading="lazy"
+                decoding="async"
               />
             </div>
           ))}

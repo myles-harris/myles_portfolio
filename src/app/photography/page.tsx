@@ -21,7 +21,7 @@ export default function Photography() {
     async function loadImages() {
       try {
         setLoading(true);
-        const response = await fetch('/film/images.json');
+        const response = await fetch('/film/images-optimized.json');
         if (!response.ok) {
           throw new Error('Failed to fetch images');
         }

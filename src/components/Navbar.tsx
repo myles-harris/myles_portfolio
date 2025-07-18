@@ -30,16 +30,17 @@ export default function Navbar() {
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         style={{ 
-          minWidth: isMounted ? (hovered ? '19rem' : '4rem') : '4rem',
+          minWidth: isMounted ? (hovered ? '25rem' : '4rem') : '4rem',
           transition: 'all 400ms ease-in-out',
           position: 'relative'
         }}
       >
-        {/* Gradient blur overlay */}
+        {/* Gradient blur overlay with white tint */}
         <div 
           style={{
             position: 'absolute',
             inset: 0,
+            backgroundColor: isMounted && hovered ? 'rgba(255, 255, 255, 0.9)' : 'transparent',
             backdropFilter: isMounted && hovered ? 'blur(8px)' : 'none',
             WebkitBackdropFilter: isMounted && hovered ? 'blur(8px)' : 'none',
             maskImage: isMounted && hovered ? 'linear-gradient(to left, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0))' : 'none',
@@ -80,7 +81,7 @@ export default function Navbar() {
                   {/* Menu label slides out from prong */}
                   <a
                     href={MENU[4-i].href}
-                    className={`absolute left-0 top-0 px-8 pt-2 pb-0 font-serif font-semibold text-2xl tracking-wide text-[#3a2c1a] whitespace-nowrap transition-all duration-[900ms] ease-in-out ${isMounted && hovered ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+                    className={`absolute left-0 top-0 px-8 pt-2 pb-0 font-serif font-semibold text-2xl tracking-wide text-[#3a2c1a] whitespace-nowrap transition-all duration-[900ms] ease-in-out hover:bg-[#e2c48d]/90 hover:rounded-md ${isMounted && hovered ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
                     style={{
                       transitionDelay: isMounted && hovered
                         ? `${PRONG_TRANSITION + i * PRONG_STAGGER}ms`
