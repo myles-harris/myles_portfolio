@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 interface TokenResponse {
@@ -10,7 +10,7 @@ interface TokenResponse {
   token_type: string;
 }
 
-export default function SpotifyAuth() {
+function SpotifyAuthContent() {
   const [authUrl, setAuthUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -147,5 +147,20 @@ export default function SpotifyAuth() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SpotifyAuth() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gray-900">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto mb-4"></div>
+          <p className="text-white text-lg">Loading...</p>
+        </div>
+      </div>
+    }>
+      <SpotifyAuthContent />
+    </Suspense>
   );
 } 
