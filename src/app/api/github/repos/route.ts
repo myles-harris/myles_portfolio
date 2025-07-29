@@ -1,6 +1,16 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
-export async function GET(request: NextRequest) {
+interface GitHubRepo {
+  id: number;
+  name: string;
+  description: string;
+  language: string;
+  stargazers_count: number;
+  updated_at: string;
+  html_url: string;
+}
+
+export async function GET() {
   try {
     const githubToken = process.env.GITHUB_TOKEN;
     const username = process.env.GITHUB_USERNAME || 'mylesharris';
@@ -23,19 +33,8 @@ export async function GET(request: NextRequest) {
       throw new Error(`GitHub API error: ${response.status}`);
     }
 
-    const data = await response.json();
-    
-    return NextResponse.json({
-      repos: data.map((repo: any) => ({
-        id: repo.id,
-        name: repo.name,
-        description: repo.description,
-        language: repo.language,
-        stargazers_count: repo.stargazers_count,
-        updated_at: repo.updated_at,
-        html_url: repo.html_url
-      }))
-    });
+    const repos: GitHubRepo[] = await response.json();
+    return NextResponse.json({ repos });
   } catch (error) {
     console.error('GitHub repos error:', error);
     return NextResponse.json(

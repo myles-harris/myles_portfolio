@@ -2,37 +2,43 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 
+interface TokenResponse {
+  success: boolean;
+  access_token: string;
+  refresh_token: string;
+  expires_in: number;
+  token_type: string;
+}
+
 export default function SpotifyAuth() {
   const [authUrl, setAuthUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [tokens, setTokens] = useState<any>(null);
+  const [tokens, setTokens] = useState<TokenResponse | null>(null);
   const searchParams = useSearchParams();
 
   useEffect(() => {
     const code = searchParams.get('code');
-    
     if (code) {
-      // Handle callback
       handleCallback(code);
     } else {
-      // Get auth URL
       getAuthUrl();
     }
   }, [searchParams]);
 
   const getAuthUrl = async () => {
     try {
+      setLoading(true);
       const response = await fetch('/api/spotify/auth');
       const data = await response.json();
       
-      if (data.authUrl) {
+      if (response.ok) {
         setAuthUrl(data.authUrl);
       } else {
         setError(data.error || 'Failed to get authorization URL');
       }
-    } catch (err) {
-      setError('Failed to initialize Spotify authorization');
+    } catch (error) {
+      setError('Failed to get authorization URL');
     } finally {
       setLoading(false);
     }
@@ -44,15 +50,18 @@ export default function SpotifyAuth() {
       const response = await fetch(`/api/spotify/callback?code=${code}`);
       const data = await response.json();
       
-      if (data.success) {
+      if (response.ok && data.success) {
+        // Store tokens in localStorage (for development/demo purposes)
+        localStorage.setItem('spotify_access_token', data.access_token);
+        localStorage.setItem('spotify_refresh_token', data.refresh_token);
+        localStorage.setItem('spotify_expires_at', String(Date.now() + data.expires_in * 1000));
+        
         setTokens(data);
-        // Store tokens (in production, use secure storage)
-        localStorage.setItem('spotify_tokens', JSON.stringify(data));
         setError(null);
       } else {
         setError(data.error || 'Authorization failed');
       }
-    } catch (err) {
+    } catch (error) {
       setError('Failed to complete authorization');
     } finally {
       setLoading(false);
@@ -67,10 +76,10 @@ export default function SpotifyAuth() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-gray-900">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+          <p className="text-white text-lg">Loading...</p>
         </div>
       </div>
     );
@@ -78,26 +87,20 @@ export default function SpotifyAuth() {
 
   if (tokens) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full">
+      <div className="min-h-screen flex items-center justify-center bg-gray-900">
+        <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-4">
           <div className="text-center">
             <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-white text-2xl">✓</span>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Authorization Successful!</h2>
-            <p className="text-gray-600 mb-6">Your Spotify account is now connected.</p>
-            <div className="bg-gray-50 p-4 rounded-lg mb-6">
-              <p className="text-sm text-gray-600 mb-2">Access Token:</p>
-              <p className="text-xs font-mono text-gray-800 break-all">
-                {tokens.access_token.substring(0, 20)}...
-              </p>
-            </div>
-            <a
-              href="/misc"
-              className="inline-block bg-green-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-600 transition-colors"
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Success!</h2>
+            <p className="text-gray-600 mb-6">Your Spotify account has been connected successfully.</p>
+            <button
+              onClick={() => window.location.href = '/misc'}
+              className="w-full bg-green-500 text-white py-3 px-6 rounded-xl font-medium hover:bg-green-600 transition-colors"
             >
               Go to Misc Page
-            </a>
+            </button>
           </div>
         </div>
       </div>
@@ -106,17 +109,17 @@ export default function SpotifyAuth() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full">
+      <div className="min-h-screen flex items-center justify-center bg-gray-900">
+        <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-4">
           <div className="text-center">
             <div className="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-white text-2xl">✗</span>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Authorization Failed</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Error</h2>
             <p className="text-gray-600 mb-6">{error}</p>
             <button
-              onClick={() => window.location.reload()}
-              className="bg-gray-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-600 transition-colors"
+              onClick={getAuthUrl}
+              className="w-full bg-blue-500 text-white py-3 px-6 rounded-xl font-medium hover:bg-blue-600 transition-colors"
             >
               Try Again
             </button>
@@ -127,21 +130,19 @@ export default function SpotifyAuth() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full">
+    <div className="min-h-screen flex items-center justify-center bg-gray-900">
+      <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-4">
         <div className="text-center">
           <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-white text-3xl">♪</span>
+            <span className="text-white text-2xl">♪</span>
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Connect Spotify</h2>
-          <p className="text-gray-600 mb-6">
-            Authorize this app to access your Spotify account for the music player.
-          </p>
+          <p className="text-gray-600 mb-6">Connect your Spotify account to access your music and playlists.</p>
           <button
             onClick={handleAuth}
-            className="bg-green-500 text-white px-8 py-4 rounded-lg font-medium hover:bg-green-600 transition-colors text-lg"
+            className="w-full bg-green-500 text-white py-3 px-6 rounded-xl font-medium hover:bg-green-600 transition-colors"
           >
-            Connect Spotify Account
+            Connect to Spotify
           </button>
         </div>
       </div>

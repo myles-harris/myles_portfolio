@@ -1,6 +1,24 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
-export async function GET(request: NextRequest) {
+interface GitHubRepo {
+  name: string;
+}
+
+interface GitHubCommit {
+  sha: string;
+  commit: {
+    message: string;
+    author: {
+      name: string;
+      date: string;
+    };
+  };
+  repository: {
+    name: string;
+  };
+}
+
+export async function GET() {
   try {
     const githubToken = process.env.GITHUB_TOKEN;
     const username = process.env.GITHUB_USERNAME || 'mylesharris';
@@ -24,10 +42,10 @@ export async function GET(request: NextRequest) {
       throw new Error(`GitHub API error: ${reposResponse.status}`);
     }
 
-    const repos = await reposResponse.json();
+    const repos: GitHubRepo[] = await reposResponse.json();
     
     // Get recent commits from each repository
-    const commitsPromises = repos.map(async (repo: any) => {
+    const commitsPromises = repos.map(async (repo: GitHubRepo) => {
       const commitsResponse = await fetch(`https://api.github.com/repos/${username}/${repo.name}/commits?per_page=3`, {
         headers: {
           'Authorization': `token ${githubToken}`,
@@ -36,8 +54,8 @@ export async function GET(request: NextRequest) {
       });
 
       if (commitsResponse.ok) {
-        const commits = await commitsResponse.json();
-        return commits.map((commit: any) => ({
+        const commits: GitHubCommit[] = await commitsResponse.json();
+        return commits.map((commit: GitHubCommit) => ({
           ...commit,
           repository: { name: repo.name }
         }));
@@ -46,7 +64,7 @@ export async function GET(request: NextRequest) {
     });
 
     const allCommits = await Promise.all(commitsPromises);
-    const flatCommits = allCommits.flat().sort((a: any, b: any) => 
+    const flatCommits = allCommits.flat().sort((a: GitHubCommit, b: GitHubCommit) => 
       new Date(b.commit.author.date).getTime() - new Date(a.commit.author.date).getTime()
     );
 

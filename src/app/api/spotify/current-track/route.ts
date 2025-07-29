@@ -1,12 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const accessToken = process.env.SPOTIFY_ACCESS_TOKEN;
-    
     if (!accessToken) {
       return NextResponse.json(
-        { error: 'Spotify access token not configured' },
+        { error: 'No Spotify access token available' },
         { status: 500 }
       );
     }
@@ -19,33 +18,21 @@ export async function GET(request: NextRequest) {
     });
 
     if (!response.ok) {
-      if (response.status === 204) {
-        // No track currently playing
-        return NextResponse.json({
-          track: null,
-          is_playing: false
-        });
+      if (response.status === 401) {
+        return NextResponse.json(
+          { error: 'Access token expired' },
+          { status: 401 }
+        );
       }
-      throw new Error(`Spotify API error: ${response.status}`);
+      return NextResponse.json(
+        { error: 'Failed to fetch current track' },
+        { status: 500 }
+      );
     }
 
     const data = await response.json();
-    
-    if (!data.item) {
-      return NextResponse.json({
-        track: null,
-        is_playing: false
-      });
-    }
-
     return NextResponse.json({
-      track: {
-        id: data.item.id,
-        name: data.item.name,
-        artists: data.item.artists,
-        album: data.item.album,
-        duration_ms: data.item.duration_ms
-      },
+      track: data.item,
       is_playing: data.is_playing
     });
   } catch (error) {

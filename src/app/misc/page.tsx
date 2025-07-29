@@ -1,5 +1,6 @@
 "use client";
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import NavLogo from '@/components/NavLogo';
 import BackgroundVideo from '@/components/BackgroundVideo';
 
@@ -9,10 +10,9 @@ interface WindowProps {
   children: React.ReactNode;
   position: { x: number; y: number };
   onMove: (id: string, x: number, y: number) => void;
-  onClose: (id: string) => void;
 }
 
-function DraggableWindow({ id, title, children, position, onMove, onClose }: WindowProps) {
+function DraggableWindow({ id, title, children, position, onMove }: WindowProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const windowRef = useRef<HTMLDivElement>(null);
@@ -29,14 +29,14 @@ function DraggableWindow({ id, title, children, position, onMove, onClose }: Win
     }
   };
 
-  const handleMouseMove = (e: MouseEvent) => {
+  const handleMouseMove = useCallback((e: MouseEvent) => {
     if (isDragging) {
       e.preventDefault();
       const newX = e.clientX - dragOffset.x;
       const newY = e.clientY - dragOffset.y;
       onMove(id, newX, newY);
     }
-  };
+  }, [isDragging, dragOffset, onMove, id]);
 
   const handleMouseUp = () => {
     setIsDragging(false);
@@ -51,7 +51,7 @@ function DraggableWindow({ id, title, children, position, onMove, onClose }: Win
         document.removeEventListener('mouseup', handleMouseUp);
       };
     }
-  }, [isDragging, dragOffset]);
+  }, [isDragging, handleMouseMove]);
 
   // Different sizes for different windows
   const getWindowSize = () => {
@@ -114,18 +114,11 @@ export default function Misc() {
     ));
   };
 
-  const openWindow = (id: string) => {
-    setWindows(prev => prev.map(window => 
-      window.id === id ? { ...window, isOpen: true } : window
-    ));
-  };
-
   return (
     <>
       <BackgroundVideo />
       <NavLogo />
       <main className="min-h-screen relative overflow-hidden">
-
 
         {/* Draggable Windows */}
         {windows.filter(w => w.isOpen).map(window => (
@@ -135,7 +128,6 @@ export default function Misc() {
             title={window.title}
             position={window.position}
             onMove={moveWindow}
-            onClose={closeWindow}
           >
             {window.id === 'spotify' && <SpotifyWindow />}
             {window.id === 'training' && <TrainingWindow />}
@@ -289,9 +281,11 @@ function SpotifyWindow() {
             <>
               <div className="w-20 h-20 bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
                 {currentTrack.album.images[0] ? (
-                  <img 
+                  <Image 
                     src={currentTrack.album.images[0].url} 
                     alt="Album cover"
+                    width={80}
+                    height={80}
                     className="w-full h-full rounded-xl object-cover"
                   />
                 ) : (

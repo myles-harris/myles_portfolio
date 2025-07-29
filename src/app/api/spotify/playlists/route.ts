@@ -1,21 +1,23 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
+
+interface SpotifyPlaylist {
+  id: string;
+  name: string;
+  images: { url: string }[];
+  tracks: { total: number };
+}
 
 async function getValidAccessToken() {
-  // In a real app, you'd get this from a database or secure storage
-  // For now, we'll use the environment variable as fallback
   const accessToken = process.env.SPOTIFY_ACCESS_TOKEN;
-  
   if (!accessToken) {
     throw new Error('No Spotify access token available');
   }
-
   return accessToken;
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const accessToken = await getValidAccessToken();
-
     const response = await fetch('https://api.spotify.com/v1/me/playlists?limit=20', {
       headers: {
         'Authorization': `Bearer ${accessToken}`,
@@ -32,9 +34,8 @@ export async function GET(request: NextRequest) {
     }
 
     const data = await response.json();
-    
     return NextResponse.json({
-      playlists: data.items.map((playlist: any) => ({
+      playlists: data.items.map((playlist: SpotifyPlaylist) => ({
         id: playlist.id,
         name: playlist.name,
         images: playlist.images,
