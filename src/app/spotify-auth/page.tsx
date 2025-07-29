@@ -37,7 +37,7 @@ export default function SpotifyAuth() {
       } else {
         setError(data.error || 'Failed to get authorization URL');
       }
-    } catch (error) {
+    } catch {
       setError('Failed to get authorization URL');
     } finally {
       setLoading(false);
@@ -61,7 +61,7 @@ export default function SpotifyAuth() {
       } else {
         setError(data.error || 'Authorization failed');
       }
-    } catch (error) {
+    } catch {
       setError('Failed to complete authorization');
     } finally {
       setLoading(false);

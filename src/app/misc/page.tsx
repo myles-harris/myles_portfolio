@@ -108,12 +108,6 @@ export default function Misc() {
     ));
   };
 
-  const closeWindow = (id: string) => {
-    setWindows(prev => prev.map(window => 
-      window.id === id ? { ...window, isOpen: false } : window
-    ));
-  };
-
   return (
     <>
       <BackgroundVideo />
