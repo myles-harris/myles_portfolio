@@ -8,6 +8,7 @@ interface SpotifyPlaylist {
 }
 
 async function getValidAccessToken() {
+  // Use the new access token from the successful OAuth flow
   const accessToken = process.env.SPOTIFY_ACCESS_TOKEN;
   if (!accessToken) {
     throw new Error('No Spotify access token available');
