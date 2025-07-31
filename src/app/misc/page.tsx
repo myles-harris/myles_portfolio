@@ -210,8 +210,21 @@ function SpotifyWindow() {
       if (response.ok) {
         const data = await response.json();
         setDevices(data.devices || []);
-        // Auto-select the first available device
-        if (data.devices && data.devices.length > 0) {
+        
+        // Auto-select the user's current device (Computer)
+        const currentDevice = data.devices?.find((device: SpotifyDevice) => 
+          device.type === 'Computer' || 
+          device.name.toLowerCase().includes('mac') ||
+          device.name.toLowerCase().includes('windows') ||
+          device.name.toLowerCase().includes('chrome') ||
+          device.name.toLowerCase().includes('safari') ||
+          device.name.toLowerCase().includes('firefox')
+        );
+        
+        if (currentDevice) {
+          setSelectedDevice(currentDevice.id);
+        } else if (data.devices && data.devices.length > 0) {
+          // Fallback to first available device
           setSelectedDevice(data.devices[0].id);
         }
       }
@@ -322,21 +335,13 @@ function SpotifyWindow() {
 
   return (
     <div className="h-full flex flex-col">
-      {/* Device Selection */}
-      <div className="mb-4">
-        <label className="block text-xs font-medium text-gray-700 mb-2">Playback Device</label>
-        <select
-          value={selectedDevice || ''}
-          onChange={(e) => setSelectedDevice(e.target.value)}
-          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-        >
-          {devices.map((device) => (
-            <option key={device.id} value={device.id}>
-              {device.name} {device.type === 'Computer' ? '(This Device)' : ''}
-            </option>
-          ))}
-        </select>
-      </div>
+      {/* Current Device Indicator */}
+      {selectedDevice && (
+        <div className="mb-3 text-xs text-gray-500 flex items-center">
+          <span className="mr-1">🎵</span>
+          Playing on: {devices.find(d => d.id === selectedDevice)?.name || 'Your device'}
+        </div>
+      )}
 
       {/* Volume Controls */}
       <div className="mb-4 flex items-center space-x-3">
