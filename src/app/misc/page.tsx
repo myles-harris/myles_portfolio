@@ -169,13 +169,9 @@ function SpotifyWindow() {
   const [volume, setVolume] = useState(50);
   const [isMuted, setIsMuted] = useState(false);
   const [previousVolume, setPreviousVolume] = useState(50);
+  const [showPlaylists, setShowPlaylists] = useState(false);
 
-  useEffect(() => {
-    fetchSpotifyData();
-    fetchDevices();
-  }, []);
-
-  const fetchSpotifyData = async () => {
+  const fetchSpotifyData = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -187,6 +183,15 @@ function SpotifyWindow() {
       }
       const playlistsData = await playlistsResponse.json();
       setPlaylists(playlistsData.playlists || []);
+
+      // Auto-play disco playlist by default
+      const discoPlaylist = playlistsData.playlists?.find((p: SpotifyPlaylist) => 
+        p.name.toLowerCase().includes('disco')
+      );
+      if (discoPlaylist && !selectedPlaylist) {
+        setSelectedPlaylist(discoPlaylist.id);
+        // Don't auto-play on initial load to avoid dependency issues
+      }
 
       // Fetch current track
       const currentTrackResponse = await fetch('/api/spotify/current-track');
@@ -201,9 +206,9 @@ function SpotifyWindow() {
       setError(err instanceof Error ? err.message : 'Failed to load Spotify data');
       setLoading(false);
     }
-  };
+  }, [selectedPlaylist]);
 
-  const fetchDevices = async () => {
+  const fetchDevices = useCallback(async () => {
     try {
       const response = await fetch('/api/spotify/devices');
       if (response.ok) {
@@ -229,25 +234,9 @@ function SpotifyWindow() {
     } catch (err) {
       console.error('Failed to fetch devices:', err);
     }
-  };
+  }, []);
 
-  const handlePlayPause = async () => {
-    try {
-      const response = await fetch('/api/spotify/play-pause', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: isPlaying ? 'pause' : 'play' }),
-      });
-
-      if (response.ok) {
-        setIsPlaying(!isPlaying);
-      }
-    } catch (err) {
-      console.error('Failed to toggle play/pause:', err);
-    }
-  };
-
-  const handlePlaylistSelect = async (playlistId: string) => {
+  const handlePlaylistSelect = useCallback(async (playlistId: string) => {
     try {
       setSelectedPlaylist(playlistId);
       const response = await fetch('/api/spotify/play-playlist', {
@@ -266,6 +255,39 @@ function SpotifyWindow() {
       }
     } catch (err) {
       console.error('Failed to play playlist:', err);
+    }
+  }, [selectedDevice, fetchSpotifyData]);
+
+  useEffect(() => {
+    fetchSpotifyData();
+    fetchDevices();
+  }, [fetchSpotifyData, fetchDevices]);
+
+  // Auto-play disco playlist after initial load
+  useEffect(() => {
+    if (playlists.length > 0 && !selectedPlaylist) {
+      const discoPlaylist = playlists.find((p: SpotifyPlaylist) => 
+        p.name.toLowerCase().includes('disco')
+      );
+      if (discoPlaylist) {
+        handlePlaylistSelect(discoPlaylist.id);
+      }
+    }
+  }, [playlists, selectedPlaylist, handlePlaylistSelect]);
+
+  const handlePlayPause = async () => {
+    try {
+      const response = await fetch('/api/spotify/play-pause', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: isPlaying ? 'pause' : 'play' }),
+      });
+
+      if (response.ok) {
+        setIsPlaying(!isPlaying);
+      }
+    } catch (err) {
+      console.error('Failed to toggle play/pause:', err);
     }
   };
 
@@ -308,7 +330,7 @@ function SpotifyWindow() {
 
   if (loading) {
     return (
-      <div className="h-full flex items-center justify-center">
+      <div className="h-full flex items-center justify-center bg-black">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
       </div>
     );
@@ -316,7 +338,7 @@ function SpotifyWindow() {
 
   if (error) {
     return (
-      <div className="h-full flex flex-col items-center justify-center">
+      <div className="h-full flex flex-col items-center justify-center bg-black text-white">
         <div className="text-red-500 text-center mb-4">
           <p className="text-sm font-medium">Spotify API Error</p>
           <p className="text-xs opacity-75">{error}</p>
@@ -332,63 +354,144 @@ function SpotifyWindow() {
   }
 
   return (
-    <div className="h-full flex flex-col bg-black text-white">
-      {/* Current Track Display - Spotify Miniplayer Style */}
-      <div className="flex-1 flex items-center justify-center p-6">
-        <div className="w-full max-w-sm">
-          {/* Album Art */}
-          <div className="mb-6 flex justify-center">
-            <div className="w-48 h-48 bg-gray-800 rounded-lg shadow-2xl overflow-hidden">
-              {currentTrack?.album.images[0] ? (
-                <Image
-                  src={currentTrack.album.images[0].url}
-                  alt="Album cover"
-                  width={192}
-                  height={192}
-                  className="w-full h-full object-cover"
-                  unoptimized
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.style.display = 'none';
-                    const parent = target.parentElement;
-                    if (parent) {
-                      const fallback = document.createElement('div');
-                      fallback.className = 'w-full h-full bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center';
-                      fallback.innerHTML = '<span class="text-white text-4xl">♪</span>';
-                      parent.appendChild(fallback);
-                    }
-                  }}
-                />
-              ) : (
-                <div className="w-full h-full bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center">
-                  <span className="text-white text-4xl">♪</span>
-                </div>
-              )}
+    <div 
+      className="h-full relative overflow-hidden"
+      style={{
+        backgroundImage: currentTrack?.album.images[0] 
+          ? `url(${currentTrack.album.images[0].url})` 
+          : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
+      {/* Dark overlay for better text readability */}
+      <div className="absolute inset-0 bg-black/40"></div>
+
+      {/* Hamburger Menu */}
+      <div className="absolute top-4 right-4 z-10">
+        <button
+          onClick={() => setShowPlaylists(!showPlaylists)}
+          className="w-8 h-8 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-black/70 transition-colors"
+        >
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+          </svg>
+        </button>
+
+        {/* Playlist Dropdown */}
+        {showPlaylists && (
+          <div className="absolute top-12 right-0 w-64 bg-black/90 backdrop-blur-sm rounded-lg p-3 shadow-2xl border border-white/10">
+            <h4 className="text-white font-semibold mb-3 text-sm uppercase tracking-wider">Your Playlists</h4>
+            <div className="space-y-2 max-h-48 overflow-y-auto">
+              {playlists.map((playlist) => {
+                const name = playlist.name.toLowerCase();
+                
+                // Check for explicit daylist keywords
+                const hasDaylistKeyword = name.includes('daylist') || name.includes('daily');
+                
+                // Check for the dynamic daylist pattern: descriptive words + day + time
+                const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+                const timePeriods = ['early morning', 'morning', 'afternoon', 'evening', 'night', 'late night'];
+                
+                // Check if the playlist name contains a day of the week
+                const hasDay = days.some(day => name.includes(day));
+                
+                // Check if the playlist name contains a time period
+                const hasTimePeriod = timePeriods.some(time => name.includes(time));
+                
+                // Also check for common daylist descriptive words
+                const descriptiveWords = ['cool', 'collaboration', 'vibes', 'mood', 'energy', 'flow', 'groove', 'chill', 'upbeat', 'relaxed', 'focused', 'creative', 'productive'];
+                const hasDescriptiveWord = descriptiveWords.some(word => name.includes(word));
+                
+                const isDaylist = hasDaylistKeyword || 
+                                 (hasDay && hasTimePeriod) ||
+                                 (hasDescriptiveWord && (hasDay || hasTimePeriod));
+                
+                return (
+                  <button
+                    key={playlist.id}
+                    onClick={() => {
+                      handlePlaylistSelect(playlist.id);
+                      setShowPlaylists(false);
+                    }}
+                    className={`w-full flex items-center space-x-3 p-2 rounded-md text-left transition-colors ${
+                      selectedPlaylist === playlist.id
+                        ? 'bg-green-600 text-white'
+                        : 'text-gray-300 hover:bg-white/10 hover:text-white'
+                    }`}
+                  >
+                    {playlist.images[0] && (
+                      <Image
+                        src={playlist.images[0].url}
+                        alt={playlist.name}
+                        width={32}
+                        height={32}
+                        className="rounded-sm"
+                        unoptimized
+                      />
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center">
+                        <span className="text-sm font-medium truncate">
+                          {playlist.name}
+                        </span>
+                        {isDaylist && (
+                          <span className="ml-2 px-1.5 py-0.5 bg-purple-600 text-white text-xs rounded-full font-medium">
+                            LIVE
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        {playlist.tracks.total} tracks
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </div>
+        )}
+      </div>
 
+      {/* Up Next Bubble */}
+      <div className="absolute top-4 left-4 z-10">
+        <div className="bg-black/50 backdrop-blur-sm rounded-full px-3 py-1.5 text-white text-xs font-medium">
+          <div className="flex items-center space-x-2">
+            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+            <span>Up Next</span>
+          </div>
+          <div className="text-xs text-gray-300 mt-1 truncate max-w-32">
+            {currentTrack ? currentTrack.name : 'No track'}
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Controls Overlay */}
+      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6">
+        <div className="flex items-center justify-between">
           {/* Track Info */}
-          <div className="text-center mb-8">
+          <div className="flex-1 min-w-0">
             {currentTrack ? (
               <>
-                <h3 className="text-white font-bold text-lg mb-2 truncate">
+                <h3 className="text-white font-bold text-lg mb-1 truncate">
                   {currentTrack.name}
                 </h3>
-                <p className="text-gray-400 text-sm truncate">
+                <p className="text-gray-300 text-sm truncate">
                   {currentTrack.artists.map(a => a.name).join(', ')}
                 </p>
               </>
             ) : (
               <>
-                <h3 className="text-white font-bold text-lg mb-2">No track playing</h3>
-                <p className="text-gray-400 text-sm">Select a playlist to start</p>
+                <h3 className="text-white font-bold text-lg mb-1">No track playing</h3>
+                <p className="text-gray-300 text-sm">Select a playlist to start</p>
               </>
             )}
           </div>
 
-          {/* Playback Controls - Spotify Style */}
-          <div className="flex items-center justify-center space-x-6 mb-8">
-            <button className="w-8 h-8 text-gray-400 hover:text-white transition-colors">
+          {/* Playback Controls */}
+          <div className="flex items-center space-x-4">
+            <button className="w-8 h-8 text-white hover:text-gray-300 transition-colors">
               <svg className="w-full h-full" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
               </svg>
@@ -407,18 +510,18 @@ function SpotifyWindow() {
                 </svg>
               )}
             </button>
-            <button className="w-8 h-8 text-gray-400 hover:text-white transition-colors">
+            <button className="w-8 h-8 text-white hover:text-gray-300 transition-colors">
               <svg className="w-full h-full" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
               </svg>
             </button>
           </div>
 
-          {/* Volume Control - Spotify Style */}
-          <div className="flex items-center space-x-3 mb-6">
+          {/* Volume Control */}
+          <div className="flex items-center space-x-3">
             <button
               onClick={handleMuteToggle}
-              className="w-6 h-6 text-gray-400 hover:text-white transition-colors"
+              className="w-6 h-6 text-white hover:text-gray-300 transition-colors"
             >
               {isMuted ? (
                 <svg className="w-full h-full" fill="currentColor" viewBox="0 0 24 24">
@@ -430,7 +533,7 @@ function SpotifyWindow() {
                 </svg>
               )}
             </button>
-            <div className="flex-1">
+            <div className="w-20">
               <input
                 type="range"
                 min="0"
@@ -444,75 +547,6 @@ function SpotifyWindow() {
               />
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Playlists Section - Spotify Style */}
-      <div className="bg-gray-900 p-4 rounded-t-lg">
-        <h4 className="text-white font-semibold mb-3 text-sm uppercase tracking-wider">Your Playlists</h4>
-        <div className="space-y-2 max-h-32 overflow-y-auto">
-          {playlists.map((playlist) => {
-            const name = playlist.name.toLowerCase();
-            
-            // Check for explicit daylist keywords
-            const hasDaylistKeyword = name.includes('daylist') || name.includes('daily');
-            
-            // Check for the dynamic daylist pattern: descriptive words + day + time
-            const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-            const timePeriods = ['early morning', 'morning', 'afternoon', 'evening', 'night', 'late night'];
-            
-            // Check if the playlist name contains a day of the week
-            const hasDay = days.some(day => name.includes(day));
-            
-            // Check if the playlist name contains a time period
-            const hasTimePeriod = timePeriods.some(time => name.includes(time));
-            
-            // Also check for common daylist descriptive words
-            const descriptiveWords = ['cool', 'collaboration', 'vibes', 'mood', 'energy', 'flow', 'groove', 'chill', 'upbeat', 'relaxed', 'focused', 'creative', 'productive'];
-            const hasDescriptiveWord = descriptiveWords.some(word => name.includes(word));
-            
-            const isDaylist = hasDaylistKeyword || 
-                             (hasDay && hasTimePeriod) ||
-                             (hasDescriptiveWord && (hasDay || hasTimePeriod));
-            
-            return (
-              <button
-                key={playlist.id}
-                onClick={() => handlePlaylistSelect(playlist.id)}
-                className={`w-full flex items-center space-x-3 p-2 rounded-md text-left transition-colors ${
-                  selectedPlaylist === playlist.id
-                    ? 'bg-green-600 text-white'
-                    : 'text-gray-300 hover:bg-gray-800 hover:text-white'
-                }`}
-              >
-                {playlist.images[0] && (
-                  <Image
-                    src={playlist.images[0].url}
-                    alt={playlist.name}
-                    width={32}
-                    height={32}
-                    className="rounded-sm"
-                    unoptimized
-                  />
-                )}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center">
-                    <span className="text-sm font-medium truncate">
-                      {playlist.name}
-                    </span>
-                    {isDaylist && (
-                      <span className="ml-2 px-1.5 py-0.5 bg-purple-600 text-white text-xs rounded-full font-medium">
-                        LIVE
-                      </span>
-                    )}
-                  </div>
-                  <div className="text-xs text-gray-500">
-                    {playlist.tracks.total} tracks
-                  </div>
-                </div>
-              </button>
-            );
-          })}
         </div>
       </div>
     </div>
