@@ -165,7 +165,6 @@ function SpotifyWindow() {
   const [playlists, setPlaylists] = useState<SpotifyPlaylist[]>([]);
   const [currentTrack, setCurrentTrack] = useState<SpotifyTrack | null>(null);
   const [selectedPlaylist, setSelectedPlaylist] = useState<string | null>(null);
-  const [devices, setDevices] = useState<SpotifyDevice[]>([]);
   const [selectedDevice, setSelectedDevice] = useState<string | null>(null);
   const [volume, setVolume] = useState(50);
   const [isMuted, setIsMuted] = useState(false);
@@ -209,7 +208,6 @@ function SpotifyWindow() {
       const response = await fetch('/api/spotify/devices');
       if (response.ok) {
         const data = await response.json();
-        setDevices(data.devices || []);
         
         // Auto-select the user's current device (Computer)
         const currentDevice = data.devices?.find((device: SpotifyDevice) => 
