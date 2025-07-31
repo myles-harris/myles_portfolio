@@ -57,7 +57,7 @@ export async function GET() {
       }));
 
     // Find the actual Spotify Daylist
-    const daylist = data.items.find((playlist: any) => {
+    const daylist = data.items.find((playlist: SpotifyPlaylist) => {
       const name = playlist.name.toLowerCase();
       
       // Check for explicit daylist keywords

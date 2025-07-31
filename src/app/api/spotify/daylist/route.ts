@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-interface SpotifyDaylist {
+interface SpotifyPlaylist {
   id: string;
   name: string;
   images: { url: string }[];
@@ -37,7 +37,7 @@ export async function GET() {
     const data = await response.json();
     
     // Look for a playlist that contains "daylist" in the name (case insensitive)
-    const daylist = data.items.find((playlist: any) => {
+    const daylist = data.items.find((playlist: SpotifyPlaylist) => {
       const name = playlist.name.toLowerCase();
       
       // Check for explicit daylist keywords
