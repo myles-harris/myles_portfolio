@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-interface SpotifyPlaylist {
+interface SpotifyDaylist {
   id: string;
   name: string;
   images: { url: string }[];
@@ -8,7 +8,6 @@ interface SpotifyPlaylist {
 }
 
 async function getValidAccessToken() {
-  // Use the new access token from the successful OAuth flow
   const accessToken = process.env.SPOTIFY_ACCESS_TOKEN;
   if (!accessToken) {
     throw new Error('No Spotify access token available');
@@ -20,7 +19,7 @@ export async function GET() {
   try {
     const accessToken = await getValidAccessToken();
     
-    // Get all playlists first
+    // First, get all user's playlists to find the daylist
     const response = await fetch('https://api.spotify.com/v1/me/playlists?limit=50', {
       headers: {
         'Authorization': `Bearer ${accessToken}`,
@@ -30,7 +29,6 @@ export async function GET() {
 
     if (!response.ok) {
       if (response.status === 401) {
-        // Token expired, try to refresh
         throw new Error('Access token expired');
       }
       throw new Error(`Spotify API error: ${response.status}`);
@@ -38,25 +36,7 @@ export async function GET() {
 
     const data = await response.json();
     
-    // Filter for specific playlists
-    const targetPlaylistNames = [
-      "LA Marathon",
-      "ion play bout my lord & savior", 
-      "in case I ever have a disco themed party"
-    ];
-    
-    const filteredPlaylists = data.items
-      .filter((playlist: SpotifyPlaylist) => 
-        targetPlaylistNames.includes(playlist.name)
-      )
-      .map((playlist: SpotifyPlaylist) => ({
-        id: playlist.id,
-        name: playlist.name,
-        images: playlist.images,
-        tracks: { total: playlist.tracks.total }
-      }));
-
-    // Find the actual Spotify Daylist
+    // Look for a playlist that contains "daylist" in the name (case insensitive)
     const daylist = data.items.find((playlist: any) => {
       const name = playlist.name.toLowerCase();
       
@@ -92,26 +72,30 @@ export async function GET() {
       return false;
     });
 
-    // Add the actual daylist or a placeholder
-    const daylistPlaylist = daylist ? {
-      id: daylist.id,
-      name: daylist.name,
-      images: daylist.images,
-      tracks: { total: daylist.tracks.total }
-    } : {
-      id: 'daylist',
-      name: 'Spotify Daylist',
-      images: [{ url: 'https://i.scdn.co/image/ab67616d0000b273c5649add07ed3720be9d5526' }],
-      tracks: { total: 0 }
-    };
+    if (!daylist) {
+      // Return a default daylist if none found
+      return NextResponse.json({
+        daylist: {
+          id: 'daylist',
+          name: 'Spotify Daylist',
+          images: [{ url: 'https://i.scdn.co/image/ab67616d0000b273c5649add07ed3720be9d5526' }],
+          tracks: { total: 0 }
+        }
+      });
+    }
 
     return NextResponse.json({
-      playlists: [...filteredPlaylists, daylistPlaylist]
+      daylist: {
+        id: daylist.id,
+        name: daylist.name,
+        images: daylist.images,
+        tracks: { total: daylist.tracks.total }
+      }
     });
   } catch (error) {
-    console.error('Spotify playlists error:', error);
+    console.error('Spotify daylist error:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch playlists. Please re-authorize at /spotify-auth' },
+      { error: 'Failed to fetch daylist. Please re-authorize at /spotify-auth' },
       { status: 500 }
     );
   }

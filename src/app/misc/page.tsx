@@ -369,35 +369,74 @@ function SpotifyWindow() {
       <div className="mb-6">
         <h4 className="text-gray-900 font-semibold mb-4 text-xl">My Playlists</h4>
         <div className="grid grid-cols-1 gap-3">
-          {playlists.map((playlist) => (
-            <button
-              key={playlist.id}
-              onClick={() => handlePlaylistSelect(playlist.id)}
-              className={`px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 border text-left ${
-                selectedPlaylist === playlist.id
-                  ? 'bg-green-100 text-green-700 border-green-200'
-                  : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border-gray-200'
-              }`}
-            >
-              <div className="flex items-center space-x-3">
-                {playlist.images[0] && (
-                  <Image
-                    src={playlist.images[0].url}
-                    alt={playlist.name}
-                    width={32}
-                    height={32}
-                    className="rounded-md"
-                    unoptimized
-                  />
-                )}
-                <div className="flex-1">
-                  <div className="font-medium">{playlist.name}</div>
-                  <div className="text-xs text-gray-500">{playlist.tracks.total} tracks</div>
+          {playlists.map((playlist) => {
+            const name = playlist.name.toLowerCase();
+            
+            // Check for explicit daylist keywords
+            const hasDaylistKeyword = name.includes('daylist') || name.includes('daily');
+            
+            // Check for the dynamic daylist pattern: descriptive words + day + time
+            const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+            const timePeriods = ['early morning', 'morning', 'afternoon', 'evening', 'night', 'late night'];
+            
+            // Check if the playlist name contains a day of the week
+            const hasDay = days.some(day => name.includes(day));
+            
+            // Check if the playlist name contains a time period
+            const hasTimePeriod = timePeriods.some(time => name.includes(time));
+            
+            // Also check for common daylist descriptive words
+            const descriptiveWords = ['cool', 'collaboration', 'vibes', 'mood', 'energy', 'flow', 'groove', 'chill', 'upbeat', 'relaxed', 'focused', 'creative', 'productive'];
+            const hasDescriptiveWord = descriptiveWords.some(word => name.includes(word));
+            
+            const isDaylist = hasDaylistKeyword || 
+                             (hasDay && hasTimePeriod) ||
+                             (hasDescriptiveWord && (hasDay || hasTimePeriod));
+            
+            return (
+              <button
+                key={playlist.id}
+                onClick={() => handlePlaylistSelect(playlist.id)}
+                className={`px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 border text-left ${
+                  selectedPlaylist === playlist.id
+                    ? 'bg-green-100 text-green-700 border-green-200'
+                    : isDaylist 
+                      ? 'bg-gradient-to-r from-purple-50 to-pink-50 text-purple-700 border-purple-200 hover:from-purple-100 hover:to-pink-100'
+                      : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border-gray-200'
+                }`}
+              >
+                <div className="flex items-center space-x-3">
+                  {playlist.images[0] && (
+                    <Image
+                      src={playlist.images[0].url}
+                      alt={playlist.name}
+                      width={32}
+                      height={32}
+                      className="rounded-md"
+                      unoptimized
+                    />
+                  )}
+                  <div className="flex-1">
+                    <div className="font-medium flex items-center">
+                      {playlist.name}
+                      {isDaylist && (
+                        <span className="ml-2 px-2 py-1 bg-purple-100 text-purple-600 text-xs rounded-full font-medium">
+                          LIVE
+                        </span>
+                      )}
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      {playlist.tracks.total} tracks
+                      {isDaylist && ' • Updates throughout the day'}
+                    </div>
+                  </div>
+                  <div className="text-xs text-gray-400">
+                    {isDaylist ? '🎵' : '🔀'}
+                  </div>
                 </div>
-                <div className="text-xs text-gray-400">🔀</div>
-              </div>
-            </button>
-          ))}
+              </button>
+            );
+          })}
         </div>
       </div>
       
