@@ -334,46 +334,125 @@ function SpotifyWindow() {
   }
 
   return (
-    <div className="h-full flex flex-col">
-      {/* Current Device Indicator */}
-      {selectedDevice && (
-        <div className="mb-3 text-xs text-gray-500 flex items-center">
-          <span className="mr-1">🎵</span>
-          Playing on: {devices.find(d => d.id === selectedDevice)?.name || 'Your device'}
-        </div>
-      )}
+    <div className="h-full flex flex-col bg-black text-white">
+      {/* Current Track Display - Spotify Miniplayer Style */}
+      <div className="flex-1 flex items-center justify-center p-6">
+        <div className="w-full max-w-sm">
+          {/* Album Art */}
+          <div className="mb-6 flex justify-center">
+            <div className="w-48 h-48 bg-gray-800 rounded-lg shadow-2xl overflow-hidden">
+              {currentTrack?.album.images[0] ? (
+                <Image
+                  src={currentTrack.album.images[0].url}
+                  alt="Album cover"
+                  width={192}
+                  height={192}
+                  className="w-full h-full object-cover"
+                  unoptimized
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                    const parent = target.parentElement;
+                    if (parent) {
+                      const fallback = document.createElement('div');
+                      fallback.className = 'w-full h-full bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center';
+                      fallback.innerHTML = '<span class="text-white text-4xl">♪</span>';
+                      parent.appendChild(fallback);
+                    }
+                  }}
+                />
+              ) : (
+                <div className="w-full h-full bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center">
+                  <span className="text-white text-4xl">♪</span>
+                </div>
+              )}
+            </div>
+          </div>
 
-      {/* Volume Controls */}
-      <div className="mb-4 flex items-center space-x-3">
-        <button
-          onClick={handleMuteToggle}
-          className={`w-8 h-8 rounded-full flex items-center justify-center text-sm transition-colors ${
-            isMuted 
-              ? 'bg-red-500 text-white' 
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-          }`}
-        >
-          {isMuted ? '🔇' : '🔊'}
-        </button>
-        <div className="flex-1">
-          <input
-            type="range"
-            min="0"
-            max="100"
-            value={isMuted ? 0 : volume}
-            onChange={(e) => handleVolumeChange(parseInt(e.target.value))}
-            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
-          />
+          {/* Track Info */}
+          <div className="text-center mb-8">
+            {currentTrack ? (
+              <>
+                <h3 className="text-white font-bold text-lg mb-2 truncate">
+                  {currentTrack.name}
+                </h3>
+                <p className="text-gray-400 text-sm truncate">
+                  {currentTrack.artists.map(a => a.name).join(', ')}
+                </p>
+              </>
+            ) : (
+              <>
+                <h3 className="text-white font-bold text-lg mb-2">No track playing</h3>
+                <p className="text-gray-400 text-sm">Select a playlist to start</p>
+              </>
+            )}
+          </div>
+
+          {/* Playback Controls - Spotify Style */}
+          <div className="flex items-center justify-center space-x-6 mb-8">
+            <button className="w-8 h-8 text-gray-400 hover:text-white transition-colors">
+              <svg className="w-full h-full" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+              </svg>
+            </button>
+            <button
+              onClick={handlePlayPause}
+              className="w-12 h-12 bg-white text-black rounded-full flex items-center justify-center hover:scale-105 transition-transform shadow-lg"
+            >
+              {isPlaying ? (
+                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+                </svg>
+              ) : (
+                <svg className="w-6 h-6 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              )}
+            </button>
+            <button className="w-8 h-8 text-gray-400 hover:text-white transition-colors">
+              <svg className="w-full h-full" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
+              </svg>
+            </button>
+          </div>
+
+          {/* Volume Control - Spotify Style */}
+          <div className="flex items-center space-x-3 mb-6">
+            <button
+              onClick={handleMuteToggle}
+              className="w-6 h-6 text-gray-400 hover:text-white transition-colors"
+            >
+              {isMuted ? (
+                <svg className="w-full h-full" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+                </svg>
+              ) : (
+                <svg className="w-full h-full" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                </svg>
+              )}
+            </button>
+            <div className="flex-1">
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={isMuted ? 0 : volume}
+                onChange={(e) => handleVolumeChange(parseInt(e.target.value))}
+                className="w-full h-1 bg-gray-600 rounded-full appearance-none cursor-pointer"
+                style={{
+                  background: `linear-gradient(to right, #1db954 0%, #1db954 ${isMuted ? 0 : volume}%, #4d4d4d ${isMuted ? 0 : volume}%, #4d4d4d 100%)`
+                }}
+              />
+            </div>
+          </div>
         </div>
-        <span className="text-xs text-gray-600 w-8 text-center">
-          {isMuted ? 0 : volume}%
-        </span>
       </div>
 
-      {/* Playlists */}
-      <div className="mb-6">
-        <h4 className="text-gray-900 font-semibold mb-4 text-xl">My Playlists</h4>
-        <div className="grid grid-cols-1 gap-3">
+      {/* Playlists Section - Spotify Style */}
+      <div className="bg-gray-900 p-4 rounded-t-lg">
+        <h4 className="text-white font-semibold mb-3 text-sm uppercase tracking-wider">Your Playlists</h4>
+        <div className="space-y-2 max-h-32 overflow-y-auto">
           {playlists.map((playlist) => {
             const name = playlist.name.toLowerCase();
             
@@ -402,107 +481,40 @@ function SpotifyWindow() {
               <button
                 key={playlist.id}
                 onClick={() => handlePlaylistSelect(playlist.id)}
-                className={`px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 border text-left ${
+                className={`w-full flex items-center space-x-3 p-2 rounded-md text-left transition-colors ${
                   selectedPlaylist === playlist.id
-                    ? 'bg-green-100 text-green-700 border-green-200'
-                    : isDaylist 
-                      ? 'bg-gradient-to-r from-purple-50 to-pink-50 text-purple-700 border-purple-200 hover:from-purple-100 hover:to-pink-100'
-                      : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border-gray-200'
+                    ? 'bg-green-600 text-white'
+                    : 'text-gray-300 hover:bg-gray-800 hover:text-white'
                 }`}
               >
-                <div className="flex items-center space-x-3">
-                  {playlist.images[0] && (
-                    <Image
-                      src={playlist.images[0].url}
-                      alt={playlist.name}
-                      width={32}
-                      height={32}
-                      className="rounded-md"
-                      unoptimized
-                    />
-                  )}
-                  <div className="flex-1">
-                    <div className="font-medium flex items-center">
+                {playlist.images[0] && (
+                  <Image
+                    src={playlist.images[0].url}
+                    alt={playlist.name}
+                    width={32}
+                    height={32}
+                    className="rounded-sm"
+                    unoptimized
+                  />
+                )}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center">
+                    <span className="text-sm font-medium truncate">
                       {playlist.name}
-                      {isDaylist && (
-                        <span className="ml-2 px-2 py-1 bg-purple-100 text-purple-600 text-xs rounded-full font-medium">
-                          LIVE
-                        </span>
-                      )}
-                    </div>
-                    <div className="text-xs text-gray-500">
-                      {playlist.tracks.total} tracks
-                      {isDaylist && ' • Updates throughout the day'}
-                    </div>
+                    </span>
+                    {isDaylist && (
+                      <span className="ml-2 px-1.5 py-0.5 bg-purple-600 text-white text-xs rounded-full font-medium">
+                        LIVE
+                      </span>
+                    )}
                   </div>
-                  <div className="text-xs text-gray-400">
-                    {isDaylist ? '🎵' : '🔀'}
+                  <div className="text-xs text-gray-500">
+                    {playlist.tracks.total} tracks
                   </div>
                 </div>
               </button>
             );
           })}
-        </div>
-      </div>
-      
-      {/* Current Track */}
-      <div className="flex-1 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 flex flex-col justify-center items-center border border-green-200">
-        <div className="text-center">
-          {currentTrack ? (
-            <>
-              <div className="w-20 h-20 bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-                {currentTrack.album.images[0] ? (
-                  <Image 
-                    src={currentTrack.album.images[0].url} 
-                    alt="Album cover"
-                    width={80}
-                    height={80}
-                    className="w-full h-full rounded-xl object-cover"
-                    unoptimized
-                    onError={(e) => {
-                      // Fallback to music icon if image fails to load
-                      const target = e.target as HTMLImageElement;
-                      target.style.display = 'none';
-                      const parent = target.parentElement;
-                      if (parent) {
-                        const fallback = document.createElement('span');
-                        fallback.className = 'text-white text-3xl';
-                        fallback.textContent = '♪';
-                        parent.appendChild(fallback);
-                      }
-                    }}
-                  />
-                ) : (
-                  <span className="text-white text-3xl">♪</span>
-                )}
-              </div>
-              <h5 className="text-gray-900 font-semibold mb-2 text-lg">{currentTrack.name}</h5>
-              <p className="text-gray-600 text-sm mb-6">{currentTrack.artists.map(a => a.name).join(', ')}</p>
-            </>
-          ) : (
-            <>
-              <div className="w-20 h-20 bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-                <span className="text-white text-3xl">♪</span>
-              </div>
-              <h5 className="text-gray-900 font-semibold mb-2 text-lg">No track playing</h5>
-              <p className="text-gray-600 text-sm mb-6">Select a playlist to start</p>
-            </>
-          )}
-          
-          <div className="flex items-center justify-center space-x-4">
-            <button className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-all duration-200 shadow-sm">
-              ⏮
-            </button>
-            <button 
-              onClick={handlePlayPause}
-              className="w-14 h-14 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center text-white hover:from-green-600 hover:to-emerald-600 transition-all duration-200 text-xl shadow-lg"
-            >
-              {isPlaying ? '⏸' : '▶'}
-            </button>
-            <button className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-all duration-200 shadow-sm">
-              ⏭
-            </button>
-          </div>
         </div>
       </div>
     </div>
