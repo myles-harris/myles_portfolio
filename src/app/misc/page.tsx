@@ -281,6 +281,19 @@ function SpotifyWindow() {
                     width={80}
                     height={80}
                     className="w-full h-full rounded-xl object-cover"
+                    unoptimized
+                    onError={(e) => {
+                      // Fallback to music icon if image fails to load
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                      const parent = target.parentElement;
+                      if (parent) {
+                        const fallback = document.createElement('span');
+                        fallback.className = 'text-white text-3xl';
+                        fallback.textContent = '♪';
+                        parent.appendChild(fallback);
+                      }
+                    }}
                   />
                 ) : (
                   <span className="text-white text-3xl">♪</span>
