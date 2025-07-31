@@ -148,6 +148,16 @@ interface SpotifyPlaylist {
   tracks: { total: number };
 }
 
+interface SpotifyDevice {
+  id: string;
+  name: string;
+  type: string;
+  is_active: boolean;
+  is_private_session: boolean;
+  is_restricted: boolean;
+  volume_percent: number;
+}
+
 function SpotifyWindow() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -155,7 +165,7 @@ function SpotifyWindow() {
   const [playlists, setPlaylists] = useState<SpotifyPlaylist[]>([]);
   const [currentTrack, setCurrentTrack] = useState<SpotifyTrack | null>(null);
   const [selectedPlaylist, setSelectedPlaylist] = useState<string | null>(null);
-  const [devices, setDevices] = useState<any[]>([]);
+  const [devices, setDevices] = useState<SpotifyDevice[]>([]);
   const [selectedDevice, setSelectedDevice] = useState<string | null>(null);
   const [volume, setVolume] = useState(50);
   const [isMuted, setIsMuted] = useState(false);
