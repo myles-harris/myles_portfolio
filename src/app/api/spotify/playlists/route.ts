@@ -19,7 +19,9 @@ async function getValidAccessToken() {
 export async function GET() {
   try {
     const accessToken = await getValidAccessToken();
-    const response = await fetch('https://api.spotify.com/v1/me/playlists?limit=20', {
+    
+    // Get all playlists first
+    const response = await fetch('https://api.spotify.com/v1/me/playlists?limit=50', {
       headers: {
         'Authorization': `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
@@ -35,13 +37,35 @@ export async function GET() {
     }
 
     const data = await response.json();
-    return NextResponse.json({
-      playlists: data.items.map((playlist: SpotifyPlaylist) => ({
+    
+    // Filter for specific playlists
+    const targetPlaylistNames = [
+      "LA Marathon",
+      "ion play bout my lord & savior", 
+      "in case I ever have a disco themed party"
+    ];
+    
+    const filteredPlaylists = data.items
+      .filter((playlist: SpotifyPlaylist) => 
+        targetPlaylistNames.includes(playlist.name)
+      )
+      .map((playlist: SpotifyPlaylist) => ({
         id: playlist.id,
         name: playlist.name,
         images: playlist.images,
         tracks: { total: playlist.tracks.total }
-      }))
+      }));
+
+    // Add a placeholder for Spotify Daylist (we'll need to get this separately)
+    const daylistPlaylist = {
+      id: 'daylist',
+      name: 'Spotify Daylist',
+      images: [{ url: 'https://i.scdn.co/image/ab67616d0000b273c5649add07ed3720be9d5526' }], // Default daylist image
+      tracks: { total: 0 }
+    };
+
+    return NextResponse.json({
+      playlists: [...filteredPlaylists, daylistPlaylist]
     });
   } catch (error) {
     console.error('Spotify playlists error:', error);

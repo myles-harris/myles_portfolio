@@ -155,9 +155,15 @@ function SpotifyWindow() {
   const [playlists, setPlaylists] = useState<SpotifyPlaylist[]>([]);
   const [currentTrack, setCurrentTrack] = useState<SpotifyTrack | null>(null);
   const [selectedPlaylist, setSelectedPlaylist] = useState<string | null>(null);
+  const [devices, setDevices] = useState<any[]>([]);
+  const [selectedDevice, setSelectedDevice] = useState<string | null>(null);
+  const [volume, setVolume] = useState(50);
+  const [isMuted, setIsMuted] = useState(false);
+  const [previousVolume, setPreviousVolume] = useState(50);
 
   useEffect(() => {
     fetchSpotifyData();
+    fetchDevices();
   }, []);
 
   const fetchSpotifyData = async () => {
@@ -188,6 +194,22 @@ function SpotifyWindow() {
     }
   };
 
+  const fetchDevices = async () => {
+    try {
+      const response = await fetch('/api/spotify/devices');
+      if (response.ok) {
+        const data = await response.json();
+        setDevices(data.devices || []);
+        // Auto-select the first available device
+        if (data.devices && data.devices.length > 0) {
+          setSelectedDevice(data.devices[0].id);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to fetch devices:', err);
+    }
+  };
+
   const handlePlayPause = async () => {
     try {
       const response = await fetch('/api/spotify/play-pause', {
@@ -210,7 +232,10 @@ function SpotifyWindow() {
       const response = await fetch('/api/spotify/play-playlist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ playlist_id: playlistId }),
+        body: JSON.stringify({ 
+          playlistId: playlistId,
+          deviceId: selectedDevice 
+        }),
       });
 
       if (response.ok) {
@@ -220,6 +245,43 @@ function SpotifyWindow() {
       }
     } catch (err) {
       console.error('Failed to play playlist:', err);
+    }
+  };
+
+  const handleVolumeChange = async (newVolume: number) => {
+    try {
+      setVolume(newVolume);
+      const response = await fetch('/api/spotify/volume', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          volume_percent: newVolume,
+          device_id: selectedDevice 
+        }),
+      });
+
+      if (!response.ok) {
+        console.error('Failed to set volume');
+      }
+    } catch (err) {
+      console.error('Failed to set volume:', err);
+    }
+  };
+
+  const handleMuteToggle = async () => {
+    try {
+      if (isMuted) {
+        // Unmute - restore previous volume
+        await handleVolumeChange(previousVolume);
+        setIsMuted(false);
+      } else {
+        // Mute - save current volume and set to 0
+        setPreviousVolume(volume);
+        await handleVolumeChange(0);
+        setIsMuted(true);
+      }
+    } catch (err) {
+      console.error('Failed to toggle mute:', err);
     }
   };
 
@@ -250,25 +312,86 @@ function SpotifyWindow() {
 
   return (
     <div className="h-full flex flex-col">
+      {/* Device Selection */}
+      <div className="mb-4">
+        <label className="block text-xs font-medium text-gray-700 mb-2">Playback Device</label>
+        <select
+          value={selectedDevice || ''}
+          onChange={(e) => setSelectedDevice(e.target.value)}
+          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+        >
+          {devices.map((device) => (
+            <option key={device.id} value={device.id}>
+              {device.name} {device.type === 'Computer' ? '(This Device)' : ''}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Volume Controls */}
+      <div className="mb-4 flex items-center space-x-3">
+        <button
+          onClick={handleMuteToggle}
+          className={`w-8 h-8 rounded-full flex items-center justify-center text-sm transition-colors ${
+            isMuted 
+              ? 'bg-red-500 text-white' 
+              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+          }`}
+        >
+          {isMuted ? '🔇' : '🔊'}
+        </button>
+        <div className="flex-1">
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={isMuted ? 0 : volume}
+            onChange={(e) => handleVolumeChange(parseInt(e.target.value))}
+            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+          />
+        </div>
+        <span className="text-xs text-gray-600 w-8 text-center">
+          {isMuted ? 0 : volume}%
+        </span>
+      </div>
+
+      {/* Playlists */}
       <div className="mb-6">
-        <h4 className="text-gray-900 font-semibold mb-4 text-xl">Music</h4>
-        <div className="grid grid-cols-2 gap-3">
-          {playlists.slice(0, 4).map((playlist) => (
+        <h4 className="text-gray-900 font-semibold mb-4 text-xl">My Playlists</h4>
+        <div className="grid grid-cols-1 gap-3">
+          {playlists.map((playlist) => (
             <button
               key={playlist.id}
               onClick={() => handlePlaylistSelect(playlist.id)}
-              className={`px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 border ${
+              className={`px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 border text-left ${
                 selectedPlaylist === playlist.id
                   ? 'bg-green-100 text-green-700 border-green-200'
                   : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border-gray-200'
               }`}
             >
-              {playlist.name}
+              <div className="flex items-center space-x-3">
+                {playlist.images[0] && (
+                  <Image
+                    src={playlist.images[0].url}
+                    alt={playlist.name}
+                    width={32}
+                    height={32}
+                    className="rounded-md"
+                    unoptimized
+                  />
+                )}
+                <div className="flex-1">
+                  <div className="font-medium">{playlist.name}</div>
+                  <div className="text-xs text-gray-500">{playlist.tracks.total} tracks</div>
+                </div>
+                <div className="text-xs text-gray-400">🔀</div>
+              </div>
             </button>
           ))}
         </div>
       </div>
       
+      {/* Current Track */}
       <div className="flex-1 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 flex flex-col justify-center items-center border border-green-200">
         <div className="text-center">
           {currentTrack ? (
