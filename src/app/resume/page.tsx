@@ -15,7 +15,7 @@ export default function Resume() {
       <NavLogo />
       <main className="w-full text-[#3a2c1a] font-serif">
         {/* Resume Section */}
-        <section className="pt-32">
+        <section className="pt-32 h-screen overflow-hidden">
           {/* Toggle Switch */}
           <div className="fixed left-1/2 -translate-x-1/2 top-8 z-10">
             <button
@@ -53,13 +53,13 @@ export default function Resume() {
           </div>
 
           {/* Resume Display */}
-          <div className="relative min-h-[1200px] overflow-hidden">
+          <div className="relative h-screen overflow-hidden flex flex-col" style={{ height: '100vh' }}>
             {isStyledView ? (
-              <div key="styled-view" className="absolute inset-0">
+              <div key="styled-view" className="h-full flex flex-col">
                 {/* Timeline Container */}
-                <div className="relative h-[50vh] pt-12">
+                <div className="relative pt-4" style={{ height: 'fit-content' }}>
                   {/* Timeline Navigation Hint */}
-                  <div className="absolute right-8 bottom-4 flex items-center gap-4 text-[#3a2c1a] z-20">
+                  <div className="absolute right-8 top-4 flex items-center gap-4 text-[#3a2c1a] z-20">
                     <span className="text-base font-semibold tracking-wider">Scroll Right for History</span>
                     <svg className="w-6 h-6 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -67,8 +67,12 @@ export default function Resume() {
                   </div>
 
                   {/* Main Timeline Scroll Area */}
-                  <div className="h-full overflow-x-auto overflow-y-hidden">
-                    <div className="inline-flex gap-8 pl-16 pr-8 pt-4 items-start" style={{ minWidth: "max-content" }}>
+                  <div className="h-full overflow-x-auto overflow-y-hidden custom-scrollbar" onWheel={(e) => {
+                    e.preventDefault();
+                    const container = e.currentTarget;
+                    container.scrollLeft += e.deltaY;
+                  }}>
+                    <div className="inline-flex gap-8 pl-16 pr-8 pt-4 pb-2 items-start" style={{ minWidth: "max-content" }}>
                       {/* Experience Section */}
                       <div className="relative flex gap-8 items-start">
                         {/* Section Label */}
@@ -79,21 +83,18 @@ export default function Resume() {
                         </div>
 
                         {/* Dell Technologies - Software Engineer II */}
-                        <div className="relative flex flex-col items-start gap-4 bg-white rounded-xl p-8 max-w-xl shadow-lg ml-16">
+                        <div className="relative flex flex-col items-start gap-4 bg-white rounded-xl p-8 w-96 h-[28rem] shadow-lg ml-16">
                           <div className="absolute -top-4 left-8 bg-[#f6bf10] text-[#3a2c1a] px-4 py-1 rounded-full text-sm font-medium">
                             Sept 2023 - Present
                           </div>
                           <h3 className="text-2xl font-semibold text-[#3a2c1a]">Dell Technologies</h3>
-                          <p className="text-lg text-[#3a2c1a]/80">Software Engineer II</p>
-                          <div className="space-y-3 text-[#3a2c1a] mt-3">
-                            <p>• Real‑time incident‑correlation microservice (Java, Python, Kafka)</p>
-                            <p>• 2B+ events/day processing with 900% MTTR improvement</p>
-                            <p>• In-house performance monitoring platform with JMeter</p>
-                            <p>• 75% reduction in test cycles</p>
-                            <p>• High throughput REST APIs with &gt;90% test coverage</p>
+                          <p className="text-lg text-[#3a2c1a]/80">Software Engineer II | <span className="text-sm">Acq. Moogsoft</span></p>
+                          <div className="space-y-2 text-[#3a2c1a] mt-3">
+                            <p>• Real-time incident-correlation microservice (Java, Python, Kafka) ingesting 2B+ events/day, cut MTTR by 900%</p>
+                            <p>• High-throughput REST APIs with caching, connection pooling, async processing; &gt;90% test coverage</p>
                           </div>
                           <div className="flex flex-wrap gap-2 mt-4">
-                            {["Java", "Python", "Kafka", "REST APIs", "Microservices"].map((tech) => (
+                            {["Java", "Python", "Kafka", "REST APIs", "Microservices", "Caching"].map((tech) => (
                               <span key={tech} className="bg-[#e2c48d] px-3 py-1 rounded-full text-sm text-[#3a2c1a]">
                                 {tech}
                               </span>
@@ -101,44 +102,19 @@ export default function Resume() {
                           </div>
                         </div>
 
-                        {/* Dell Technologies - SQA Engineer II */}
-                        <div className="relative flex flex-col items-start gap-4 bg-white rounded-xl p-8 max-w-xl shadow-lg">
+                        {/* Moogsoft - SQA Engineer II */}
+                        <div className="relative flex flex-col items-start gap-4 bg-white rounded-xl p-8 w-96 h-[28rem] shadow-lg">
                           <div className="absolute -top-4 left-8 bg-[#e2c48d] text-[#3a2c1a] px-4 py-1 rounded-full text-sm font-medium">
                             Nov 2022 - Sept 2023
                           </div>
-                          <h3 className="text-2xl font-semibold text-[#3a2c1a]">Dell Technologies</h3>
+                          <h3 className="text-2xl font-semibold text-[#3a2c1a]">Moogsoft</h3>
                           <p className="text-lg text-[#3a2c1a]/80">Software Quality Assurance Engineer II</p>
-                          <p className="text-sm text-[#3a2c1a]/60 italic">(Acquired from Moogsoft)</p>
-                          <div className="space-y-3 text-[#3a2c1a] mt-3">
-                            <p>• Designed/Implemented automated testing frameworks</p>
-                            <p>• Enterprise microservices testing and quality assurance</p>
-                            <p>• End-to-end test automation development</p>
-                            <p>• Performance testing and monitoring</p>
+                          <div className="space-y-2 text-[#3a2c1a] mt-3">
+                            <p>• In-house performance monitoring platform (JMeter) reducing manual QA cycles by 75%</p>
+                            <p>• Automated testing frameworks for microservices, rapid deployments, AWS Lambda integration</p>
                           </div>
                           <div className="flex flex-wrap gap-2 mt-4">
-                            {["Test Automation", "JMeter", "CI/CD", "Quality Assurance"].map((tech) => (
-                              <span key={tech} className="bg-[#e2c48d] px-3 py-1 rounded-full text-sm text-[#3a2c1a]">
-                                {tech}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Northrop Grumman - Embedded Software Engineer */}
-                        <div className="relative flex flex-col items-start gap-4 bg-white rounded-xl p-8 max-w-xl shadow-lg">
-                          <div className="absolute -top-4 left-8 bg-[#e2c48d] text-[#3a2c1a] px-4 py-1 rounded-full text-sm font-medium">
-                            Oct 2021 - Oct 2022
-                          </div>
-                          <h3 className="text-2xl font-semibold text-[#3a2c1a]">Northrop Grumman</h3>
-                          <p className="text-lg text-[#3a2c1a]/80">Embedded Software Engineer</p>
-                          <div className="space-y-3 text-[#3a2c1a] mt-3">
-                            <p>• Led 6-12 engineer team for DO-178C compliance</p>
-                            <p>• GPS/Inertial Navigation System development</p>
-                            <p>• Scrum-of-Scrums leader for 80+ engineers</p>
-                            <p>• Drove timeline forecasts and priority management</p>
-                          </div>
-                          <div className="flex flex-wrap gap-2 mt-4">
-                            {["DO-178C", "Embedded Systems", "Scrum", "Team Leadership"].map((tech) => (
+                            {["JMeter", "AWS Lambda", "Test Automation", "Microservices", "Performance Testing"].map((tech) => (
                               <span key={tech} className="bg-[#e2c48d] px-3 py-1 rounded-full text-sm text-[#3a2c1a]">
                                 {tech}
                               </span>
@@ -147,42 +123,19 @@ export default function Resume() {
                         </div>
 
                         {/* Northrop Grumman - Software Engineer */}
-                        <div className="relative flex flex-col items-start gap-4 bg-white rounded-xl p-8 max-w-xl shadow-lg">
+                        <div className="relative flex flex-col items-start gap-4 bg-white rounded-xl p-8 w-96 h-[28rem] shadow-lg">
                           <div className="absolute -top-4 left-8 bg-[#e2c48d] text-[#3a2c1a] px-4 py-1 rounded-full text-sm font-medium">
-                            Sept 2020 - Oct 2021
+                            July 2019 - Oct 2022
                           </div>
                           <h3 className="text-2xl font-semibold text-[#3a2c1a]">Northrop Grumman</h3>
-                          <p className="text-lg text-[#3a2c1a]/80">Software Engineer</p>
-                          <div className="space-y-3 text-[#3a2c1a] mt-3">
-                            <p>• JavaFX UI & C++ backend for defense systems</p>
-                            <p>• Real-time classification decisions</p>
-                            <p>• 35% reduction in planning time</p>
-                            <p>• Satellite defense application development</p>
+                          <p className="text-lg text-[#3a2c1a]/80">Software Engineer | <span className="text-sm">Top 30% performer</span></p>
+                          <div className="space-y-2 text-[#3a2c1a] mt-3">
+                            <p>• GPS/Inertial Navigation Systems, DO-178C standards, sensor/radar libraries (C++) as Scrum Master</p>
+                            <p>• Scrum-of-Scrums for 8 teams (~80 engineers), backlog analytics, sprint velocity</p>
+                            <p>• JavaFX UI + C++ backend for satellite defense, 35% reduction in planning time</p>
                           </div>
                           <div className="flex flex-wrap gap-2 mt-4">
-                            {["C++", "JavaFX", "UI Development", "Defense Systems"].map((tech) => (
-                              <span key={tech} className="bg-[#e2c48d] px-3 py-1 rounded-full text-sm text-[#3a2c1a]">
-                                {tech}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Northrop Grumman - Associate Mechanical Engineer */}
-                        <div className="relative flex flex-col items-start gap-4 bg-white rounded-xl p-8 max-w-xl shadow-lg">
-                          <div className="absolute -top-4 left-8 bg-[#e2c48d] text-[#3a2c1a] px-4 py-1 rounded-full text-sm font-medium">
-                            July 2019 - Sept 2020
-                          </div>
-                          <h3 className="text-2xl font-semibold text-[#3a2c1a]">Northrop Grumman</h3>
-                          <p className="text-lg text-[#3a2c1a]/80">Associate Mechanical Engineer</p>
-                          <div className="space-y-3 text-[#3a2c1a] mt-3">
-                            <p>• Flight-qualified assemblies using FEA & 3D modeling</p>
-                            <p>• 2x modernized parts library</p>
-                            <p>• Met MIL-STD specifications</p>
-                            <p>• Electro-mechanical systems design</p>
-                          </div>
-                          <div className="flex flex-wrap gap-2 mt-4">
-                            {["FEA", "3D Modeling", "MIL-STD", "Mechanical Design"].map((tech) => (
+                            {["C++", "JavaFX", "DO-178C", "Scrum", "Team Leadership", "Defense Systems"].map((tech) => (
                               <span key={tech} className="bg-[#e2c48d] px-3 py-1 rounded-full text-sm text-[#3a2c1a]">
                                 {tech}
                               </span>
@@ -204,22 +157,41 @@ export default function Resume() {
                             </h2>
                           </div>
 
+                          {/* Orbit Video Conferencing App */}
+                          <div className="relative flex flex-col items-start gap-4 bg-white rounded-xl p-8 w-96 h-[28rem] shadow-lg ml-8">
+                            <div className="absolute -top-4 left-8 bg-[#e2c48d] text-[#3a2c1a] px-4 py-1 rounded-full text-sm font-medium">
+                              Project
+                            </div>
+                            <h3 className="text-2xl font-semibold text-[#3a2c1a]">Orbit — Video Conferencing App</h3>
+                            <p className="text-lg text-[#3a2c1a]/80">Personal Project | 2025</p>
+                            <div className="space-y-2 text-[#3a2c1a] mt-3">
+                              <p>• Scalable group video-calling platform using PERN stack</p>
+                              <p>• Stateless Node.js APIs, optimized PostgreSQL schemas, 100+ concurrent calls</p>
+                              <p>• Migrated from AWS EventBridge/Lambda to Twilio, 20% faster feature iteration</p>
+                            </div>
+                            <div className="flex flex-wrap gap-2 mt-4">
+                              {["PostgreSQL", "Express.js", "React", "Node.js", "Twilio", "AWS", "Cursor"].map((tech) => (
+                                <span key={tech} className="bg-[#e2c48d] px-3 py-1 rounded-full text-sm text-[#3a2c1a]">
+                                  {tech}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+
                           {/* ML Stock Screener Project */}
-                          <div className="relative flex flex-col items-start gap-4 bg-white rounded-xl p-8 max-w-xl shadow-lg ml-8">
+                          <div className="relative flex flex-col items-start gap-4 bg-white rounded-xl p-8 w-96 h-[28rem] shadow-lg">
                             <div className="absolute -top-4 left-8 bg-[#e2c48d] text-[#3a2c1a] px-4 py-1 rounded-full text-sm font-medium">
                               Project
                             </div>
                             <h3 className="text-2xl font-semibold text-[#3a2c1a]">ML Stock Screener</h3>
                             <p className="text-lg text-[#3a2c1a]/80">Personal Project</p>
-                            <p className="text-sm text-[#3a2c1a]/60">2023</p>
-                            <div className="space-y-3 text-[#3a2c1a] mt-3">
-                              <p>• Gradient‑Boosting & LSTM models with 0.92 F1 score</p>
-                              <p>• 10 years of S&P 500 data analysis</p>
-                              <p>• K-Means Clustering implementation</p>
-                              <p>• 1k+ weekly queries served</p>
+                            <div className="space-y-2 text-[#3a2c1a] mt-3">
+                              <p>• Built scalable pipeline for ingesting, processing, and analyzing 10+ years of S&P 500 data</p>
+                              <p>• Used LSTM and K-Means Clustering; achieved 0.92 F1 score</p>
+                              <p>• Served 1K+ weekly queries</p>
                             </div>
                             <div className="flex flex-wrap gap-2 mt-4">
-                              {["Python", "TensorFlow", "Scikit-learn", "Jupyter", "Machine Learning"].map((tech) => (
+                              {["Scikit-Learn", "TensorFlow", "Python"].map((tech) => (
                                 <span key={tech} className="bg-[#e2c48d] px-3 py-1 rounded-full text-sm text-[#3a2c1a]">
                                   {tech}
                                 </span>
@@ -228,14 +200,13 @@ export default function Resume() {
                           </div>
 
                           {/* Electric Prosthetic Arm Project */}
-                          <div className="relative flex flex-col items-start gap-4 bg-white rounded-xl p-8 max-w-xl shadow-lg">
+                          <div className="relative flex flex-col items-start gap-4 bg-white rounded-xl p-8 w-96 h-[28rem] shadow-lg">
                             <div className="absolute -top-4 left-8 bg-[#e2c48d] text-[#3a2c1a] px-4 py-1 rounded-full text-sm font-medium">
                               Project
                             </div>
                             <h3 className="text-2xl font-semibold text-[#3a2c1a]">Electric Prosthetic Arm</h3>
-                            <p className="text-lg text-[#3a2c1a]/80">Mercer Engineering Expo</p>
-                            <p className="text-sm text-[#3a2c1a]/60">2019</p>
-                            <div className="space-y-3 text-[#3a2c1a] mt-3">
+                            <p className="text-lg text-[#3a2c1a]/80">Mercer Engineering Expo | 2019</p>
+                            <div className="space-y-2 text-[#3a2c1a] mt-3">
                               <p>• EMG‑controlled prosthetic prototype</p>
                               <p>• 98% cost reduction vs commercial options</p>
                               <p>• Led interdisciplinary team</p>
@@ -256,7 +227,7 @@ export default function Resume() {
                 </div>
 
                 {/* Sticky Sections Container */}
-                <div className="sticky top-0 mt-4 px-8">
+                <div className="flex-1 px-8 pt-1 pb-1">
                   <style jsx>{`
                     .adaptive-text {
                       mix-blend-mode: difference;
@@ -271,86 +242,106 @@ export default function Resume() {
                       background: rgba(226, 196, 141, 0.8);
                     }
                   `}</style>
-                  <div className="bg-[#3a2c1a]/5 backdrop-blur-sm rounded-xl p-6">
-                    <div className="grid grid-cols-3 gap-16">
+                  <div className="bg-[#3a2c1a]/5 backdrop-blur-sm rounded-xl p-1">
+                    <div className="grid grid-cols-3 gap-6 h-full">
                       {/* Technical Skills Section */}
-                      <div className="px-4 adaptive-text-container">
+                      <div className="px-4 adaptive-text-container col-span-2">
                         <h2 className="text-xl font-semibold adaptive-text mb-4">Technical Skills</h2>
-                        <div className="space-y-4">
-                          <div>
-                            <h3 className="text-base font-semibold adaptive-text mb-2">Languages</h3>
-                            <div className="flex flex-wrap gap-1.5">
-                              {["Java", "C / C++", "Python", "HTML / CSS"].map((skill) => (
-                                <span key={skill} className="adaptive-tag px-2 py-0.5 rounded-full text-sm">
-                                  {skill}
-                                </span>
-                              ))}
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <div>
+                              <h3 className="text-base font-semibold adaptive-text mb-2">Languages</h3>
+                              <div className="flex flex-wrap gap-1.5">
+                                {["Java", "Python", "C/C++", "SQL (PostgreSQL)", "JavaScript", "HTML/CSS"].map((skill) => (
+                                  <span key={skill} className="adaptive-tag px-2 py-0.5 rounded-full text-sm">
+                                    {skill}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                            <div>
+                              <h3 className="text-base font-semibold adaptive-text mb-2">Frameworks</h3>
+                              <div className="flex flex-wrap gap-1.5">
+                                {["Node.js", "Express.js", "React", "Angular", "JUnit", "TestNG", "Guice", "Spring Boot"].map((skill) => (
+                                  <span key={skill} className="adaptive-tag px-2 py-0.5 rounded-full text-sm">
+                                    {skill}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                            <div>
+                              <h3 className="text-base font-semibold adaptive-text mb-2">Developer Tools</h3>
+                              <div className="flex flex-wrap gap-1.5">
+                                {["Git", "Docker", "AWS", "Jenkins", "Kafka", "Grafana", "Maven", "VS Code", "PyCharm", "IntelliJ", "Eclipse", "Redis"].map((skill) => (
+                                  <span key={skill} className="adaptive-tag px-2 py-0.5 rounded-full text-sm">
+                                    {skill}
+                                  </span>
+                                ))}
+                              </div>
                             </div>
                           </div>
-                          <div>
-                            <h3 className="text-base font-semibold adaptive-text mb-2">Frameworks</h3>
-                            <div className="flex flex-wrap gap-1.5">
-                              {["Node.js", "React", "Express.js", "Scikit-Learn", "TensorFlow", "NumPy / Pandas"].map((skill) => (
-                                <span key={skill} className="adaptive-tag px-2 py-0.5 rounded-full text-sm">
-                                  {skill}
-                                </span>
-                              ))}
+                          <div className="space-y-2">
+                            <div>
+                              <h3 className="text-base font-semibold adaptive-text mb-2">LLM-Assisted Development</h3>
+                              <div className="flex flex-wrap gap-1.5">
+                                {["Cursor", "ChatGPT", "GitHub Copilot", "Windsurf"].map((skill) => (
+                                  <span key={skill} className="adaptive-tag px-2 py-0.5 rounded-full text-sm">
+                                    {skill}
+                                  </span>
+                                ))}
+                              </div>
                             </div>
-                          </div>
-                          <div>
-                            <h3 className="text-base font-semibold adaptive-text mb-2">Tools</h3>
-                            <div className="flex flex-wrap gap-1.5">
-                              {["PostgreSQL", "AWS", "Jenkins / Maven", "Atlassian", "Git", "GitHub"].map((skill) => (
-                                <span key={skill} className="adaptive-tag px-2 py-0.5 rounded-full text-sm">
-                                  {skill}
-                                </span>
-                              ))}
+                            <div>
+                              <h3 className="text-base font-semibold adaptive-text mb-2">Libraries</h3>
+                              <div className="flex flex-wrap gap-1.5">
+                                {["Pandas", "NumPy", "Matplotlib", "SciPy", "Scikit-Learn"].map((skill) => (
+                                  <span key={skill} className="adaptive-tag px-2 py-0.5 rounded-full text-sm">
+                                    {skill}
+                                  </span>
+                                ))}
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
 
-                      {/* Professional Involvement Section */}
-                      <div className="px-4 border-x-2 border-[#e2c48d]/40 adaptive-text-container">
-                        <h2 className="text-xl font-semibold adaptive-text mb-4">Professional Involvement</h2>
-                        <div className="space-y-4">
-                          <div>
-                            <div className="flex justify-between items-baseline">
-                              <h3 className="text-base font-semibold adaptive-text">National Society of Black Engineers</h3>
-                              <span className="text-xs adaptive-text opacity-80">2023 - Present</span>
-                            </div>
-                            <p className="text-sm adaptive-text opacity-80">Atlanta Professionals Chapter</p>
-                          </div>
-                          <div>
-                            <div className="flex justify-between items-baseline">
-                              <h3 className="text-base font-semibold adaptive-text">NGC Mentoring Program</h3>
-                              <span className="text-xs adaptive-text opacity-80">2021 - 2022</span>
-                            </div>
-                            <p className="text-sm adaptive-text opacity-80">Technical Professional Program Mentee</p>
-                          </div>
-                          <div>
-                            <div className="flex justify-between items-baseline">
-                              <h3 className="text-base font-semibold adaptive-text">NGC African American Task Group</h3>
-                              <span className="text-xs adaptive-text opacity-80">2019 - 2022</span>
-                            </div>
-                            <p className="text-sm adaptive-text opacity-80">Communications Lead / Vice-Chair</p>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Education Section */}
+                      {/* Right Column - Education and Professional Involvement */}
                       <div className="px-4 adaptive-text-container">
-                        <h2 className="text-xl font-semibold adaptive-text mb-4">Education</h2>
-                        <div className="space-y-4">
-                          <div>
-                            <h3 className="text-base font-semibold adaptive-text">Master of Science</h3>
-                            <p className="text-sm adaptive-text">Software Engineering</p>
-                            <p className="text-sm adaptive-text opacity-80">Mercer University</p>
+                        {/* Education Section */}
+                        <div className="mb-6">
+                          <h2 className="text-xl font-semibold adaptive-text mb-4">Education</h2>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <h3 className="text-base font-semibold adaptive-text">Bachelor of Science</h3>
+                              <p className="text-sm adaptive-text">Mechanical Engineering</p>
+                              <p className="text-sm adaptive-text opacity-80">Mercer University</p>
+                            </div>
+                            <div>
+                              <h3 className="text-base font-semibold adaptive-text">Master of Science</h3>
+                              <p className="text-sm adaptive-text">Software Engineering</p>
+                              <p className="text-sm adaptive-text opacity-80">Mercer University</p>
+                            </div>
                           </div>
-                          <div>
-                            <h3 className="text-base font-semibold adaptive-text">Bachelor of Science</h3>
-                            <p className="text-sm adaptive-text">Mechanical Engineering</p>
-                            <p className="text-sm adaptive-text opacity-80">Mercer University</p>
+                        </div>
+
+                        {/* Professional Involvement Section */}
+                        <div>
+                          <h2 className="text-xl font-semibold adaptive-text mb-4">Professional Involvement</h2>
+                          <div className="space-y-2">
+                            <div>
+                              <div className="flex justify-between items-baseline">
+                                <h3 className="text-base font-semibold adaptive-text">National Society of Black Engineers</h3>
+                                <span className="text-xs adaptive-text opacity-80">2023 - Present</span>
+                              </div>
+                              <p className="text-sm adaptive-text opacity-80">Atlanta Professionals Chapter</p>
+                            </div>
+                            <div>
+                              <div className="flex justify-between items-baseline">
+                                <h3 className="text-base font-semibold adaptive-text">NGC African American Task Group</h3>
+                                <span className="text-xs adaptive-text opacity-80">2019 - 2022</span>
+                              </div>
+                              <p className="text-sm adaptive-text opacity-80">Communications Lead / Vice-Chair</p>
+                            </div>
                           </div>
                         </div>
                       </div>
