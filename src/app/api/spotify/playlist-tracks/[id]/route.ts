@@ -3,9 +3,10 @@ import { spotifyFetch } from '@/lib/spotify';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  props: { params: Promise<{ id: string }> }
 ) {
   try {
+    const params = await props.params;
     const playlistId = params.id;
 
     const response = await spotifyFetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`);
