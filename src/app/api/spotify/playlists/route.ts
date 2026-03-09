@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { spotifyFetch } from '@/lib/spotify';
 
 interface SpotifyPlaylist {
   id: string;
@@ -7,32 +8,12 @@ interface SpotifyPlaylist {
   tracks: { total: number };
 }
 
-async function getValidAccessToken() {
-  // Use the new access token from the successful OAuth flow
-  const accessToken = process.env.SPOTIFY_ACCESS_TOKEN;
-  if (!accessToken) {
-    throw new Error('No Spotify access token available');
-  }
-  return accessToken;
-}
-
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const accessToken = await getValidAccessToken();
-    
     // Get all playlists first
-    const response = await fetch('https://api.spotify.com/v1/me/playlists?limit=50', {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-    });
+    const response = await spotifyFetch('https://api.spotify.com/v1/me/playlists?limit=50');
 
     if (!response.ok) {
-      if (response.status === 401) {
-        // Token expired, try to refresh
-        throw new Error('Access token expired');
-      }
       throw new Error(`Spotify API error: ${response.status}`);
     }
 

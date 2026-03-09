@@ -1,6 +1,5 @@
 "use client";
-import { useState, useEffect, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useState, useEffect } from 'react';
 
 interface TokenResponse {
   success: boolean;
@@ -10,59 +9,61 @@ interface TokenResponse {
   token_type: string;
 }
 
-function SpotifyAuthContent() {
+export default function SpotifyAuth() {
   const [authUrl, setAuthUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [tokens, setTokens] = useState<TokenResponse | null>(null);
-  const searchParams = useSearchParams();
 
   useEffect(() => {
-    const code = searchParams.get('code');
-    if (code) {
-      handleCallback(code);
+    // Check URL parameters on mount
+    const urlParams = new URLSearchParams(window.location.search);
+    const success = urlParams.get('success');
+
+    if (success === 'true') {
+      // Tokens have been saved on the server
+      setTokens({
+        success: true,
+        access_token: 'stored_on_server',
+        refresh_token: 'stored_on_server',
+        expires_in: 3600,
+        token_type: 'Bearer'
+      });
+      setLoading(false);
     } else {
       getAuthUrl();
     }
-  }, [searchParams]);
+  }, []);
+
+  // Add a timeout to prevent infinite loading
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (loading && !authUrl && !error) {
+        setError('Timeout loading authorization. Please refresh the page.');
+        setLoading(false);
+      }
+    }, 5000);
+    return () => clearTimeout(timeout);
+  }, [loading, authUrl, error]);
 
   const getAuthUrl = async () => {
     try {
+      console.log('Fetching Spotify auth URL...');
       setLoading(true);
       const response = await fetch('/api/spotify/auth');
       const data = await response.json();
-      
+      console.log('Auth response:', data);
+
       if (response.ok) {
         setAuthUrl(data.authUrl);
+        console.log('Auth URL set:', data.authUrl);
       } else {
+        console.error('Auth error:', data.error);
         setError(data.error || 'Failed to get authorization URL');
       }
-    } catch {
+    } catch (err) {
+      console.error('Fetch error:', err);
       setError('Failed to get authorization URL');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleCallback = async (code: string) => {
-    try {
-      setLoading(true);
-      const response = await fetch(`/api/spotify/callback?code=${code}`);
-      const data = await response.json();
-      
-      if (response.ok && data.success) {
-        // Store tokens in localStorage (for development/demo purposes)
-        localStorage.setItem('spotify_access_token', data.access_token);
-        localStorage.setItem('spotify_refresh_token', data.refresh_token);
-        localStorage.setItem('spotify_expires_at', String(Date.now() + data.expires_in * 1000));
-        
-        setTokens(data);
-        setError(null);
-      } else {
-        setError(data.error || 'Authorization failed');
-      }
-    } catch {
-      setError('Failed to complete authorization');
     } finally {
       setLoading(false);
     }
@@ -94,7 +95,7 @@ function SpotifyAuthContent() {
               <span className="text-white text-2xl">✓</span>
             </div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Success!</h2>
-            <p className="text-gray-600 mb-6">Your Spotify account has been connected successfully.</p>
+            <p className="text-gray-600 mb-6">Your Spotify account has been connected successfully. Tokens are securely stored on the server.</p>
             <button
               onClick={() => window.location.href = '/misc'}
               className="w-full bg-green-500 text-white py-3 px-6 rounded-xl font-medium hover:bg-green-600 transition-colors"
@@ -147,20 +148,5 @@ function SpotifyAuthContent() {
         </div>
       </div>
     </div>
-  );
-}
-
-export default function SpotifyAuth() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-gray-900">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto mb-4"></div>
-          <p className="text-white text-lg">Loading...</p>
-        </div>
-      </div>
-    }>
-      <SpotifyAuthContent />
-    </Suspense>
   );
 } 

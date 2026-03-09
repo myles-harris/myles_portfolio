@@ -1,12 +1,20 @@
 import { NextResponse } from 'next/server';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const accessToken = process.env.SPOTIFY_ACCESS_TOKEN;
-    
+    // Try to get token from Authorization header first (from client localStorage)
+    let accessToken = null;
+    const authHeader = request.headers.get('Authorization');
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      accessToken = authHeader.substring(7);
+    } else {
+      // Fall back to environment variable
+      accessToken = process.env.SPOTIFY_ACCESS_TOKEN;
+    }
+
     if (!accessToken) {
       return NextResponse.json(
-        { error: 'No Spotify access token available' },
+        { error: 'No Spotify access token available. Please authorize at /spotify-auth' },
         { status: 500 }
       );
     }

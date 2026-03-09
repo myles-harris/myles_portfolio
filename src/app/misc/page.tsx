@@ -56,15 +56,25 @@ function DraggableWindow({ id, title, children, position, onMove }: WindowProps)
   // Different sizes for different windows
   const getWindowSize = () => {
     if (title.includes('Training')) {
-      return 'min-w-[350px] min-h-[250px]';
+      return 'w-[450px] h-[710px]';
     }
-    return 'min-w-[400px] min-h-[300px]';
+    if (id === 'spotify') {
+      return 'w-[450px] h-[500px]';
+    }
+    if (id === 'github') {
+      return 'w-[400px] h-[400px]';
+    }
+    return 'w-[400px] h-[300px]';
   };
+
+  const isSpotify = id === 'spotify';
 
   return (
     <div
       ref={windowRef}
-      className={`absolute bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-gray-200/50 cursor-move ${getWindowSize()}`}
+      className={`absolute rounded-2xl shadow-2xl border border-gray-200/50 cursor-move ${getWindowSize()} ${
+        isSpotify ? 'overflow-hidden' : 'bg-white/95 backdrop-blur-md'
+      }`}
       style={{
         left: position.x,
         top: position.y,
@@ -73,7 +83,7 @@ function DraggableWindow({ id, title, children, position, onMove }: WindowProps)
       }}
       onMouseDown={handleMouseDown}
     >
-      <div className="p-6 h-full overflow-auto">
+      <div className={isSpotify ? "h-full w-full" : "p-6 h-full overflow-auto"}>
         {children}
       </div>
     </div>
@@ -164,7 +174,10 @@ function SpotifyWindow() {
   const [error, setError] = useState<string | null>(null);
   const [playlists, setPlaylists] = useState<SpotifyPlaylist[]>([]);
   const [currentTrack, setCurrentTrack] = useState<SpotifyTrack | null>(null);
+  const [nextTrack, setNextTrack] = useState<SpotifyTrack | null>(null);
   const [selectedPlaylist, setSelectedPlaylist] = useState<string | null>(null);
+  const [viewingPlaylist, setViewingPlaylist] = useState<SpotifyPlaylist | null>(null);
+  const [playlistTracks, setPlaylistTracks] = useState<SpotifyTrack[]>([]);
   const [selectedDevice, setSelectedDevice] = useState<string | null>(null);
   const [volume, setVolume] = useState(50);
   const [isMuted, setIsMuted] = useState(false);
@@ -176,7 +189,7 @@ function SpotifyWindow() {
       setLoading(true);
       setError(null);
 
-      // Fetch playlists
+      // Fetch playlists (server will handle authentication)
       const playlistsResponse = await fetch('/api/spotify/playlists');
       if (!playlistsResponse.ok) {
         throw new Error('Failed to fetch playlists');
@@ -184,13 +197,12 @@ function SpotifyWindow() {
       const playlistsData = await playlistsResponse.json();
       setPlaylists(playlistsData.playlists || []);
 
-      // Auto-play disco playlist by default
-      const discoPlaylist = playlistsData.playlists?.find((p: SpotifyPlaylist) => 
+      // Auto-select disco playlist by default (view-only, no auto-play)
+      const discoPlaylist = playlistsData.playlists?.find((p: SpotifyPlaylist) =>
         p.name.toLowerCase().includes('disco')
       );
       if (discoPlaylist && !selectedPlaylist) {
         setSelectedPlaylist(discoPlaylist.id);
-        // Don't auto-play on initial load to avoid dependency issues
       }
 
       // Fetch current track
@@ -199,6 +211,13 @@ function SpotifyWindow() {
         const trackData = await currentTrackResponse.json();
         setCurrentTrack(trackData.track);
         setIsPlaying(trackData.is_playing);
+      }
+
+      // Fetch queue to get next track
+      const queueResponse = await fetch('/api/spotify/queue');
+      if (queueResponse.ok) {
+        const queueData = await queueResponse.json();
+        setNextTrack(queueData.next_track);
       }
 
       setLoading(false);
@@ -236,44 +255,25 @@ function SpotifyWindow() {
     }
   }, []);
 
-  const handlePlaylistSelect = useCallback(async (playlistId: string) => {
+  const handleViewPlaylist = useCallback(async (playlist: SpotifyPlaylist) => {
     try {
-      setSelectedPlaylist(playlistId);
-      const response = await fetch('/api/spotify/play-playlist', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          playlistId: playlistId,
-          deviceId: selectedDevice 
-        }),
-      });
-
+      const response = await fetch(`/api/spotify/playlist-tracks/${playlist.id}`);
       if (response.ok) {
-        setIsPlaying(true);
-        // Refresh current track after a short delay
-        setTimeout(fetchSpotifyData, 1000);
+        const data = await response.json();
+        setPlaylistTracks(data.tracks);
+        setViewingPlaylist(playlist);
+        setShowPlaylists(false);
       }
     } catch (err) {
-      console.error('Failed to play playlist:', err);
+      console.error('Failed to fetch playlist tracks:', err);
     }
-  }, [selectedDevice, fetchSpotifyData]);
+  }, []);
 
   useEffect(() => {
     fetchSpotifyData();
     fetchDevices();
   }, [fetchSpotifyData, fetchDevices]);
 
-  // Auto-play disco playlist after initial load
-  useEffect(() => {
-    if (playlists.length > 0 && !selectedPlaylist) {
-      const discoPlaylist = playlists.find((p: SpotifyPlaylist) => 
-        p.name.toLowerCase().includes('disco')
-      );
-      if (discoPlaylist) {
-        handlePlaylistSelect(discoPlaylist.id);
-      }
-    }
-  }, [playlists, selectedPlaylist, handlePlaylistSelect]);
 
   const handlePlayPause = async () => {
     try {
@@ -353,6 +353,74 @@ function SpotifyWindow() {
     );
   }
 
+  // Playlist view
+  if (viewingPlaylist) {
+    return (
+      <div className="h-full relative overflow-hidden bg-gradient-to-br from-gray-900 via-black to-gray-900">
+        {/* Back button */}
+        <button
+          onClick={() => setViewingPlaylist(null)}
+          className="absolute top-4 left-4 z-10 w-10 h-10 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-black/70 transition-colors"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+
+        {/* Playlist header */}
+        <div className="p-6 pb-4">
+          <div className="flex items-center space-x-4 mt-8">
+            {viewingPlaylist.images[0] && (
+              <Image
+                src={viewingPlaylist.images[0].url}
+                alt={viewingPlaylist.name}
+                width={80}
+                height={80}
+                className="rounded-lg shadow-xl"
+                unoptimized
+              />
+            )}
+            <div>
+              <h2 className="text-white font-bold text-2xl mb-1">{viewingPlaylist.name}</h2>
+              <p className="text-gray-400 text-sm">{playlistTracks.length} tracks</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Track list */}
+        <div className="px-6 pb-6 overflow-y-auto" style={{ maxHeight: 'calc(100% - 160px)' }}>
+          <div className="space-y-2">
+            {playlistTracks.map((track, index) => (
+              <div key={track.id || index} className="flex items-center space-x-3 p-2 rounded-md hover:bg-white/5 transition-colors">
+                <span className="text-gray-500 text-sm w-6">{index + 1}</span>
+                {track.album?.images[0] && (
+                  <Image
+                    src={track.album.images[0].url}
+                    alt={track.album.name}
+                    width={40}
+                    height={40}
+                    className="rounded"
+                    unoptimized
+                  />
+                )}
+                <div className="flex-1 min-w-0">
+                  <p className="text-white text-sm font-medium truncate">{track.name}</p>
+                  <p className="text-gray-400 text-xs truncate">
+                    {track.artists.map(a => a.name).join(', ')}
+                  </p>
+                </div>
+                <span className="text-gray-500 text-xs">
+                  {Math.floor(track.duration_ms / 60000)}:{String(Math.floor((track.duration_ms % 60000) / 1000)).padStart(2, '0')}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Currently playing view
   return (
     <div 
       className="h-full relative overflow-hidden"
@@ -382,44 +450,37 @@ function SpotifyWindow() {
         {/* Playlist Dropdown */}
         {showPlaylists && (
           <div className="absolute top-12 right-0 w-64 bg-black/90 backdrop-blur-sm rounded-lg p-3 shadow-2xl border border-white/10">
-            <h4 className="text-white font-semibold mb-3 text-sm uppercase tracking-wider">Your Playlists</h4>
-            <div className="space-y-2 max-h-48 overflow-y-auto">
+            <h4 className="text-white font-semibold mb-3 text-sm uppercase tracking-wider">My Playlists</h4>
+            <div className="space-y-2 max-h-64 overflow-y-auto">
               {playlists.map((playlist) => {
                 const name = playlist.name.toLowerCase();
-                
+
                 // Check for explicit daylist keywords
                 const hasDaylistKeyword = name.includes('daylist') || name.includes('daily');
-                
+
                 // Check for the dynamic daylist pattern: descriptive words + day + time
                 const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
                 const timePeriods = ['early morning', 'morning', 'afternoon', 'evening', 'night', 'late night'];
-                
+
                 // Check if the playlist name contains a day of the week
                 const hasDay = days.some(day => name.includes(day));
-                
+
                 // Check if the playlist name contains a time period
                 const hasTimePeriod = timePeriods.some(time => name.includes(time));
-                
+
                 // Also check for common daylist descriptive words
                 const descriptiveWords = ['cool', 'collaboration', 'vibes', 'mood', 'energy', 'flow', 'groove', 'chill', 'upbeat', 'relaxed', 'focused', 'creative', 'productive'];
                 const hasDescriptiveWord = descriptiveWords.some(word => name.includes(word));
-                
-                const isDaylist = hasDaylistKeyword || 
+
+                const isDaylist = hasDaylistKeyword ||
                                  (hasDay && hasTimePeriod) ||
                                  (hasDescriptiveWord && (hasDay || hasTimePeriod));
-                
+
                 return (
                   <button
                     key={playlist.id}
-                    onClick={() => {
-                      handlePlaylistSelect(playlist.id);
-                      setShowPlaylists(false);
-                    }}
-                    className={`w-full flex items-center space-x-3 p-2 rounded-md text-left transition-colors ${
-                      selectedPlaylist === playlist.id
-                        ? 'bg-green-600 text-white'
-                        : 'text-gray-300 hover:bg-white/10 hover:text-white'
-                    }`}
+                    onClick={() => handleViewPlaylist(playlist)}
+                    className="w-full flex items-center space-x-3 p-2 rounded-md text-gray-300 hover:bg-white/10 hover:text-white transition-colors cursor-pointer"
                   >
                     {playlist.images[0] && (
                       <Image
@@ -431,7 +492,7 @@ function SpotifyWindow() {
                         unoptimized
                       />
                     )}
-                    <div className="flex-1 min-w-0">
+                    <div className="flex-1 min-w-0 text-left">
                       <div className="flex items-center">
                         <span className="text-sm font-medium truncate">
                           {playlist.name}
@@ -456,97 +517,54 @@ function SpotifyWindow() {
 
       {/* Up Next Bubble */}
       <div className="absolute top-4 left-4 z-10">
-        <div className="bg-black/50 backdrop-blur-sm rounded-full px-3 py-1.5 text-white text-xs font-medium">
-          <div className="flex items-center space-x-2">
+        <div className="bg-black/50 backdrop-blur-sm rounded-2xl px-3 py-2 text-white text-xs font-medium">
+          <div className="flex items-center space-x-2 mb-2">
             <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
             <span>Up Next</span>
           </div>
-          <div className="text-xs text-gray-300 mt-1 truncate max-w-32">
-            {currentTrack ? currentTrack.name : 'No track'}
-          </div>
+          {nextTrack && (
+            <div className="flex items-center space-x-2">
+              <Image
+                src={nextTrack.album.images[0].url}
+                alt={nextTrack.album.name}
+                width={40}
+                height={40}
+                className="rounded-md"
+              />
+              <div className="text-xs text-gray-300 truncate max-w-32">
+                {nextTrack.name}
+              </div>
+            </div>
+          )}
+          {!nextTrack && (
+            <div className="text-xs text-gray-300 truncate max-w-32">
+              No upcoming track
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Bottom Controls Overlay */}
+      {/* Bottom Track Info Overlay */}
       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6">
-        <div className="flex items-center justify-between">
-          {/* Track Info */}
-          <div className="flex-1 min-w-0">
-            {currentTrack ? (
-              <>
-                <h3 className="text-white font-bold text-lg mb-1 truncate">
-                  {currentTrack.name}
-                </h3>
-                <p className="text-gray-300 text-sm truncate">
-                  {currentTrack.artists.map(a => a.name).join(', ')}
-                </p>
-              </>
-            ) : (
-              <>
-                <h3 className="text-white font-bold text-lg mb-1">No track playing</h3>
-                <p className="text-gray-300 text-sm">Select a playlist to start</p>
-              </>
-            )}
-          </div>
-
-          {/* Playback Controls */}
-          <div className="flex items-center space-x-4">
-            <button className="w-8 h-8 text-white hover:text-gray-300 transition-colors">
-              <svg className="w-full h-full" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
-              </svg>
-            </button>
-            <button
-              onClick={handlePlayPause}
-              className="w-12 h-12 bg-white text-black rounded-full flex items-center justify-center hover:scale-105 transition-transform shadow-lg"
-            >
-              {isPlaying ? (
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
-                </svg>
-              ) : (
-                <svg className="w-6 h-6 ml-1" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M8 5v14l11-7z"/>
-                </svg>
-              )}
-            </button>
-            <button className="w-8 h-8 text-white hover:text-gray-300 transition-colors">
-              <svg className="w-full h-full" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
-              </svg>
-            </button>
-          </div>
-
-          {/* Volume Control */}
-          <div className="flex items-center space-x-3">
-            <button
-              onClick={handleMuteToggle}
-              className="w-6 h-6 text-white hover:text-gray-300 transition-colors"
-            >
-              {isMuted ? (
-                <svg className="w-full h-full" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
-                </svg>
-              ) : (
-                <svg className="w-full h-full" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
-                </svg>
-              )}
-            </button>
-            <div className="w-20">
-              <input
-                type="range"
-                min="0"
-                max="100"
-                value={isMuted ? 0 : volume}
-                onChange={(e) => handleVolumeChange(parseInt(e.target.value))}
-                className="w-full h-1 bg-gray-600 rounded-full appearance-none cursor-pointer"
-                style={{
-                  background: `linear-gradient(to right, #1db954 0%, #1db954 ${isMuted ? 0 : volume}%, #4d4d4d ${isMuted ? 0 : volume}%, #4d4d4d 100%)`
-                }}
-              />
-            </div>
-          </div>
+        <div className="text-center">
+          {currentTrack ? (
+            <>
+              <h3 className="text-white font-bold text-xl mb-2">
+                {currentTrack.name}
+              </h3>
+              <p className="text-gray-300 text-base">
+                {currentTrack.artists.map(a => a.name).join(', ')}
+              </p>
+              <p className="text-gray-400 text-sm mt-1">
+                {currentTrack.album.name}
+              </p>
+            </>
+          ) : (
+            <>
+              <h3 className="text-white font-bold text-xl mb-2">No track playing</h3>
+              <p className="text-gray-300 text-base">Nothing currently playing</p>
+            </>
+          )}
         </div>
       </div>
     </div>
