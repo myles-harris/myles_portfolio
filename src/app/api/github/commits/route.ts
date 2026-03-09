@@ -33,7 +33,7 @@ export async function GET() {
     // First get user's repositories
     const reposResponse = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=5`, {
       headers: {
-        'Authorization': `token ${githubToken}`,
+        'Authorization': `Bearer ${githubToken}`,
         'Accept': 'application/vnd.github.v3+json',
       },
     });
@@ -48,7 +48,7 @@ export async function GET() {
     const commitsPromises = repos.map(async (repo: GitHubRepo) => {
       const commitsResponse = await fetch(`https://api.github.com/repos/${username}/${repo.name}/commits?per_page=3`, {
         headers: {
-          'Authorization': `token ${githubToken}`,
+          'Authorization': `Bearer ${githubToken}`,
           'Accept': 'application/vnd.github.v3+json',
         },
       });

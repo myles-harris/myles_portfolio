@@ -24,7 +24,7 @@ export async function GET() {
 
     const response = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=10`, {
       headers: {
-        'Authorization': `token ${githubToken}`,
+        'Authorization': `Bearer ${githubToken}`,
         'Accept': 'application/vnd.github.v3+json',
       },
     });
