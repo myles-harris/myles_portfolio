@@ -158,18 +158,7 @@ interface SpotifyPlaylist {
   tracks: { total: number };
 }
 
-interface SpotifyDevice {
-  id: string;
-  name: string;
-  type: string;
-  is_active: boolean;
-  is_private_session: boolean;
-  is_restricted: boolean;
-  volume_percent: number;
-}
-
 function SpotifyWindow() {
-  const [isPlaying, setIsPlaying] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [playlists, setPlaylists] = useState<SpotifyPlaylist[]>([]);
@@ -178,10 +167,6 @@ function SpotifyWindow() {
   const [selectedPlaylist, setSelectedPlaylist] = useState<string | null>(null);
   const [viewingPlaylist, setViewingPlaylist] = useState<SpotifyPlaylist | null>(null);
   const [playlistTracks, setPlaylistTracks] = useState<SpotifyTrack[]>([]);
-  const [selectedDevice, setSelectedDevice] = useState<string | null>(null);
-  const [volume, setVolume] = useState(50);
-  const [isMuted, setIsMuted] = useState(false);
-  const [previousVolume, setPreviousVolume] = useState(50);
   const [showPlaylists, setShowPlaylists] = useState(false);
 
   const fetchSpotifyData = useCallback(async () => {
@@ -210,7 +195,6 @@ function SpotifyWindow() {
       if (currentTrackResponse.ok) {
         const trackData = await currentTrackResponse.json();
         setCurrentTrack(trackData.track);
-        setIsPlaying(trackData.is_playing);
       }
 
       // Fetch queue to get next track
@@ -228,31 +212,8 @@ function SpotifyWindow() {
   }, [selectedPlaylist]);
 
   const fetchDevices = useCallback(async () => {
-    try {
-      const response = await fetch('/api/spotify/devices');
-      if (response.ok) {
-        const data = await response.json();
-        
-        // Auto-select the user's current device (Computer)
-        const currentDevice = data.devices?.find((device: SpotifyDevice) => 
-          device.type === 'Computer' || 
-          device.name.toLowerCase().includes('mac') ||
-          device.name.toLowerCase().includes('windows') ||
-          device.name.toLowerCase().includes('chrome') ||
-          device.name.toLowerCase().includes('safari') ||
-          device.name.toLowerCase().includes('firefox')
-        );
-        
-        if (currentDevice) {
-          setSelectedDevice(currentDevice.id);
-        } else if (data.devices && data.devices.length > 0) {
-          // Fallback to first available device
-          setSelectedDevice(data.devices[0].id);
-        }
-      }
-    } catch (err) {
-      console.error('Failed to fetch devices:', err);
-    }
+    // Devices are not needed for view-only mode
+    // This function is kept for potential future use
   }, []);
 
   const handleViewPlaylist = useCallback(async (playlist: SpotifyPlaylist) => {
@@ -273,60 +234,6 @@ function SpotifyWindow() {
     fetchSpotifyData();
     fetchDevices();
   }, [fetchSpotifyData, fetchDevices]);
-
-
-  const handlePlayPause = async () => {
-    try {
-      const response = await fetch('/api/spotify/play-pause', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: isPlaying ? 'pause' : 'play' }),
-      });
-
-      if (response.ok) {
-        setIsPlaying(!isPlaying);
-      }
-    } catch (err) {
-      console.error('Failed to toggle play/pause:', err);
-    }
-  };
-
-  const handleVolumeChange = async (newVolume: number) => {
-    try {
-      setVolume(newVolume);
-      const response = await fetch('/api/spotify/volume', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          volume_percent: newVolume,
-          device_id: selectedDevice 
-        }),
-      });
-
-      if (!response.ok) {
-        console.error('Failed to set volume');
-      }
-    } catch (err) {
-      console.error('Failed to set volume:', err);
-    }
-  };
-
-  const handleMuteToggle = async () => {
-    try {
-      if (isMuted) {
-        // Unmute - restore previous volume
-        await handleVolumeChange(previousVolume);
-        setIsMuted(false);
-      } else {
-        // Mute - save current volume and set to 0
-        setPreviousVolume(volume);
-        await handleVolumeChange(0);
-        setIsMuted(true);
-      }
-    } catch (err) {
-      console.error('Failed to toggle mute:', err);
-    }
-  };
 
   if (loading) {
     return (

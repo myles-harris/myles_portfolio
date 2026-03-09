@@ -308,7 +308,7 @@ export default function Projects() {
                 <p className="text-lg opacity-80 mb-4">Software Engineer</p>
               </div>
               <a
-                href="/mylesHarris_Resume_v3.pdf"
+                href="/mylesHarris_Resume_v8.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-4 py-2 bg-[#e2c48d] text-[#3a2c1a] rounded hover:bg-[#a67c52] transition-colors"
@@ -323,11 +323,11 @@ export default function Projects() {
             ) : (
               <div className="w-full h-[1200px] border border-[#e2c48d] rounded-lg overflow-hidden">
                 <iframe
-                  src={`/mylesHarris_Resume_v3.pdf#view=FitH`}
+                  src={`/mylesHarris_Resume_v8.pdf#view=FitH`}
                   className="w-full h-full"
                   frameBorder="0"
                 >
-                  <p>It appears your browser doesn&apos;t support embedded PDFs. You can <a href="/mylesHarris_Resume_v3.pdf" className="text-[#a67c52] underline">download the PDF</a> instead.</p>
+                  <p>It appears your browser doesn&apos;t support embedded PDFs. You can <a href="/mylesHarris_Resume_v8.pdf" className="text-[#a67c52] underline">download the PDF</a> instead.</p>
                 </iframe>
               </div>
             )}

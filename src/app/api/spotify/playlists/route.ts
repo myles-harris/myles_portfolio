@@ -8,7 +8,7 @@ interface SpotifyPlaylist {
   tracks: { total: number };
 }
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     // Get all playlists first
     const response = await spotifyFetch('https://api.spotify.com/v1/me/playlists?limit=50');

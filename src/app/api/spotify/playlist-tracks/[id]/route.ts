@@ -20,6 +20,7 @@ export async function GET(
     const data = await response.json();
 
     // Extract just the track info from the items
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const tracks = data.items.map((item: any) => item.track);
 
     return NextResponse.json({ tracks });

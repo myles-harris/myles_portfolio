@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { spotifyFetch } from '@/lib/spotify';
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     const response = await spotifyFetch('https://api.spotify.com/v1/me/player/currently-playing');
 

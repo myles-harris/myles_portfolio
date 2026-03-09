@@ -5,7 +5,7 @@ import { join } from 'path';
  * Get a valid Spotify access token, refreshing if necessary
  */
 export async function getValidAccessToken(): Promise<string | null> {
-  let accessToken = process.env.SPOTIFY_ACCESS_TOKEN;
+  const accessToken = process.env.SPOTIFY_ACCESS_TOKEN;
 
   // If no access token, return null
   if (!accessToken) {

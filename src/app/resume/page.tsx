@@ -2,13 +2,83 @@
 import { useState, useEffect } from 'react';
 import NavLogo from '@/components/NavLogo';
 
+interface ResumeData {
+  name: string;
+  contact: {
+    phone: string;
+    email: string;
+    linkedin: string;
+    website: string;
+  };
+  experience: Array<{
+    title: string;
+    company: string;
+    note?: string;
+    start_date: string;
+    end_date: string | null;
+    current: boolean;
+    highlights: string[];
+  }>;
+  projects: Array<{
+    name: string;
+    technologies: string[];
+    highlights: string[];
+  }>;
+  technical_skills: {
+    languages: string[];
+    frameworks: string[];
+    developer_tools: string[];
+    llm_assisted_development: string[];
+    libraries: string[];
+  };
+  involvement: Array<{
+    organization: string;
+    role: string;
+    chapter?: string;
+    start_date: string;
+    end_date: string | null;
+    current: boolean;
+  }>;
+  education: Array<{
+    institution: string;
+    location: string;
+    degree: string;
+    field: string;
+  }>;
+}
+
 export default function Resume() {
   const [isStyledView, setIsStyledView] = useState(false);
+  const [resumeData, setResumeData] = useState<ResumeData | null>(null);
 
   // Set styled view as default after initial render
   useEffect(() => {
     setIsStyledView(true);
   }, []);
+
+  // Fetch resume data
+  useEffect(() => {
+    fetch('/mylesHarris_Resume_v8.json')
+      .then(res => res.json())
+      .then(data => setResumeData(data))
+      .catch(err => console.error('Error loading resume data:', err));
+  }, []);
+
+  // Helper function to format dates
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+  };
+
+  const formatDateRange = (startDate: string, endDate: string | null, current: boolean) => {
+    const start = formatDate(startDate);
+    const end = current ? 'Present' : endDate ? formatDate(endDate) : '';
+    return `${start} - ${end}`;
+  };
+
+  if (!resumeData) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
@@ -82,66 +152,26 @@ export default function Resume() {
                           </h2>
                         </div>
 
-                        {/* Dell Technologies - Software Engineer II */}
-                        <div className="relative flex flex-col items-start gap-4 bg-white rounded-xl p-8 w-96 h-[28rem] shadow-lg ml-16">
-                          <div className="absolute -top-4 left-8 bg-[#f6bf10] text-[#3a2c1a] px-4 py-1 rounded-full text-sm font-medium">
-                            Sept 2023 - Present
+                        {/* Experience Cards */}
+                        {resumeData.experience.map((exp, idx) => (
+                          <div key={idx} className={`relative flex flex-col bg-white rounded-xl p-8 w-96 h-[28rem] shadow-lg overflow-hidden ${idx === 0 ? 'ml-16' : ''}`}>
+                            <div className={`absolute top-4 left-8 ${exp.current ? 'bg-[#f6bf10]' : 'bg-[#e2c48d]'} text-[#3a2c1a] px-4 py-1 rounded-full text-sm font-medium`}>
+                              {formatDateRange(exp.start_date, exp.end_date, exp.current)}
+                            </div>
+                            <div className="flex-shrink-0 mt-12">
+                              <h3 className="text-2xl font-semibold text-[#3a2c1a]">{exp.company}</h3>
+                              <p className="text-lg text-[#3a2c1a]/80 mb-3">
+                                {exp.title}
+                                {exp.note && <span className="text-sm"> | {exp.note}</span>}
+                              </p>
+                            </div>
+                            <div className="flex-1 overflow-y-auto space-y-2 text-[#3a2c1a] pr-2">
+                              {exp.highlights.map((highlight, hidx) => (
+                                <p key={hidx}>• {highlight}</p>
+                              ))}
+                            </div>
                           </div>
-                          <h3 className="text-2xl font-semibold text-[#3a2c1a]">Dell Technologies</h3>
-                          <p className="text-lg text-[#3a2c1a]/80">Software Engineer II | <span className="text-sm">Acq. Moogsoft</span></p>
-                          <div className="space-y-2 text-[#3a2c1a] mt-3">
-                            <p>• Real-time incident-correlation microservice (Java, Python, Kafka) ingesting 2B+ events/day, cut MTTR by 900%</p>
-                            <p>• High-throughput REST APIs with caching, connection pooling, async processing; &gt;90% test coverage</p>
-                          </div>
-                          <div className="flex flex-wrap gap-2 mt-4">
-                            {["Java", "Python", "Kafka", "REST APIs", "Microservices", "Caching"].map((tech) => (
-                              <span key={tech} className="bg-[#e2c48d] px-3 py-1 rounded-full text-sm text-[#3a2c1a]">
-                                {tech}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Moogsoft - SQA Engineer II */}
-                        <div className="relative flex flex-col items-start gap-4 bg-white rounded-xl p-8 w-96 h-[28rem] shadow-lg">
-                          <div className="absolute -top-4 left-8 bg-[#e2c48d] text-[#3a2c1a] px-4 py-1 rounded-full text-sm font-medium">
-                            Nov 2022 - Sept 2023
-                          </div>
-                          <h3 className="text-2xl font-semibold text-[#3a2c1a]">Moogsoft</h3>
-                          <p className="text-lg text-[#3a2c1a]/80">Software Quality Assurance Engineer II</p>
-                          <div className="space-y-2 text-[#3a2c1a] mt-3">
-                            <p>• In-house performance monitoring platform (JMeter) reducing manual QA cycles by 75%</p>
-                            <p>• Automated testing frameworks for microservices, rapid deployments, AWS Lambda integration</p>
-                          </div>
-                          <div className="flex flex-wrap gap-2 mt-4">
-                            {["JMeter", "AWS Lambda", "Test Automation", "Microservices", "Performance Testing"].map((tech) => (
-                              <span key={tech} className="bg-[#e2c48d] px-3 py-1 rounded-full text-sm text-[#3a2c1a]">
-                                {tech}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Northrop Grumman - Software Engineer */}
-                        <div className="relative flex flex-col items-start gap-4 bg-white rounded-xl p-8 w-96 h-[28rem] shadow-lg">
-                          <div className="absolute -top-4 left-8 bg-[#e2c48d] text-[#3a2c1a] px-4 py-1 rounded-full text-sm font-medium">
-                            July 2019 - Oct 2022
-                          </div>
-                          <h3 className="text-2xl font-semibold text-[#3a2c1a]">Northrop Grumman</h3>
-                          <p className="text-lg text-[#3a2c1a]/80">Software Engineer | <span className="text-sm">Top 30% performer</span></p>
-                          <div className="space-y-2 text-[#3a2c1a] mt-3">
-                            <p>• GPS/Inertial Navigation Systems, DO-178C standards, sensor/radar libraries (C++) as Scrum Master</p>
-                            <p>• Scrum-of-Scrums for 8 teams (~80 engineers), backlog analytics, sprint velocity</p>
-                            <p>• JavaFX UI + C++ backend for satellite defense, 35% reduction in planning time</p>
-                          </div>
-                          <div className="flex flex-wrap gap-2 mt-4">
-                            {["C++", "JavaFX", "DO-178C", "Scrum", "Team Leadership", "Defense Systems"].map((tech) => (
-                              <span key={tech} className="bg-[#e2c48d] px-3 py-1 rounded-full text-sm text-[#3a2c1a]">
-                                {tech}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
+                        ))}
 
                         {/* Timeline Section Separator */}
                         <div className="flex flex-col items-center justify-center px-2">
@@ -157,69 +187,31 @@ export default function Resume() {
                             </h2>
                           </div>
 
-                          {/* Orbit Video Conferencing App */}
-                          <div className="relative flex flex-col items-start gap-4 bg-white rounded-xl p-8 w-96 h-[28rem] shadow-lg ml-8">
-                            <div className="absolute -top-4 left-8 bg-[#e2c48d] text-[#3a2c1a] px-4 py-1 rounded-full text-sm font-medium">
-                              Project
+                          {/* Project Cards */}
+                          {resumeData.projects.map((project, idx) => (
+                            <div key={idx} className={`relative flex flex-col bg-white rounded-xl p-8 w-96 h-[28rem] shadow-lg overflow-hidden ${idx === 0 ? 'ml-8' : ''}`}>
+                              <div className="absolute top-4 left-8 bg-[#e2c48d] text-[#3a2c1a] px-4 py-1 rounded-full text-sm font-medium">
+                                Project
+                              </div>
+                              <div className="flex-shrink-0 mt-12">
+                                <h3 className="text-2xl font-semibold text-[#3a2c1a] mb-3">{project.name}</h3>
+                              </div>
+                              <div className="flex-1 overflow-y-auto pr-2">
+                                <div className="space-y-2 text-[#3a2c1a] mb-4">
+                                  {project.highlights.map((highlight, hidx) => (
+                                    <p key={hidx}>• {highlight}</p>
+                                  ))}
+                                </div>
+                                <div className="flex flex-wrap gap-2">
+                                  {project.technologies.map((tech) => (
+                                    <span key={tech} className="bg-[#e2c48d] px-3 py-1 rounded-full text-sm text-[#3a2c1a]">
+                                      {tech}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
                             </div>
-                            <h3 className="text-2xl font-semibold text-[#3a2c1a]">Orbit — Video Conferencing App</h3>
-                            <p className="text-lg text-[#3a2c1a]/80">Personal Project | 2025</p>
-                            <div className="space-y-2 text-[#3a2c1a] mt-3">
-                              <p>• Scalable group video-calling platform using PERN stack</p>
-                              <p>• Stateless Node.js APIs, optimized PostgreSQL schemas, 100+ concurrent calls</p>
-                              <p>• Migrated from AWS EventBridge/Lambda to Twilio, 20% faster feature iteration</p>
-                            </div>
-                            <div className="flex flex-wrap gap-2 mt-4">
-                              {["PostgreSQL", "Express.js", "React", "Node.js", "Twilio", "AWS", "Cursor"].map((tech) => (
-                                <span key={tech} className="bg-[#e2c48d] px-3 py-1 rounded-full text-sm text-[#3a2c1a]">
-                                  {tech}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-
-                          {/* ML Stock Screener Project */}
-                          <div className="relative flex flex-col items-start gap-4 bg-white rounded-xl p-8 w-96 h-[28rem] shadow-lg">
-                            <div className="absolute -top-4 left-8 bg-[#e2c48d] text-[#3a2c1a] px-4 py-1 rounded-full text-sm font-medium">
-                              Project
-                            </div>
-                            <h3 className="text-2xl font-semibold text-[#3a2c1a]">ML Stock Screener</h3>
-                            <p className="text-lg text-[#3a2c1a]/80">Personal Project</p>
-                            <div className="space-y-2 text-[#3a2c1a] mt-3">
-                              <p>• Built scalable pipeline for ingesting, processing, and analyzing 10+ years of S&P 500 data</p>
-                              <p>• Used LSTM and K-Means Clustering; achieved 0.92 F1 score</p>
-                              <p>• Served 1K+ weekly queries</p>
-                            </div>
-                            <div className="flex flex-wrap gap-2 mt-4">
-                              {["Scikit-Learn", "TensorFlow", "Python"].map((tech) => (
-                                <span key={tech} className="bg-[#e2c48d] px-3 py-1 rounded-full text-sm text-[#3a2c1a]">
-                                  {tech}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-
-                          {/* Electric Prosthetic Arm Project */}
-                          <div className="relative flex flex-col items-start gap-4 bg-white rounded-xl p-8 w-96 h-[28rem] shadow-lg">
-                            <div className="absolute -top-4 left-8 bg-[#e2c48d] text-[#3a2c1a] px-4 py-1 rounded-full text-sm font-medium">
-                              Project
-                            </div>
-                            <h3 className="text-2xl font-semibold text-[#3a2c1a]">Electric Prosthetic Arm</h3>
-                            <p className="text-lg text-[#3a2c1a]/80">Mercer Engineering Expo | 2019</p>
-                            <div className="space-y-2 text-[#3a2c1a] mt-3">
-                              <p>• EMG‑controlled prosthetic prototype</p>
-                              <p>• 98% cost reduction vs commercial options</p>
-                              <p>• Led interdisciplinary team</p>
-                              <p>• Award-winning senior design project</p>
-                            </div>
-                            <div className="flex flex-wrap gap-2 mt-4">
-                              {["EMG", "Arduino", "3D Printing", "Team LEADERSHIP"].map((tech) => (
-                                <span key={tech} className="bg-[#e2c48d] px-3 py-1 rounded-full text-sm text-[#3a2c1a]">
-                                  {tech}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
+                          ))}
                         </div>
                       </div>
                     </div>
@@ -252,7 +244,7 @@ export default function Resume() {
                             <div>
                               <h3 className="text-base font-semibold adaptive-text mb-2">Languages</h3>
                               <div className="flex flex-wrap gap-1.5">
-                                {["Java", "Python", "C/C++", "SQL (PostgreSQL)", "JavaScript", "HTML/CSS"].map((skill) => (
+                                {resumeData.technical_skills.languages.map((skill) => (
                                   <span key={skill} className="adaptive-tag px-2 py-0.5 rounded-full text-sm">
                                     {skill}
                                   </span>
@@ -262,7 +254,7 @@ export default function Resume() {
                             <div>
                               <h3 className="text-base font-semibold adaptive-text mb-2">Frameworks</h3>
                               <div className="flex flex-wrap gap-1.5">
-                                {["Node.js", "Express.js", "React", "Angular", "JUnit", "TestNG", "Guice", "Spring Boot"].map((skill) => (
+                                {resumeData.technical_skills.frameworks.map((skill) => (
                                   <span key={skill} className="adaptive-tag px-2 py-0.5 rounded-full text-sm">
                                     {skill}
                                   </span>
@@ -272,7 +264,7 @@ export default function Resume() {
                             <div>
                               <h3 className="text-base font-semibold adaptive-text mb-2">Developer Tools</h3>
                               <div className="flex flex-wrap gap-1.5">
-                                {["Git", "Docker", "AWS", "Jenkins", "Kafka", "Grafana", "Maven", "VS Code", "PyCharm", "IntelliJ", "Eclipse", "Redis"].map((skill) => (
+                                {resumeData.technical_skills.developer_tools.map((skill) => (
                                   <span key={skill} className="adaptive-tag px-2 py-0.5 rounded-full text-sm">
                                     {skill}
                                   </span>
@@ -284,7 +276,7 @@ export default function Resume() {
                             <div>
                               <h3 className="text-base font-semibold adaptive-text mb-2">LLM-Assisted Development</h3>
                               <div className="flex flex-wrap gap-1.5">
-                                {["Cursor", "ChatGPT", "GitHub Copilot", "Windsurf"].map((skill) => (
+                                {resumeData.technical_skills.llm_assisted_development.map((skill) => (
                                   <span key={skill} className="adaptive-tag px-2 py-0.5 rounded-full text-sm">
                                     {skill}
                                   </span>
@@ -294,7 +286,7 @@ export default function Resume() {
                             <div>
                               <h3 className="text-base font-semibold adaptive-text mb-2">Libraries</h3>
                               <div className="flex flex-wrap gap-1.5">
-                                {["Pandas", "NumPy", "Matplotlib", "SciPy", "Scikit-Learn"].map((skill) => (
+                                {resumeData.technical_skills.libraries.map((skill) => (
                                   <span key={skill} className="adaptive-tag px-2 py-0.5 rounded-full text-sm">
                                     {skill}
                                   </span>
@@ -311,16 +303,13 @@ export default function Resume() {
                         <div className="mb-6">
                           <h2 className="text-xl font-semibold adaptive-text mb-4">Education</h2>
                           <div className="grid grid-cols-2 gap-4">
-                            <div>
-                              <h3 className="text-base font-semibold adaptive-text">Bachelor of Science</h3>
-                              <p className="text-sm adaptive-text">Mechanical Engineering</p>
-                              <p className="text-sm adaptive-text opacity-80">Mercer University</p>
-                            </div>
-                            <div>
-                              <h3 className="text-base font-semibold adaptive-text">Master of Science</h3>
-                              <p className="text-sm adaptive-text">Software Engineering</p>
-                              <p className="text-sm adaptive-text opacity-80">Mercer University</p>
-                            </div>
+                            {resumeData.education.map((edu, idx) => (
+                              <div key={idx}>
+                                <h3 className="text-base font-semibold adaptive-text">{edu.degree}</h3>
+                                <p className="text-sm adaptive-text">{edu.field}</p>
+                                <p className="text-sm adaptive-text opacity-80">{edu.institution}</p>
+                              </div>
+                            ))}
                           </div>
                         </div>
 
@@ -328,20 +317,19 @@ export default function Resume() {
                         <div>
                           <h2 className="text-xl font-semibold adaptive-text mb-4">Professional Involvement</h2>
                           <div className="space-y-2">
-                            <div>
-                              <div className="flex justify-between items-baseline">
-                                <h3 className="text-base font-semibold adaptive-text">National Society of Black Engineers</h3>
-                                <span className="text-xs adaptive-text opacity-80">2023 - Present</span>
+                            {resumeData.involvement.map((inv, idx) => (
+                              <div key={idx}>
+                                <div className="flex justify-between items-baseline">
+                                  <h3 className="text-base font-semibold adaptive-text">{inv.organization}</h3>
+                                  <span className="text-xs adaptive-text opacity-80">
+                                    {inv.start_date} - {inv.current ? 'Present' : inv.end_date}
+                                  </span>
+                                </div>
+                                <p className="text-sm adaptive-text opacity-80">
+                                  {inv.chapter || inv.role}
+                                </p>
                               </div>
-                              <p className="text-sm adaptive-text opacity-80">Atlanta Professionals Chapter</p>
-                            </div>
-                            <div>
-                              <div className="flex justify-between items-baseline">
-                                <h3 className="text-base font-semibold adaptive-text">NGC African American Task Group</h3>
-                                <span className="text-xs adaptive-text opacity-80">2019 - 2022</span>
-                              </div>
-                              <p className="text-sm adaptive-text opacity-80">Communications Lead / Vice-Chair</p>
-                            </div>
+                            ))}
                           </div>
                         </div>
                       </div>
@@ -354,8 +342,8 @@ export default function Resume() {
               <div key="simple-view" className="absolute inset-0">
                 {/* Download Button */}
                 <div className="flex justify-center mb-6">
-                  <a 
-                    href="/mylesHarris_Resume_v3.pdf"
+                  <a
+                    href="/mylesHarris_Resume_v8.pdf"
                     download
                     className="flex items-center gap-2 px-4 py-2 bg-[#e2c48d] text-[#3a2c1a] rounded-lg hover:bg-[#f6bf10] transition-colors duration-300"
                   >
@@ -365,22 +353,24 @@ export default function Resume() {
                     Download Resume
                   </a>
                 </div>
-                <object
-                  data="/mylesHarris_Resume_v3.pdf#view=FitH"
-                  type="application/pdf"
-                  className="w-[850px] h-[1200px] mx-auto"
-                >
-                  <div className="p-4 text-center">
-                    <p>It appears your browser doesn&apos;t support embedded PDFs.</p>
-                    <a 
-                      href="/mylesHarris_Resume_v3.pdf"
-                      className="text-[#a67c52] underline"
-                      download
-                    >
-                      Download the PDF instead
-                    </a>
-                  </div>
-                </object>
+                <div className="w-[900px] h-[calc(100vh-12rem)] overflow-auto mx-auto p-4">
+                  <object
+                    data="/mylesHarris_Resume_v8.pdf#zoom=100"
+                    type="application/pdf"
+                    className="w-full h-full min-h-[1100px]"
+                  >
+                    <div className="p-4 text-center">
+                      <p>It appears your browser doesn&apos;t support embedded PDFs.</p>
+                      <a
+                        href="/mylesHarris_Resume_v8.pdf"
+                        className="text-[#a67c52] underline"
+                        download
+                      >
+                        Download the PDF instead
+                      </a>
+                    </div>
+                  </object>
+                </div>
               </div>
             )}
           </div>
