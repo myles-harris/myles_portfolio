@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import { Cinzel } from "next/font/google";
+import { Geist, Geist_Mono, Cinzel } from "next/font/google";
 import "./globals.css";
-import Navbar from "../components/Navbar";
-import BackgroundVideo from "../components/BackgroundVideo";
-import MobileWarningDialog from "../components/MobileWarningDialog";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
@@ -26,7 +22,7 @@ const cinzel = Cinzel({
 
 export const metadata: Metadata = {
   title: "Myles Harris | Portfolio",
-  description: "Personal portfolio website of Myles Harris, showcasing professional work and creative projects.",
+  description: "Personal portfolio of Myles Harris — software engineer, photographer, distance runner.",
 };
 
 export default function RootLayout({
@@ -36,12 +32,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} ${cinzel.variable} antialiased`}
-      >
-        <BackgroundVideo />
-        <Navbar />
-        <MobileWarningDialog />
+      <body className={`${geistSans.variable} ${geistMono.variable} ${cinzel.variable} antialiased`}>
         {children}
         <Analytics />
         <SpeedInsights />

@@ -1,0 +1,185 @@
+{
+  "name": "Myles C. Harris",
+  "contact": {
+    "phone": "678-951-7549",
+    "email": "mylescharris18@gmail.com",
+    "linkedin": "linkedin.com/in/mylescharris/",
+    "website": "myles-harris.com"
+  },
+  "experience": [
+    {
+      "title": "Software Engineer II",
+      "company": "Dell Technologies",
+      "startDate": "2023-09",
+      "endDate": "2026-04",
+      "highlights": [
+        "Built and owned REST APIs across distributed Java/Spring Boot services, leveraging async processing for high-throughput event handling; increased automated test coverage to over 90%.",
+        "Led organization-wide Java 25 and Spring Boot 4 upgrade across 1,300+ repositories; authored spec-driven migration recipes for phased AI-assisted execution, and defined manual validation checkpoints for code owners.",
+        "Boosted development speed 40% using LLM tooling (Windsurf, Claude, Cursor) and prompt engineering to automate code generation, testing, and documentation."
+      ],
+      "skills": [
+        "Java",
+        "Spring Boot",
+        "REST API",
+        "Async Processing",
+        "Distributed Systems",
+        "LLM-Assisted Development",
+        "Claude",
+        "Cursor",
+        "Windsurf",
+        "Prompt Engineering",
+        "CI/CD",
+        "Test Automation",
+        "Migration Planning"
+      ]
+    },
+    {
+      "title": "Software Engineer II",
+      "company": "Moogsoft",
+      "note": "Acquired by Dell",
+      "startDate": "2022-11",
+      "endDate": "2023-09",
+      "highlights": [
+        "Designed and tested a real-time, event-driven incident-correlation microservice (Java, Kafka, Elasticsearch) that ingests 2B+ events/day and cut MTTR by up to 35% across Fortune 100 customers.",
+        "Built a performance monitoring platform (JMeter) that load-tested distributed microservices, reducing manual QA cycles by 75% and defining scalability metrics for executive decisions. Integrated into CI/CD pipeline (Jenkins).",
+        "Developed mock OAuth service using AWS Lambda to simulate authentication flows for integration testing across distributed microservices."
+      ],
+      "skills": [
+        "Java",
+        "Kafka",
+        "Elasticsearch",
+        "Event-Driven Architecture",
+        "Microservices",
+        "Performance Testing",
+        "JMeter",
+        "Jenkins",
+        "CI/CD",
+        "AWS Lambda",
+        "OAuth",
+        "Integration Testing",
+        "Distributed Systems"
+      ]
+    },
+    {
+      "title": "Software Engineer",
+      "company": "Northrop Grumman",
+      "note": "Enterprise Top Performer 2021–2022",
+      "startDate": "2019-07",
+      "endDate": "2022-10",
+      "highlights": [
+        "Led software delivery for GPS/Inertial Navigation Systems, meeting DO-178C standards while developing sensor/radar libraries (C++) as a technical Scrum Master.",
+        "Managed program-level technical delivery across 8 cross-functional teams (~80 engineers), identifying and resolving cross-team blockers to reduce rework cycles and recover 2 weeks of engineering capacity per quarter.",
+        "Built JavaFX UI integrated with C++ backend for satellite defense system, adopted by nearly 100 mission operators."
+      ],
+      "skills": [
+        "C++",
+        "JavaFX",
+        "DO-178C",
+        "Safety-Critical Software",
+        "GPS / Inertial Navigation",
+        "Scrum Master",
+        "Agile",
+        "Defense Systems",
+        "Embedded Software",
+        "Cross-Team Leadership",
+        "Sensor/Radar Libraries"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "Orbit",
+      "description": "Video Conferencing App",
+      "highlights": [
+        "Built a group video-calling platform with Daily.co for real-time video and Twilio for SMS/OTP. Designed stateless APIs for call scheduling/orchestration and optimized PostgreSQL schemas to support 100+ concurrent calls.",
+        "Developed end-to-end with LLM-assisted tooling from system design and prompt-driven feature buildout to automated testing and deployment, enabling 20% faster iteration on new features."
+      ],
+      "skills": [
+        "TypeScript",
+        "React",
+        "Express",
+        "PostgreSQL",
+        "Twilio",
+        "Daily.co",
+        "WebRTC",
+        "BullMQ",
+        "Redis",
+        "REST API",
+        "Claude Code",
+        "LLM-Assisted Development",
+        "System Design"
+      ]
+    },
+    {
+      "name": "ML Stock Screener",
+      "description": "Machine learning pipeline for S&P 500 analysis",
+      "highlights": [
+        "Built scalable pipeline for ingesting, processing, and analyzing 10+ years of S&P 500 data using LSTM and K-Means Clustering; achieved 0.92 F1 score, serving 1K+ weekly queries."
+      ],
+      "skills": [
+        "Python",
+        "Scikit-Learn",
+        "TensorFlow",
+        "LSTM",
+        "K-Means Clustering",
+        "Pandas",
+        "NumPy",
+        "Data Pipelines",
+        "Machine Learning"
+      ]
+    },
+    {
+      "name": "Electric Prosthetic Arm",
+      "description": "EMG-controlled prosthetic prototype",
+      "highlights": [
+        "Led interdisciplinary team to deliver EMG-controlled prosthetic prototype 98% cheaper than commercial devices."
+      ],
+      "skills": [
+        "Machine Design",
+        "Finite Element Analysis",
+        "PCB Design",
+        "SolidWorks",
+        "EMG Signal Processing",
+        "Embedded Systems",
+        "Mechatronics",
+        "Interdisciplinary Team Leadership"
+      ]
+    }
+  ],
+  "technicalSkills": {
+    "languages": ["Java", "Python", "C++", "SQL", "JavaScript", "TypeScript"],
+    "frameworks": ["Node.js", "Express.js", "React", "Angular", "JUnit", "TestNG", "Guice", "Spring Boot"],
+    "developerTools": ["Git", "Kubernetes", "Docker", "AWS", "Jenkins", "Kafka", "Grafana", "Maven", "Redis"],
+    "llmTools": ["Claude", "Cursor", "Windsurf", "ChatGPT", "GitHub Copilot"],
+    "libraries": ["Pandas", "NumPy", "Matplotlib", "SciPy", "Scikit-Learn"]
+  },
+  "involvement": [
+    {
+      "organization": "National Society of Black Engineers",
+      "role": "Member",
+      "chapter": "Atlanta & Los Angeles Professionals Chapter",
+      "startDate": "2023",
+      "endDate": "Present"
+    },
+    {
+      "organization": "NGC African American Task Group",
+      "role": "Communications Lead / Vice-Chair",
+      "startDate": "2019",
+      "endDate": "2022"
+    }
+  ],
+  "education": [
+    {
+      "institution": "Mercer University",
+      "location": "Macon, GA",
+      "degree": "Master of Science",
+      "field": "Software Engineering"
+    },
+    {
+      "institution": "Mercer University",
+      "location": "Macon, GA",
+      "degree": "Bachelor of Science",
+      "field": "Mechanical Engineering"
+    }
+  ]
+}

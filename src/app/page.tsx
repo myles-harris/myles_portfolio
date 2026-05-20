@@ -1,15 +1,43 @@
+"use client";
+import { useEffect } from "react";
+import TopBar from "@/components/TopBar";
+import HeroSection from "@/components/sections/HeroSection";
+import AboutSection from "@/components/sections/AboutSection";
+import ResumeSection, { SkillsGrid } from "@/components/sections/ResumeSection";
+import ProjectsSection from "@/components/sections/ProjectsSection";
+import PhotographySection from "@/components/sections/PhotographySection";
+import RunningSection from "@/components/sections/RunningSection";
+import ContactSection from "@/components/sections/ContactSection";
+
 export default function Home() {
+  // Reveal-on-scroll: adds .in to .reveal elements when they enter the viewport
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) entry.target.classList.add("in");
+        });
+      },
+      { threshold: 0.12 }
+    );
+    document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <main className="flex flex-col items-start justify-start min-h-screen pt-[50vh] px-24 text-[#3a2c1a] font-serif">
-      <h1 className="mb-8 tracking-tight">
-        <span className="text-8xl transition-colors duration-200 hover:text-[#a67c52] cursor-pointer font-[var(--font-cinzel)] italic" style={{ color: '#f6bf10' }}>Myles Harris</span>
-      </h1>
-      <h2 className="text-3xl opacity-80">Atlanta born, LA based Engineer</h2>
-    </main>
+    <>
+      <div className="bg-stage" aria-hidden="true" />
+      <TopBar />
+      <main>
+        <HeroSection />
+        <AboutSection />
+        <ResumeSection />
+        <ProjectsSection />
+        <SkillsGrid />
+        <PhotographySection />
+        <RunningSection />
+        <ContactSection />
+      </main>
+    </>
   );
 }
-
-export const metadata = {
-  title: "Myles Harris | Portfolio",
-  description: "Myles Harris | Portfolio",
-};

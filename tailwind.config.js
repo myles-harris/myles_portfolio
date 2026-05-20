@@ -7,6 +7,13 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        marigold: '#f6bf10',
+        wheat:    '#e2c48d',
+        saddle:   '#a67c52',
+        espresso: '#3a2c1a',
+        cream:    '#fff8e7',
+      },
       keyframes: {
         tickerH: {
           '0%': { transform: 'translateX(0)' },

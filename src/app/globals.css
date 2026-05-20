@@ -1,102 +1,155 @@
 @import "tailwindcss";
 
+/* ─── Design Tokens ─────────────────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --mh-marigold: #f6bf10;
+  --mh-wheat:    #e2c48d;
+  --mh-saddle:   #a67c52;
+  --mh-espresso: #3a2c1a;
+  --mh-cream:    #fff8e7;
+  --mh-paper:    #fff;
+
+  --font-display: var(--font-cinzel), 'Cormorant Garamond', Georgia, serif;
+  --font-serif:   Georgia, 'Times New Roman', serif;
+  --font-mono:    var(--font-geist-mono), monospace;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ─── Reset & Base ──────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #fdf1d8;
+  color: var(--mh-espresso);
+  font-family: var(--font-serif);
+  scroll-behavior: smooth;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* --font-sans must be on body so var(--font-geist-sans) is in scope */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  --font-sans: var(--font-geist-sans), 'Geist', system-ui, -apple-system, sans-serif;
 }
 
-/* Spotify-style volume slider */
-input[type="range"] {
-  -webkit-appearance: none;
-  appearance: none;
-  outline: none;
-  border-radius: 2px;
-  height: 4px;
+body { overflow-x: hidden; }
+
+/* ─── Warm cream paper background (fixed layer) ─────────────────────────── */
+.bg-stage {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(120% 80% at 70% 10%, rgba(246,191,16,0.18) 0%, transparent 55%),
+    radial-gradient(100% 80% at 10% 90%, rgba(166,124,82,0.16) 0%, transparent 65%),
+    linear-gradient(180deg, #fff8e7 0%, #fdf1d8 60%, #f6e7c4 100%);
+}
+.bg-stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, transparent 0%, rgba(166,124,82,0.06) 100%);
+  pointer-events: none;
+}
+
+/* ─── Layout containers ─────────────────────────────────────────────────── */
+.container      { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+.container-wide { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
+
+@media (max-width: 768px) {
+  .container, .container-wide { padding: 0 16px; }
+}
+
+/* ─── Typography utilities ──────────────────────────────────────────────── */
+.mh-word {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 700;
+  color: var(--mh-marigold);
+  letter-spacing: -0.01em;
+  line-height: 1;
   cursor: pointer;
+  transition: color 200ms ease;
+}
+.mh-word:hover { color: var(--mh-saddle); }
+
+.mh-display {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 700;
+  color: var(--mh-espresso);
+  letter-spacing: 0.02em;
 }
 
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #ffffff;
-  cursor: pointer;
-  border: none;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--mh-saddle);
+  opacity: 0.95;
 }
 
-input[type="range"]::-moz-range-thumb {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #ffffff;
-  cursor: pointer;
-  border: none;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+.hl   { color: var(--mh-saddle); font-weight: 500; }
+.hl-b { color: var(--mh-saddle); font-weight: 700; }
+
+/* ─── Reveal-on-scroll ──────────────────────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 800ms ease, transform 800ms ease;
+}
+.reveal.in {
+  opacity: 1;
+  transform: translateY(0);
 }
 
-input[type="range"]:hover::-webkit-slider-thumb {
-  transform: scale(1.1);
+/* ─── Photography marquee ───────────────────────────────────────────────── */
+@keyframes ticker-ltr { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+@keyframes ticker-rtl { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
+
+.ticker-track-ltr { display: flex; width: max-content; animation: ticker-ltr 30s linear infinite; gap: 16px; }
+.ticker-track-rtl { display: flex; width: max-content; animation: ticker-rtl 40s linear infinite; gap: 16px; }
+.ticker-mask {
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
 }
 
-input[type="range"]:hover::-moz-range-thumb {
-  transform: scale(1.1);
+/* ─── Tilted photo frame (About section margins) ────────────────────────── */
+.tilt-photo {
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+  transition: transform 300ms ease;
 }
+.tilt-photo:hover { transform: scale(1.04) rotate(0deg) !important; }
 
-/* Hide scrollbar but keep scroll functionality */
+/* ─── Scrollbar ─────────────────────────────────────────────────────────── */
 .scrollbar-hide {
-  -ms-overflow-style: none;  /* Internet Explorer 10+ */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
 
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;  /* Safari and Chrome */
-}
-
-/* Custom scrollbar styling to match page design */
 .custom-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: #e2c48d transparent;
 }
-
-.custom-scrollbar::-webkit-scrollbar {
-  height: 8px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-  border-radius: 4px;
-}
-
+.custom-scrollbar::-webkit-scrollbar { height: 8px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; border-radius: 4px; }
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background: linear-gradient(135deg, #e2c48d, #f6bf10);
   border-radius: 4px;
-  border: 1px solid rgba(58, 44, 26, 0.2);
+  border: 1px solid rgba(58,44,26,0.2);
 }
-
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(135deg, #f6bf10, #e2c48d);
-  transform: scale(1.05);
 }
+
+/* ─── Chat dots animation ───────────────────────────────────────────────── */
+@keyframes chatDots {
+  0%, 20% { opacity: 0.3; }
+  50%      { opacity: 1;   }
+  80%, 100%{ opacity: 0.3; }
+}
+.chat-dots::after { content: ' ●●●'; animation: chatDots 1.4s infinite ease-in-out; }
