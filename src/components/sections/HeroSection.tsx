@@ -138,13 +138,15 @@ interface BentoTileProps {
   shadow: string;
   label?: string;
   style?: React.CSSProperties;
+  className?: string;
   children: React.ReactNode;
 }
 
-function BentoTile({ col, row, shadow, label, style, children }: BentoTileProps) {
+function BentoTile({ col, row, shadow, label, style, className, children }: BentoTileProps) {
   const [hovered, setHovered] = useState(false);
   return (
     <div
+      className={className}
       style={{
         gridColumn: col,
         gridRow: row,
@@ -298,13 +300,13 @@ const GLASSES_VIDEOS = [
   "/videos/glasses/glasses_tortoise.mp4",
 ];
 
-const TECH_STACK = ["Java", "Kafka", "React", "TypeScript", "PostgreSQL", "AWS", "Claude", "Cursor"];
+const TECH_STACK = ["TypeScript", "Java", "Python", "React", "Agentic AI", "RAG", "Cloud", "Claude Code", "LangChain"];
 const SOCIAL_LINKS = [
-  { label: "LinkedIn",  href: "https://linkedin.com/in/myles-harris" },
-  { label: "Instagram", href: "https://instagram.com" },
-  { label: "Strava",    href: "https://strava.com" },
+  { label: "LinkedIn",  href: "https://www.linkedin.com/in/mylescharris" },
+  { label: "Instagram", href: "https://www.instagram.com/millennium_myles" },
+  { label: "Strava",    href: "https://www.strava.com/athletes/136978271" },
   { label: "GitHub",    href: "https://github.com/myles-harris" },
-  { label: "Email",     href: "#contact" },
+  { label: "Email",     href: "mailto:mylescharris18@gmail.com" },
 ];
 
 export default function HeroSection() {
@@ -358,7 +360,7 @@ export default function HeroSection() {
           <StravaTile />
 
           {/* LIFESTYLE VIDEO */}
-          <BentoTile col="span 4" row="span 1" shadow="#a67c52" style={{ padding: 0 }}>
+          <BentoTile col="span 4" row="span 2" shadow="#a67c52" style={{ padding: 0 }}>
             <video src="/videos/lifestyle.mp4" autoPlay muted loop playsInline style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", flex: 1, borderRadius: 16 }} />
           </BentoTile>
 
@@ -371,7 +373,7 @@ export default function HeroSection() {
           </BentoTile>
 
           {/* GLASSES */}
-          <BentoTile col="span 3" row="span 1" shadow="#3a2c1a" style={{ padding: 0 }}>
+          <BentoTile col="span 3" row="span 1" shadow="#3a2c1a" style={{ padding: 0 }} className="glasses-tile">
             <VideoPlaylist srcs={GLASSES_VIDEOS} style={{ transform: "scale(1.08)" }} />
           </BentoTile>
 
@@ -408,6 +410,7 @@ export default function HeroSection() {
           }
           .bento-grid > * { grid-column: span 2 !important; grid-row: auto !important; }
           .find-me-row > * { flex: 1 1 45% !important; }
+          .glasses-tile { aspect-ratio: 25 / 9 !important; min-height: 0 !important; }
         }
         @media (min-width: 901px) and (max-width: 1200px) {
           .bento-grid {

@@ -32,6 +32,7 @@ const PROJECTS = [
     shadow: "#e2c48d",
     bgImage: "/projects/prosthetic-team.jpg",
     bgPosition: "center 30%",
+    mobileBgPosition: "right 30%",
     frontTone: "light" as const,
     bullets: [
       "Led interdisciplinary team to deliver EMG-controlled prosthetic prototype 98% cheaper than commercial devices.",
@@ -56,6 +57,7 @@ interface ProjectData {
   shadow: string;
   bgImage?: string;
   bgPosition?: string;
+  mobileBgPosition?: string;
   frontTone?: "light" | "dark";
   bullets: string[];
   tech?: string[];
@@ -95,13 +97,14 @@ function ProjectTile({ project, index }: { project: ProjectData; index: number }
         transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
       }}>
         {/* FRONT */}
-        <div style={{
+        <div className="proj-front" style={{
           position: "absolute",
           inset: 0,
           background: "#fffaf0",
           backgroundImage: project.bgImage ? `url(${project.bgImage})` : "none",
           backgroundSize: "cover",
           backgroundPosition: project.bgPosition ?? "center",
+          ...({ "--mob-bg-pos": project.mobileBgPosition ?? project.bgPosition ?? "center" } as React.CSSProperties),
           border: "1.5px solid #1a1208",
           borderRadius: 18,
           boxShadow: `8px 10px 0 ${project.shadow}`,
@@ -221,7 +224,10 @@ export default function ProjectsSection() {
       </div>
 
       <style>{`
-        @media (max-width: 768px) { .proj-grid { grid-template-columns: 1fr !important; } }
+        @media (max-width: 768px) {
+          .proj-grid { grid-template-columns: 1fr !important; }
+          .proj-front { background-position: var(--mob-bg-pos) !important; }
+        }
       `}</style>
     </section>
   );
