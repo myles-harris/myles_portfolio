@@ -25,7 +25,7 @@ const JOBS = [
     bullets: [
       "Designed and tested a real-time, event-driven incident-correlation microservice (Java, Kafka, Elasticsearch) that ingests 2B+ events/day and cut MTTR by up to 35% across Fortune 100 customers.",
       "Built a performance monitoring platform (JMeter) that load-tested distributed microservices, reducing manual QA cycles by 75% and defining scalability metrics for executive decisions. Integrated into CI/CD pipeline (Jenkins).",
-      "Developed mock OAuth service using AWS Lambda to simulate authentication flows for integration testing across distributed microservices.",
+      "Developed mock OAuth service using AWS Lambda to simulate authentication flows for integration testing.",
     ],
     tags: ["Java", "Kafka", "Elasticsearch", "Event-Driven Architecture", "Microservices", "Performance Testing", "JMeter", "Jenkins", "CI/CD", "AWS Lambda", "OAuth", "Integration Testing", "Distributed Systems"],
   },
@@ -38,9 +38,8 @@ const JOBS = [
     bullets: [
       "Led software delivery for GPS/Inertial Navigation Systems, meeting DO-178C standards while developing sensor/radar libraries (C++) as a technical Scrum Master.",
       "Managed program-level technical delivery across 8 cross-functional teams (~80 engineers), identifying and resolving cross-team blockers to reduce rework cycles and recover 2 weeks of engineering capacity per quarter.",
-      "Built JavaFX UI integrated with C++ backend for satellite defense system, adopted by nearly 100 mission operators.",
     ],
-    tags: ["C++", "JavaFX", "DO-178C", "Safety-Critical Software", "GPS / Inertial Navigation", "Scrum Master", "Agile", "Defense Systems", "Embedded Software", "Cross-Team Leadership", "Sensor/Radar Libraries"],
+    tags: ["C++", "DO-178C", "Safety-Critical Software", "GPS / Inertial Navigation", "Scrum Master", "Agile", "Defense Systems", "Embedded Software", "Cross-Team Leadership", "Sensor/Radar Libraries"],
   },
 ];
 
@@ -53,22 +52,27 @@ const SKILL_GROUPS = [
   {
     label: "Frameworks",
     shadow: "#a67c52",
-    items: ["Node.js", "Express.js", "React", "Angular", "JUnit", "TestNG", "Guice", "Spring Boot"],
+    items: ["Node.js", "Express.js", "React", "Spring Boot", "LangChain", "LangGraph", "Angular"],
   },
   {
     label: "Developer Tools",
     shadow: "#e2c48d",
-    items: ["Git", "Kubernetes", "Docker", "AWS", "Jenkins", "Kafka", "Grafana", "Maven", "Redis"],
+    items: ["Git", "Kubernetes", "Docker", "AWS", "Jenkins", "Kafka", "Grafana", "Maven", "Redis", "BullMQ"],
   },
   {
-    label: "LLM Tools",
+    label: "LLM-Assisted Development",
     shadow: "#3a2c1a",
-    items: ["Claude", "Cursor", "Windsurf", "ChatGPT", "GitHub Copilot"],
+    items: ["Claude", "Cursor", "Windsurf", "ChatGPT", "Copilot"],
   },
   {
     label: "Libraries",
     shadow: "#f6bf10",
     items: ["Pandas", "NumPy", "Matplotlib", "SciPy", "Scikit-Learn"],
+  },
+  {
+    label: "GenAI",
+    shadow: "#a67c52",
+    items: ["Prompt Engineering", "LLM Tool Calling", "RAG Pipelines", "Vector Databases", "ChromaDB", "FAISS", "Agentic AI", "ReAct", "Multi-Agent Orchestration"],
   },
 ];
 
@@ -213,7 +217,7 @@ export default function ResumeSection() {
               <h2 className="mh-display" style={{ fontSize: "clamp(36px, 6vw, 56px)", margin: "8px 0 0" }}>Where I&rsquo;ve worked</h2>
             </div>
             <a
-              href="/mylesHarris_Resume_v10.pdf"
+              href="/mylesHarris_Resume_v15.pdf"
               download
               style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 20px", borderRadius: 9999, border: "1.5px solid #1a1208", background: "#3a2c1a", color: "#fff8e7", fontFamily: "var(--font-serif)", fontSize: 14, textDecoration: "none", whiteSpace: "nowrap" }}
             >

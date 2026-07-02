@@ -16,6 +16,19 @@ const PROJECTS = [
     tech: ["TypeScript", "React", "Express", "PostgreSQL", "Twilio", "Daily.co", "WebRTC", "BullMQ", "Redis", "REST API", "Claude Code", "LLM-Assisted Development", "System Design"],
   },
   {
+    name: "California Culinary Map",
+    sub: "Multimodal RAG assistant",
+    shadow: "#f6bf10",
+    bgImage: "/projects/two_hommes-bg.jpg",
+    frontTone: "light" as const,
+    bullets: [
+      "Built a multimodal RAG pipeline over a restaurant/recipe database; captioned 100+ images via vision LLM; indexed dual 384-d text / 512-d image embeddings in ChromaDB with weighted fusion & metadata-filtered reranking.",
+      "Designed a multi-agent recommendation system (LangGraph) with NL intent classification and preference extraction, exposed via a FastMCP server (3 tools, 1 resource) for query, recommendations, and review retrieval.",
+      "Built an MCP / ReAct agent loop binding server tools to an LLM at runtime, delivered via Gradio chat interface.",
+    ],
+    tech: ["Python", "LangChain", "LangGraph", "ChromaDB", "FastMCP", "Gradio", "RAG", "Multimodal AI", "Vector Databases", "Multi-Agent Orchestration", "ReAct", "Vision LLM", "Prompt Engineering", "MCP", "Embeddings"],
+  },
+  {
     name: "ML Stock Screener",
     sub: "Machine learning pipeline for S&P 500",
     shadow: "#a67c52",
@@ -149,7 +162,7 @@ function ProjectTile({ project, index }: { project: ProjectData; index: number }
           backfaceVisibility: "hidden",
           WebkitBackfaceVisibility: "hidden",
           transform: "rotateY(180deg)",
-          overflow: "hidden",
+          overflowY: "auto",
         }}>
           <div style={{ fontFamily: "var(--font-sans)", fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: "#a67c52", marginBottom: 10 }}>
             Project · {String(index + 1).padStart(2, "0")}

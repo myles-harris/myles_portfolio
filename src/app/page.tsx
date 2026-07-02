@@ -5,6 +5,7 @@ import HeroSection from "@/components/sections/HeroSection";
 import AboutSection from "@/components/sections/AboutSection";
 import ResumeSection, { SkillsGrid } from "@/components/sections/ResumeSection";
 import ProjectsSection from "@/components/sections/ProjectsSection";
+import InvolvementSection from "@/components/sections/InvolvementSection";
 import PhotographySection from "@/components/sections/PhotographySection";
 import RunningSection from "@/components/sections/RunningSection";
 import ContactSection from "@/components/sections/ContactSection";
@@ -34,6 +35,7 @@ export default function Home() {
         <ResumeSection />
         <ProjectsSection />
         <SkillsGrid />
+        <InvolvementSection />
         <PhotographySection />
         <RunningSection />
         <ContactSection />
