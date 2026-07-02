@@ -1,0 +1,188 @@
+{
+  "name": "Myles C. Harris",
+  "contact": {
+    "phone": "678-951-7549",
+    "email": "mylescharris18@gmail.com",
+    "linkedin": "linkedin.com/in/mylescharris/",
+    "website": "myles-harris.com"
+  },
+  "experience": [
+    {
+      "title": "Software Engineer II",
+      "company": "Dell Technologies",
+      "startDate": "2023-09",
+      "endDate": "2026-04",
+      "highlights": [
+        "Built and owned REST APIs across distributed Java/Spring Boot services, leveraging async processing for high-throughput event handling; increased automated test coverage to over 90%.",
+        "Led organization-wide Java 25 and Spring Boot 4 upgrade across 1,300+ repositories; authored spec-driven migration recipes for phased AI-assisted execution and defined manual validation checkpoints for code owners.",
+        "Boosted development speed 40% using LLM tooling (Windsurf, Claude, Cursor) and prompt engineering to automate code generation, testing, and documentation."
+      ],
+      "skills": [
+        "Java",
+        "Spring Boot",
+        "REST API",
+        "Async Processing",
+        "Distributed Systems",
+        "LLM-Assisted Development",
+        "Claude",
+        "Cursor",
+        "Windsurf",
+        "Prompt Engineering",
+        "CI/CD",
+        "Test Automation",
+        "Migration Planning"
+      ]
+    },
+    {
+      "title": "Software Engineer II",
+      "company": "Moogsoft",
+      "note": "Acquired by Dell",
+      "startDate": "2022-11",
+      "endDate": "2023-09",
+      "highlights": [
+        "Designed and tested a real-time, event-driven incident-correlation microservice (Java, Kafka, Elasticsearch) that ingests 2B+ events/day and cut MTTR by up to 35% across Fortune 100 customers.",
+        "Built a performance monitoring platform (JMeter) that load-tested distributed microservices, reducing manual QA cycles by 75% and defining scalability metrics for executive decisions. Integrated into CI/CD pipeline (Jenkins).",
+        "Developed mock OAuth service using AWS Lambda to simulate authentication flows for integration testing."
+      ],
+      "skills": [
+        "Java",
+        "Kafka",
+        "Elasticsearch",
+        "Event-Driven Architecture",
+        "Microservices",
+        "Performance Testing",
+        "JMeter",
+        "Jenkins",
+        "CI/CD",
+        "AWS Lambda",
+        "OAuth",
+        "Integration Testing",
+        "Distributed Systems"
+      ]
+    },
+    {
+      "title": "Software Engineer",
+      "company": "Northrop Grumman",
+      "note": "Enterprise Top Performer 2021–2022",
+      "startDate": "2019-07",
+      "endDate": "2022-10",
+      "highlights": [
+        "Led software delivery for GPS/Inertial Navigation Systems, meeting DO-178C standards while developing sensor/radar libraries (C++) as a technical Scrum Master.",
+        "Managed program-level technical delivery across 8 cross-functional teams (~80 engineers), identifying and resolving cross-team blockers to reduce rework cycles and recover 2 weeks of engineering capacity per quarter."
+      ],
+      "skills": [
+        "C++",
+        "DO-178C",
+        "Safety-Critical Software",
+        "GPS / Inertial Navigation",
+        "Scrum Master",
+        "Agile",
+        "Defense Systems",
+        "Embedded Software",
+        "Sensor/Radar Libraries",
+        "Cross-Team Leadership"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "Orbit",
+      "description": "Video Conferencing App",
+      "highlights": [
+        "Built a group video-calling platform with Daily.co for real-time video and Twilio for SMS/OTP. Designed stateless APIs for call scheduling/orchestration and optimized PostgreSQL schemas to support 100+ concurrent calls.",
+        "Developed end-to-end with LLM-assisted tooling, enabling 20% faster iteration on new features."
+      ],
+      "skills": [
+        "TypeScript",
+        "React",
+        "Express",
+        "PostgreSQL",
+        "Twilio",
+        "Daily.co",
+        "WebRTC",
+        "BullMQ",
+        "Redis",
+        "REST API",
+        "Claude Code",
+        "LLM-Assisted Development",
+        "System Design"
+      ]
+    },
+    {
+      "name": "California Culinary Map",
+      "description": "Multimodal RAG Assistant",
+      "highlights": [
+        "Built a multimodal RAG pipeline over a restaurant/recipe database; captioned 100+ images via vision LLM; indexed dual 384-d text / 512-d image embeddings in ChromaDB with weighted fusion & metadata-filtered reranking.",
+        "Designed a multi-agent recommendation system (LangGraph) with NL intent classification and preference extraction, exposed via a FastMCP server (3 tools, 1 resource) for query, recommendations, and review retrieval.",
+        "Built an MCP / ReAct agent loop binding server tools to an LLM at runtime, delivered via Gradio chat interface."
+      ],
+      "skills": [
+        "Python",
+        "LangChain",
+        "LangGraph",
+        "ChromaDB",
+        "FastMCP",
+        "Gradio",
+        "RAG",
+        "Multimodal AI",
+        "Vector Databases",
+        "Multi-Agent Orchestration",
+        "ReAct",
+        "Vision LLM",
+        "Prompt Engineering",
+        "MCP",
+        "Embeddings"
+      ]
+    }
+  ],
+  "technicalSkills": {
+    "languages": ["Java", "Python", "TypeScript", "JavaScript", "C++", "SQL"],
+    "frameworks": ["Node.js", "Express.js", "React", "Spring Boot", "LangChain", "LangGraph", "Angular"],
+    "developerTools": ["Git", "Kubernetes", "Docker", "AWS", "Jenkins", "Kafka", "Grafana", "Maven", "Redis", "BullMQ"],
+    "llmTools": ["Claude", "Cursor", "Windsurf", "ChatGPT", "GitHub Copilot"],
+    "libraries": ["Pandas", "NumPy", "Matplotlib", "SciPy", "Scikit-Learn"],
+    "genAI": [
+      "Prompt Engineering",
+      "LLM Function/Tool Calling",
+      "Model Evaluation",
+      "RAG Pipelines",
+      "Vector Databases",
+      "ChromaDB",
+      "FAISS",
+      "LangChain",
+      "LangGraph",
+      "Agentic AI",
+      "ReAct",
+      "Multi-Agent Orchestration"
+    ]
+  },
+  "involvement": [
+    {
+      "organization": "National Society of Black Engineers",
+      "role": "Member",
+      "chapter": "Atlanta & Los Angeles Professionals Chapter",
+      "startDate": "2023",
+      "endDate": "Present"
+    }
+  ],
+  "education": [
+    {
+      "institution": "Mercer University",
+      "location": "Macon, GA",
+      "degree": "Master of Science",
+      "field": "Software Engineering"
+    },
+    {
+      "institution": "Mercer University",
+      "location": "Macon, GA",
+      "degree": "Bachelor of Science",
+      "field": "Mechanical Engineering"
+    },
+    {
+      "institution": "Coursera",
+      "degree": "Professional Certificate",
+      "field": "IBM RAG and Agentic AI",
+      "completedDate": "2026-06"
+    }
+  ]
+}
