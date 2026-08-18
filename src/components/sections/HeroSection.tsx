@@ -190,16 +190,24 @@ interface SpotifyTrack {
 function SpotifyTile() {
   const [track, setTrack] = useState<SpotifyTrack | null>(null);
   const [loading, setLoading] = useState(true);
+  const [errored, setErrored] = useState(false);
 
   const fetchTrack = useCallback(async () => {
     try {
       const res = await fetch("/api/spotify/current-track");
-      if (res.ok) {
-        const data = await res.json();
-        setTrack(data.track ?? null);
+      if (!res.ok) {
+        console.warn(`[spotify tile] /api/spotify/current-track → ${res.status}`);
+        setErrored(true);
+        setTrack(null);
+        return;
       }
-    } catch {
-      // silently fail — show placeholder
+      const data = await res.json();
+      setErrored(false);
+      setTrack(data.track ?? null);
+    } catch (err) {
+      console.warn("[spotify tile] request failed", err);
+      setErrored(true);
+      setTrack(null);
     } finally {
       setLoading(false);
     }
@@ -211,14 +219,29 @@ function SpotifyTile() {
     return () => clearInterval(interval);
   }, [fetchTrack]);
 
+  // No fake progress — an empty bar is honest, 42% is not.
   const progressPct = track && track.duration_ms > 0
     ? Math.round((track.progress_ms / track.duration_ms) * 100)
-    : 42;
+    : 0;
+
+  const title = loading
+    ? "Loading…"
+    : errored
+    ? "Currently unavailable"
+    : track
+    ? track.name
+    : "Nothing playing";
+
+  const subtitle = errored
+    ? "Couldn't reach Spotify"
+    : track
+    ? `${track.artists.map(a => a.name).join(", ")} · ${track.album.name}`
+    : "Open Spotify to start listening";
 
   return (
     <BentoTile col="span 2" row="span 1" shadow="#3a2c1a" label="Now playing · Spotify">
       <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-        {track?.album?.images[0] ? (
+        {track?.album?.images?.[0] ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={track.album.images[0].url}
@@ -230,10 +253,10 @@ function SpotifyTile() {
         )}
         <div style={{ minWidth: 0, flex: 1 }}>
           <div style={{ fontFamily: "var(--font-serif)", fontWeight: 600, fontSize: 16, color: "#3a2c1a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-            {loading ? "Loading…" : track ? track.name : "Nothing playing"}
+            {title}
           </div>
-          <div style={{ fontFamily: "var(--font-serif)", fontSize: 13, color: "#3a2c1a", opacity: 0.6 }}>
-            {track ? `${track.artists.map(a => a.name).join(", ")} · ${track.album.name}` : "Open Spotify to start listening"}
+          <div style={{ fontFamily: "var(--font-serif)", fontSize: 13, color: "#3a2c1a", opacity: 0.6, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+            {subtitle}
           </div>
           <div style={{ height: 3, background: "#1a1208", borderRadius: 9999, marginTop: 8, position: "relative", opacity: 0.15 }}>
             <div style={{ position: "absolute", inset: 0, width: `${progressPct}%`, background: "#3a2c1a", borderRadius: 9999, opacity: 1 }} />
