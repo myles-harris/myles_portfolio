@@ -1,0 +1,1286 @@
+<!doctype html>
+<html lang="en">
+<head>
+<base href="/sonos/">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ayanna Costley for Sonos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&amp;display=swap">
+<style>
+html,body{height:100%}
+
+body{margin:0;background:transparent}
+a{color:#3A4BFF}a:hover{color:#2433C9}
+button,input{font:inherit}
+.tab[aria-pressed="false"]:hover{background:#2E2968 !important;color:#FFFFFF !important}
+.chan[aria-pressed="false"]:hover{background:#3A31C0 !important}
+.tab:focus-visible,.hit:focus-visible,.cbtn:focus-visible,.chan:focus-visible,.cta:focus-visible{outline:2px solid #FFCB2E;outline-offset:2px}
+.composer:focus-within{border-color:#3A4BFF !important;box-shadow:0 0 0 3px rgba(58,75,255,0.2)}
+.tab.nudge{animation:nudge 1.3s ease-in-out infinite}
+@keyframes nudge{0%,100%{box-shadow:0 0 0 2px #FF6A47}50%{box-shadow:0 0 0 6px rgba(255,106,71,0.28)}}
+.say{animation:pop 260ms cubic-bezier(.2,.9,.3,1.25)}
+.flashA{animation:flashA 1.2s ease-out 1}
+.flashB{animation:flashB 1.2s ease-out 1}
+@keyframes flashA{0%{box-shadow:0 0 0 3px #FFFFFF,0 0 0 6px #3A4BFF}100%{box-shadow:0 0 0 3px rgba(255,255,255,0),0 0 0 18px rgba(58,75,255,0)}}
+@keyframes flashB{0%{box-shadow:0 0 0 3px #FFFFFF,0 0 0 6px #3A4BFF}100%{box-shadow:0 0 0 3px rgba(255,255,255,0),0 0 0 18px rgba(58,75,255,0)}}
+.gifbox{animation:gifbg 1.2s steps(1) infinite}
+@keyframes gifbg{0%{background-color:#FF6A47}50%{background-color:#FF8AD1}}
+.fah{animation:fah .9s ease-in-out infinite}
+@keyframes fah{0%,100%{transform:scale(1,1) rotate(-2deg)}35%{transform:scale(1.16,.9) rotate(2deg)}65%{transform:scale(.95,1.06) rotate(-1deg)}}
+@media (prefers-reduced-motion:reduce){.gifbox,.fah{animation:none !important}}
+@keyframes pop{from{opacity:0;transform:scale(.85) translateY(-4px)}to{opacity:1;transform:none}}
+.mp-label{position:absolute;left:15px;top:19px;display:flex;flex-direction:column;align-items:flex-start;gap:5px}
+[data-flip="1"] .mp-label{left:auto;right:14px;align-items:flex-end}
+[data-flip="1"] .mp-pill{border-radius:10px 3px 10px 10px !important}
+[data-flip="1"] .say{border-radius:16px 3px 16px 16px !important}
+@media (hover:hover) and (pointer:fine){.mp-root,.mp-root *{cursor:none !important}}
+@media (hover:none){.mp-me{display:none !important}}
+.chat{display:flex;flex-direction:row}
+.chat-side{width:252px}
+.chat-list{display:flex;flex-direction:column;gap:2px}
+@media (max-width:760px){
+.chat{flex-direction:column}
+.chat-side{width:auto}
+.chat-list{flex-direction:row;flex-wrap:wrap;gap:6px}
+.chat-main{min-height:460px}
+.hide-sm{display:none !important}
+}
+
+</style>
+</head>
+<body>
+<div id="app"></div>
+<template id="dc-tpl">
+<div class="mp-root" ref="{{ setRoot }}" onMouseMove="{{ onMove }}" onMouseLeave="{{ onLeave }}" style="position: relative; overflow: hidden; height: 100vh; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; padding: 0; background: transparent; color: #16133A; font-family: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;">
+
+
+<div style="flex: 1; min-height: 0; display: flex; flex-direction: column; background: #16133A; border-radius: 20px; padding: 8px 8px 0; box-shadow: 0 30px 60px -20px rgba(10,8,40,0.55);">
+<div style="flex: 1; min-height: 0; display: flex; flex-direction: column; border-radius: 13px 13px 6px 6px; overflow: hidden; background: #221E52;">
+
+<div style="display: flex; align-items: flex-end; gap: 10px; padding: 9px 10px 0;">
+<div aria-hidden="true" class="hide-sm" style="display: flex; gap: 7px; padding: 0 6px 15px;">
+<span style="width: 11px; height: 11px; border-radius: 50%; background: #FF6A47;"></span>
+<span style="width: 11px; height: 11px; border-radius: 50%; background: #FFCB2E;"></span>
+<span style="width: 11px; height: 11px; border-radius: 50%; background: #19C37D;"></span>
+</div>
+<nav aria-label="Application tabs" style="flex: 1; min-width: 0; display: flex; gap: 4px;">
+<button class="tab {{ t1.cls }}" data-guide="tab-doc" type="button" aria-pressed="{{ t1.pressed }}" onClick="{{ goDoc }}" style="flex: 0 1 260px; min-width: 0; display: flex; align-items: center; gap: 9px; padding: 9px 14px 10px 10px; border: 0; border-radius: 11px 11px 0 0; background: {{ t1.bg }}; color: {{ t1.fg }}; font-size: 13.5px; font-weight: 500; text-align: left; cursor: pointer;">
+<span aria-hidden="true" style="flex: none; width: 22px; height: 22px; border-radius: 7px; background: #FFCB2E; color: #16133A; display: flex; align-items: center; justify-content: center;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5"></path><path d="M9 13h6M9 17h4"></path></svg></span>
+<span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">What You Bring, annotated</span>
+</button>
+<button class="tab {{ t2.cls }}" data-guide="tab-web" type="button" aria-pressed="{{ t2.pressed }}" onClick="{{ goWeb }}" style="flex: 0 1 260px; min-width: 0; display: flex; align-items: center; gap: 9px; padding: 9px 14px 10px 10px; border: 0; border-radius: 11px 11px 0 0; background: {{ t2.bg }}; color: {{ t2.fg }}; font-size: 13.5px; font-weight: 500; text-align: left; cursor: pointer;">
+<span aria-hidden="true" style="flex: none; width: 22px; height: 22px; border-radius: 7px; background: #FF6A47; color: #16133A; display: flex; align-items: center; justify-content: center;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18"></path></svg></span>
+<span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">ayannacostley.com</span>
+</button>
+<button class="tab {{ t3.cls }}" data-guide="tab-chat" type="button" aria-pressed="{{ t3.pressed }}" onClick="{{ goChat }}" style="flex: 0 1 260px; min-width: 0; display: flex; align-items: center; gap: 9px; padding: 9px 14px 10px 10px; border: 0; border-radius: 11px 11px 0 0; background: {{ t3.bg }}; color: {{ t3.fg }}; font-size: 13.5px; font-weight: 500; text-align: left; cursor: pointer;">
+<span aria-hidden="true" style="flex: none; width: 22px; height: 22px; border-radius: 7px; background: #19C37D; color: #16133A; display: flex; align-items: center; justify-content: center;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 0 1-11.5 7.2L4 20.5l1.3-4.3A8 8 0 1 1 20 12z"></path></svg></span>
+<span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Ayanna HQ</span>
+</button>
+</nav>
+</div>
+
+<div style="display: flex; align-items: center; gap: 12px; padding: 8px 12px; background: #FFFDF7; border-bottom: 1px solid #E9E4F7;">
+<div aria-hidden="true" class="hide-sm" style="display: flex; gap: 12px; color: #8F8AB5;">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.4-5.7"></path><path d="M20 4v5h-5"></path></svg>
+</div>
+<div style="flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; padding: 7px 14px; background: #FFFFFF; border: 1px solid #E4E0F5; border-radius: 999px; font-family: 'Geist Mono', ui-monospace, monospace; font-size: 12.5px; color: #3A3666;">
+<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#12A066" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none;"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>
+<sc-if value="{{ showDoc }}" hint-placeholder-val="{{ true }}"><span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">docs / sonos-bpm / what-you-bring-annotated</span></sc-if>
+<sc-if value="{{ showWeb }}" hint-placeholder-val="{{ false }}"><span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">https://www.ayannacostley.com</span></sc-if>
+<sc-if value="{{ showChat }}" hint-placeholder-val="{{ false }}"><span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">chat / ayanna-hq / #{{ ch.name }}</span></sc-if>
+</div>
+<sc-if value="{{ showWeb }}" hint-placeholder-val="{{ false }}">
+<a class="cta" href="https://www.ayannacostley.com" target="_blank" rel="noopener noreferrer" style="flex: none; display: flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 999px; background: #3A4BFF; color: #FFFFFF; font-size: 12.5px; font-weight: 500; text-decoration: none;">Open<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M8 7h9v9"></path></svg></a>
+</sc-if>
+</div>
+
+<main ref="{{ setContent }}" onScroll="{{ onScroll }}" style="flex: 1; min-height: 0; overflow: auto; display: flex; flex-direction: column; background: {{ contentBg }};">
+
+<sc-if value="{{ showDoc }}" hint-placeholder-val="{{ true }}">
+<div style="flex: none; padding: 0 clamp(10px, 3vw, 32px) 56px;">
+
+<div style="max-width: 1080px; margin: 0 auto; padding: 18px 4px 14px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 20px;">
+<div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
+<span aria-hidden="true" style="flex: none; width: 30px; height: 38px; box-sizing: border-box; display: flex; flex-direction: column; gap: 3px; padding: 9px 6px; border-radius: 5px; background: #FFFFFF; border: 1px solid #EAD9A0; transform: rotate(-4deg);">
+<span style="height: 3px; border-radius: 2px; background: #3A4BFF;"></span>
+<span style="height: 2px; border-radius: 2px; background: #FF8AD1;"></span>
+<span style="height: 2px; border-radius: 2px; background: #19C37D;"></span>
+<span style="height: 2px; width: 60%; border-radius: 2px; background: #FFCB2E;"></span>
+</span>
+<div style="min-width: 0;">
+<p style="margin: 0; font-size: 15px; font-weight: 600; color: #16133A;">What You Bring, annotated</p>
+<p style="margin: 2px 0 0; font-size: 12.5px; color: #5B5780;">Ayanna Costley · Saved to drafts</p>
+</div>
+</div>
+<div style="display: flex; align-items: center; gap: 10px;">
+<span data-guide="notes-chip" style="display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; background: #FFFFFF; border: 1px solid #EAD9A0; font-size: 12.5px; font-weight: 500; color: #16133A;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#D63A16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"></path></svg>9 comments</span>
+<span aria-hidden="true" style="width: 30px; height: 30px; border-radius: 50%; background: #D63A16; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; box-shadow: 0 0 0 2px #FFF3CC, 0 0 0 4px #D63A16;">AC</span>
+</div>
+</div>
+
+<div aria-hidden="true" class="hide-sm" style="max-width: 1080px; margin: 0 auto 18px; box-sizing: border-box; display: flex; align-items: center; gap: 16px; padding: 7px 18px; background: #FFFDF7; border: 1px solid #EAD9A0; border-radius: 999px; font-size: 12.5px; color: #5B5780; white-space: nowrap; overflow: hidden;">
+<span>100%</span>
+<span style="width: 1px; height: 16px; background: #EAD9A0;"></span>
+<span>Normal text</span>
+<span style="width: 1px; height: 16px; background: #EAD9A0;"></span>
+<span>Newsreader</span>
+<span>12</span>
+<span style="width: 1px; height: 16px; background: #EAD9A0;"></span>
+<span style="font-weight: 700; color: #3A4BFF;">B</span>
+<span style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 14px; color: #B5258A;">I</span>
+<span style="text-decoration: underline; color: #0B7A4C;">U</span>
+<span style="padding: 1px 6px; border-radius: 4px; background: #FFE89A; color: #16133A;">Highlight</span>
+<span style="width: 1px; height: 16px; background: #EAD9A0;"></span>
+<span style="display: flex; align-items: center; gap: 6px; color: #D63A16; font-weight: 500;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"></path><path d="M12 8v5M9.5 10.5h5"></path></svg>Comment</span>
+</div>
+
+<article onMouseOver="{{ overDoc }}" onMouseLeave="{{ leave }}" onFocus="{{ overDoc }}" onBlur="{{ leave }}" style="max-width: 1080px; margin: 0 auto; background: #FFFFFF; border-radius: 8px; overflow: clip; display: flex; flex-wrap: wrap; box-shadow: 0 1px 2px rgba(22,19,58,0.08), 0 18px 40px -20px rgba(150,110,0,0.35);">
+
+<div style="flex: 999 1 440px; min-width: 0; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px; padding: clamp(36px, 6vw, 76px) clamp(22px, 6vw, 76px) clamp(40px, 6vw, 76px); font-family: 'Newsreader', Georgia, serif; font-size: 19px; line-height: 1.6; color: #16133A;">
+<p style="margin: 0;">At Sonos we want to create the ultimate listening experience for our customers and know that it starts by listening to each other. As part of the Sonos team, you’ll collaborate with people of all styles, skill sets, and backgrounds to realize our vision while fostering a community where everyone feels included and empowered to do the best work of their lives.</p>
+<h2 style="margin: 18px 0 0; font-family: 'Newsreader', Georgia, serif; font-weight: 600; font-size: 26px; line-height: 1.2; letter-spacing: -0.01em; color: #16133A;">This role is a hybrid position</h2>
+<p style="margin: 0;">Some roles require an office while others may be done remotely. This position is considered hybrid, allowing for a combination of remote work and in-office collaboration. Qualified applicants must live within commuting distance of our New York office location.</p>
+<h2 style="margin: 18px 0 0; font-family: 'Newsreader', Georgia, serif; font-weight: 600; font-size: 26px; line-height: 1.2; letter-spacing: -0.01em; color: #16133A;">About BPM</h2>
+<p style="margin: 0;">BPM — short for Bureau of Psychoacoustic Messaging — is the newly formed in-house creative engine for Sonos — the team behind brand campaigns, social content, and cultural moments that bring the Sonos listening experience to life. We move fast, think culturally, and care as much about how something feels as how it looks.</p>
+<p style="margin: 0;">We're opening a new creative studio and performance space in SoHo, where we'll invite artists in for live performances, listening sessions, and film screenings.</p>
+<h2 style="margin: 18px 0 0; font-family: 'Newsreader', Georgia, serif; font-weight: 600; font-size: 26px; line-height: 1.2; letter-spacing: -0.01em; color: #16133A;">About the Role</h2>
+<p style="margin: 0;">We're looking for a Junior Copywriter to join BPM and help make creative work for Sonos.</p>
+<p style="margin: 0;">You’re early in your career, but you know you want to be a writer. You love words, ideas, culture, music, and advertising — and you probably pay more attention than most people to the way brands talk.</p>
+<p style="margin: 0;">You'll work alongside writers, designers, and other creatives to come up with ideas and bring them to life across campaigns, social, product launches, retail, CRM, and whatever else we're making. Some assignments will be big. Some will be small. Sometimes you'll be writing headlines. Sometimes you'll be concepting with a designer. Sometimes you'll be figuring out how to say something complicated in five words.</p>
+<p style="margin: 0;">You don't need to have it all figured out yet. We're looking for someone with talent, curiosity, and a point of view who's excited to learn from really good people and get better by making a lot of work.</p>
+<h2 style="margin: 18px 0 0; font-family: 'Newsreader', Georgia, serif; font-weight: 600; font-size: 26px; line-height: 1.2; letter-spacing: -0.01em; color: #16133A;">What You’ll Do</h2>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px;">
+<li style="display: flex; gap: 16px;"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 13px; border-radius: 50%; background: #16133A;"></span><span>Write. Headlines, scripts, social posts, emails, product stories, campaign copy, and whatever else the idea calls for.</span></li>
+<li style="display: flex; gap: 16px;"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 13px; border-radius: 50%; background: #16133A;"></span><span>Come up with ideas — on your own and alongside designers, writers, and other creatives.</span></li>
+<li style="display: flex; gap: 16px;"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 13px; border-radius: 50%; background: #16133A;"></span><span>Explore different ways into a brief instead of stopping at the first idea. Iterate.</span></li>
+<li style="display: flex; gap: 16px;"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 13px; border-radius: 50%; background: #16133A;"></span><span>Help turn creative concepts into work that feels clear, interesting, and distinctly Sonos.</span></li>
+<li style="display: flex; gap: 16px;"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 13px; border-radius: 50%; background: #16133A;"></span><span>Find interesting, human ways to talk about products and technology.</span></li>
+<li style="display: flex; gap: 16px;"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 13px; border-radius: 50%; background: #16133A;"></span><span>Learn the Sonos voice and help bring it to life across different kinds of work.</span></li>
+<li style="display: flex; gap: 16px;"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 13px; border-radius: 50%; background: #16133A;"></span><span>Work with more senior creatives to develop your ideas and your craft.</span></li>
+<li style="display: flex; gap: 16px;"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 13px; border-radius: 50%; background: #16133A;"></span><span>Take feedback, try again, and keep pushing the work.</span></li>
+<li style="display: flex; gap: 16px;"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 13px; border-radius: 50%; background: #16133A;"></span><span>Pay attention to what's happening in music, culture, design, advertising, and the internet — and bring that curiosity into the work.</span></li>
+<li style="display: flex; gap: 16px;"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 13px; border-radius: 50%; background: #16133A;"></span><span>Juggle a few things at once and learn how to make good work on real-world timelines.</span></li>
+</ul>
+<h2 style="margin: 18px 0 0; font-family: 'Newsreader', Georgia, serif; font-weight: 600; font-size: 26px; line-height: 1.2; letter-spacing: -0.01em; color: #16133A;">What Success Looks Like</h2>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px;">
+<li style="display: flex; gap: 16px;"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 13px; border-radius: 50%; background: #16133A;"></span><span>You're making good work and getting better.</span></li>
+<li style="display: flex; gap: 16px;"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 13px; border-radius: 50%; background: #16133A;"></span><span>You're curious. You ask questions. You bring ideas into the room. You're willing to try something weird, throw away something that isn't working, and take another swing.</span></li>
+<li style="display: flex; gap: 16px;"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 13px; border-radius: 50%; background: #16133A;"></span><span>You care about craft, but you're not precious about your copy. You want feedback because you want the work to be better.</span></li>
+<li style="display: flex; gap: 16px;"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 13px; border-radius: 50%; background: #16133A;"></span><span>And as you grow, you're taking on more, finding your voice, and becoming a stronger creative partner.</span></li>
+</ul>
+<h2 data-guide="wyb" style="margin: 18px 0 0; font-family: 'Newsreader', Georgia, serif; font-weight: 600; font-size: 26px; line-height: 1.2; letter-spacing: -0.01em; color: #16133A;">What You <span style="box-shadow: inset 0 -0.36em 0 #FFCB2E;">Bring</span></h2>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px;">
+<li style="display: flex;"><button class="hit" type="button" aria-pressed="{{ r0.pressed }}" onClick="{{ r0.pick }}" style="width: 100%; display: flex; gap: 16px; padding: 0; border: 0; background: transparent; color: #16133A; font-family: 'Newsreader', Georgia, serif; font-size: 19px; line-height: 1.6; text-align: left; cursor: pointer;"><span aria-hidden="true" style="flex: none; width: 9px; height: 9px; margin-top: 11px; border-radius: 50%; background: #D9A400;"></span><span><span class="{{ r0.flash }}" style="background: {{ r0.hl }}; box-shadow: 0 0 0 3px {{ r0.hl }}; border-radius: 3px; -webkit-box-decoration-break: clone; box-decoration-break: clone; transition: background 160ms ease, box-shadow 160ms ease;">1–3 years of copywriting or creative experience — agency, in-house, freelance, internships, or other relevant experience all count.</span></span></button></li>
+<li style="display: flex;"><button class="hit" type="button" aria-pressed="{{ r1.pressed }}" onClick="{{ r1.pick }}" style="width: 100%; display: flex; gap: 16px; padding: 0; border: 0; background: transparent; color: #16133A; font-family: 'Newsreader', Georgia, serif; font-size: 19px; line-height: 1.6; text-align: left; cursor: pointer;"><span aria-hidden="true" style="flex: none; width: 9px; height: 9px; margin-top: 11px; border-radius: 50%; background: #D6449B;"></span><span><span class="{{ r1.flash }}" style="background: {{ r1.hl }}; box-shadow: 0 0 0 3px {{ r1.hl }}; border-radius: 3px; -webkit-box-decoration-break: clone; box-decoration-break: clone; transition: background 160ms ease, box-shadow 160ms ease;">A portfolio that makes us want to keep looking.</span></span></button></li>
+<li style="display: flex;"><button class="hit" type="button" aria-pressed="{{ r2.pressed }}" onClick="{{ r2.pick }}" style="width: 100%; display: flex; gap: 16px; padding: 0; border: 0; background: transparent; color: #16133A; font-family: 'Newsreader', Georgia, serif; font-size: 19px; line-height: 1.6; text-align: left; cursor: pointer;"><span aria-hidden="true" style="flex: none; width: 9px; height: 9px; margin-top: 11px; border-radius: 50%; background: #12A066;"></span><span><span class="{{ r2.flash }}" style="background: {{ r2.hl }}; box-shadow: 0 0 0 3px {{ r2.hl }}; border-radius: 3px; -webkit-box-decoration-break: clone; box-decoration-break: clone; transition: background 160ms ease, box-shadow 160ms ease;">Strong writing skills and a love of language.</span></span></button></li>
+<li style="display: flex;"><button class="hit" type="button" aria-pressed="{{ r3.pressed }}" onClick="{{ r3.pick }}" style="width: 100%; display: flex; gap: 16px; padding: 0; border: 0; background: transparent; color: #16133A; font-family: 'Newsreader', Georgia, serif; font-size: 19px; line-height: 1.6; text-align: left; cursor: pointer;"><span aria-hidden="true" style="flex: none; width: 9px; height: 9px; margin-top: 11px; border-radius: 50%; background: #3A4BFF;"></span><span><span class="{{ r3.flash }}" style="background: {{ r3.hl }}; box-shadow: 0 0 0 3px {{ r3.hl }}; border-radius: 3px; -webkit-box-decoration-break: clone; box-decoration-break: clone; transition: background 160ms ease, box-shadow 160ms ease;">Ideas. They don't all have to be great. You just need to have them.</span></span></button></li>
+<li style="display: flex;"><button class="hit" type="button" aria-pressed="{{ r4.pressed }}" onClick="{{ r4.pick }}" style="width: 100%; display: flex; gap: 16px; padding: 0; border: 0; background: transparent; color: #16133A; font-family: 'Newsreader', Georgia, serif; font-size: 19px; line-height: 1.6; text-align: left; cursor: pointer;"><span aria-hidden="true" style="flex: none; width: 9px; height: 9px; margin-top: 11px; border-radius: 50%; background: #E2541F;"></span><span><span class="{{ r4.flash }}" style="background: {{ r4.hl }}; box-shadow: 0 0 0 3px {{ r4.hl }}; border-radius: 3px; -webkit-box-decoration-break: clone; box-decoration-break: clone; transition: background 160ms ease, box-shadow 160ms ease;">Curiosity about music, culture, design, technology, advertising, and what's happening in the world.</span></span></button></li>
+<li style="display: flex;"><button class="hit" type="button" aria-pressed="{{ r5.pressed }}" onClick="{{ r5.pick }}" style="width: 100%; display: flex; gap: 16px; padding: 0; border: 0; background: transparent; color: #16133A; font-family: 'Newsreader', Georgia, serif; font-size: 19px; line-height: 1.6; text-align: left; cursor: pointer;"><span aria-hidden="true" style="flex: none; width: 9px; height: 9px; margin-top: 11px; border-radius: 50%; background: #D9A400;"></span><span><span class="{{ r5.flash }}" style="background: {{ r5.hl }}; box-shadow: 0 0 0 3px {{ r5.hl }}; border-radius: 3px; -webkit-box-decoration-break: clone; box-decoration-break: clone; transition: background 160ms ease, box-shadow 160ms ease;">An interest in making things, not just talking about making them.</span></span></button></li>
+<li style="display: flex;"><button class="hit" type="button" aria-pressed="{{ r6.pressed }}" onClick="{{ r6.pick }}" style="width: 100%; display: flex; gap: 16px; padding: 0; border: 0; background: transparent; color: #16133A; font-family: 'Newsreader', Georgia, serif; font-size: 19px; line-height: 1.6; text-align: left; cursor: pointer;"><span aria-hidden="true" style="flex: none; width: 9px; height: 9px; margin-top: 11px; border-radius: 50%; background: #D6449B;"></span><span><span class="{{ r6.flash }}" style="background: {{ r6.hl }}; box-shadow: 0 0 0 3px {{ r6.hl }}; border-radius: 3px; -webkit-box-decoration-break: clone; box-decoration-break: clone; transition: background 160ms ease, box-shadow 160ms ease;">A collaborative mindset and an openness to feedback.</span></span></button></li>
+<li style="display: flex;"><button class="hit" type="button" aria-pressed="{{ r7.pressed }}" onClick="{{ r7.pick }}" style="width: 100%; display: flex; gap: 16px; padding: 0; border: 0; background: transparent; color: #16133A; font-family: 'Newsreader', Georgia, serif; font-size: 19px; line-height: 1.6; text-align: left; cursor: pointer;"><span aria-hidden="true" style="flex: none; width: 9px; height: 9px; margin-top: 11px; border-radius: 50%; background: #12A066;"></span><span><span class="{{ r7.flash }}" style="background: {{ r7.hl }}; box-shadow: 0 0 0 3px {{ r7.hl }}; border-radius: 3px; -webkit-box-decoration-break: clone; box-decoration-break: clone; transition: background 160ms ease, box-shadow 160ms ease;">The ability to work through a problem, try different approaches, and keep going when the first answer isn't the right one.</span></span></button></li>
+<li style="display: flex;"><button class="hit" type="button" aria-pressed="{{ r8.pressed }}" onClick="{{ r8.pick }}" style="width: 100%; display: flex; gap: 16px; padding: 0; border: 0; background: transparent; color: #16133A; font-family: 'Newsreader', Georgia, serif; font-size: 19px; line-height: 1.6; text-align: left; cursor: pointer;"><span aria-hidden="true" style="flex: none; width: 9px; height: 9px; margin-top: 11px; border-radius: 50%; background: #3A4BFF;"></span><span><span class="{{ r8.flash }}" style="background: {{ r8.hl }}; box-shadow: 0 0 0 3px {{ r8.hl }}; border-radius: 3px; -webkit-box-decoration-break: clone; box-decoration-break: clone; transition: background 160ms ease, box-shadow 160ms ease;">A willingness to learn new tools and new ways of working, including AI.</span></span></button></li>
+</ul>
+<p style="margin: 0;">Experience with consumer brands, technology, music, or culture is nice to have, but it's not the point.</p>
+<p style="margin: 0;">We're much more interested in your book, your brain, and your potential than a perfectly linear résumé.</p>
+</div>
+
+<aside aria-label="Margin notes" style="flex: 1 1 280px; min-width: 0; box-sizing: border-box; padding: 0 20px 0 22px; background: #F5F2FF;">
+<div style="position: sticky; top: 0; display: flex; flex-direction: column; gap: 8px; padding: 22px 0;">
+<div style="display: flex; flex-direction: column; gap: 2px; padding: 0 2px 4px;">
+<p style="margin: 0; font-family: 'Geist Mono', ui-monospace, monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #3A4BFF;">Margin notes</p>
+<p style="margin: 0; font-size: 13px; line-height: 1.45; color: #3A3666;">Click a note to jump to its line.</p>
+</div>
+<button class="cbtn" type="button" aria-pressed="{{ r0.pressed }}" onClick="{{ r0.jump }}" style="width: 100%; display: flex; flex-direction: column; gap: 6px; padding: 11px 12px 12px; border: 1px solid {{ r0.border }}; border-radius: 12px; background: #FFFFFF; box-shadow: {{ r0.shadow }}; transform: translateX({{ r0.shift }}); transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease; color: #2B2850; text-align: left; cursor: pointer;">
+<span style="display: flex; align-items: center; gap: 8px;">
+<span aria-hidden="true" style="flex: none; width: 22px; height: 22px; border-radius: 50%; background: #D63A16; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 9.5px; font-weight: 600;">AC</span>
+<span style="font-size: 12.5px; font-weight: 600; color: #16133A;">Ayanna Costley</span>
+<span style="font-size: 11.5px; color: #5B5780;">Nov 4</span>
+<span style="margin-left: auto; padding: 1px 7px; border-radius: 999px; background: #FFE89A; font-family: 'Geist Mono', ui-monospace, monospace; font-size: 10.5px; font-weight: 500; color: #16133A;">01</span>
+</span>
+<span style="font-size: 13.5px; line-height: 1.45;">[Experience placeholder] Years, roles, and where: agency, in-house, freelance, or internships.</span>
+<span style="align-self: flex-start; padding: 2px 8px; border-radius: 6px; background: #EEF0FF; font-family: 'Geist Mono', ui-monospace, monospace; font-size: 11px; color: #2433C9;">[link to résumé]</span>
+</button>
+<button class="cbtn" type="button" aria-pressed="{{ r1.pressed }}" onClick="{{ r1.jump }}" style="width: 100%; display: flex; flex-direction: column; gap: 6px; padding: 11px 12px 12px; border: 1px solid {{ r1.border }}; border-radius: 12px; background: #FFFFFF; box-shadow: {{ r1.shadow }}; transform: translateX({{ r1.shift }}); transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease; color: #2B2850; text-align: left; cursor: pointer;">
+<span style="display: flex; align-items: center; gap: 8px;">
+<span aria-hidden="true" style="flex: none; width: 22px; height: 22px; border-radius: 50%; background: #D63A16; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 9.5px; font-weight: 600;">AC</span>
+<span style="font-size: 12.5px; font-weight: 600; color: #16133A;">Ayanna Costley</span>
+<span style="font-size: 11.5px; color: #5B5780;">Nov 4</span>
+<span style="margin-left: auto; padding: 1px 7px; border-radius: 999px; background: #FFD3EC; font-family: 'Geist Mono', ui-monospace, monospace; font-size: 10.5px; font-weight: 500; color: #16133A;">02</span>
+</span>
+<span style="font-size: 13.5px; line-height: 1.45;">[Experience placeholder] The two or three pieces I'd open first, and why.</span>
+<span style="align-self: flex-start; padding: 2px 8px; border-radius: 6px; background: #EEF0FF; font-family: 'Geist Mono', ui-monospace, monospace; font-size: 11px; color: #2433C9;">[link to sample]</span>
+</button>
+<button class="cbtn" type="button" aria-pressed="{{ r2.pressed }}" onClick="{{ r2.jump }}" style="width: 100%; display: flex; flex-direction: column; gap: 6px; padding: 11px 12px 12px; border: 1px solid {{ r2.border }}; border-radius: 12px; background: #FFFFFF; box-shadow: {{ r2.shadow }}; transform: translateX({{ r2.shift }}); transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease; color: #2B2850; text-align: left; cursor: pointer;">
+<span style="display: flex; align-items: center; gap: 8px;">
+<span aria-hidden="true" style="flex: none; width: 22px; height: 22px; border-radius: 50%; background: #D63A16; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 9.5px; font-weight: 600;">AC</span>
+<span style="font-size: 12.5px; font-weight: 600; color: #16133A;">Ayanna Costley</span>
+<span style="font-size: 11.5px; color: #5B5780;">Nov 4</span>
+<span style="margin-left: auto; padding: 1px 7px; border-radius: 999px; background: #C4F2DC; font-family: 'Geist Mono', ui-monospace, monospace; font-size: 10.5px; font-weight: 500; color: #16133A;">03</span>
+</span>
+<span style="font-size: 13.5px; line-height: 1.45;">[Experience placeholder] A line I wrote that I'm proud of, and where it ran.</span>
+</button>
+<button class="cbtn" type="button" aria-pressed="{{ r3.pressed }}" onClick="{{ r3.jump }}" style="width: 100%; display: flex; flex-direction: column; gap: 6px; padding: 11px 12px 12px; border: 1px solid {{ r3.border }}; border-radius: 12px; background: #FFFFFF; box-shadow: {{ r3.shadow }}; transform: translateX({{ r3.shift }}); transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease; color: #2B2850; text-align: left; cursor: pointer;">
+<span style="display: flex; align-items: center; gap: 8px;">
+<span aria-hidden="true" style="flex: none; width: 22px; height: 22px; border-radius: 50%; background: #D63A16; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 9.5px; font-weight: 600;">AC</span>
+<span style="font-size: 12.5px; font-weight: 600; color: #16133A;">Ayanna Costley</span>
+<span style="font-size: 11.5px; color: #5B5780;">Nov 4</span>
+<span style="margin-left: auto; padding: 1px 7px; border-radius: 999px; background: #D9DDFF; font-family: 'Geist Mono', ui-monospace, monospace; font-size: 10.5px; font-weight: 500; color: #16133A;">04</span>
+</span>
+<span style="font-size: 13.5px; line-height: 1.45;">[Experience placeholder] A brief where I pitched a lot of routes, and the weird one that made it.</span>
+</button>
+<button class="cbtn" type="button" aria-pressed="{{ r4.pressed }}" onClick="{{ r4.jump }}" style="width: 100%; display: flex; flex-direction: column; gap: 6px; padding: 11px 12px 12px; border: 1px solid {{ r4.border }}; border-radius: 12px; background: #FFFFFF; box-shadow: {{ r4.shadow }}; transform: translateX({{ r4.shift }}); transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease; color: #2B2850; text-align: left; cursor: pointer;">
+<span style="display: flex; align-items: center; gap: 8px;">
+<span aria-hidden="true" style="flex: none; width: 22px; height: 22px; border-radius: 50%; background: #D63A16; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 9.5px; font-weight: 600;">AC</span>
+<span style="font-size: 12.5px; font-weight: 600; color: #16133A;">Ayanna Costley</span>
+<span style="font-size: 11.5px; color: #5B5780;">Nov 4</span>
+<span style="margin-left: auto; padding: 1px 7px; border-radius: 999px; background: #FFD9C7; font-family: 'Geist Mono', ui-monospace, monospace; font-size: 10.5px; font-weight: 500; color: #16133A;">05</span>
+</span>
+<span style="font-size: 13.5px; line-height: 1.45;">[Experience placeholder] What I'm reading, watching, and listening to right now. Tab 3 has more.</span>
+</button>
+<button class="cbtn" type="button" aria-pressed="{{ r5.pressed }}" onClick="{{ r5.jump }}" style="width: 100%; display: flex; flex-direction: column; gap: 6px; padding: 11px 12px 12px; border: 1px solid {{ r5.border }}; border-radius: 12px; background: #FFFFFF; box-shadow: {{ r5.shadow }}; transform: translateX({{ r5.shift }}); transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease; color: #2B2850; text-align: left; cursor: pointer;">
+<span style="display: flex; align-items: center; gap: 8px;">
+<span aria-hidden="true" style="flex: none; width: 22px; height: 22px; border-radius: 50%; background: #D63A16; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 9.5px; font-weight: 600;">AC</span>
+<span style="font-size: 12.5px; font-weight: 600; color: #16133A;">Ayanna Costley</span>
+<span style="font-size: 11.5px; color: #5B5780;">Nov 4</span>
+<span style="margin-left: auto; padding: 1px 7px; border-radius: 999px; background: #FFE89A; font-family: 'Geist Mono', ui-monospace, monospace; font-size: 10.5px; font-weight: 500; color: #16133A;">06</span>
+</span>
+<span style="font-size: 13.5px; line-height: 1.45;">[Experience placeholder] Something I made on my own time: a zine, a newsletter, a side project.</span>
+</button>
+<button class="cbtn" type="button" aria-pressed="{{ r6.pressed }}" onClick="{{ r6.jump }}" style="width: 100%; display: flex; flex-direction: column; gap: 6px; padding: 11px 12px 12px; border: 1px solid {{ r6.border }}; border-radius: 12px; background: #FFFFFF; box-shadow: {{ r6.shadow }}; transform: translateX({{ r6.shift }}); transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease; color: #2B2850; text-align: left; cursor: pointer;">
+<span style="display: flex; align-items: center; gap: 8px;">
+<span aria-hidden="true" style="flex: none; width: 22px; height: 22px; border-radius: 50%; background: #D63A16; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 9.5px; font-weight: 600;">AC</span>
+<span style="font-size: 12.5px; font-weight: 600; color: #16133A;">Ayanna Costley</span>
+<span style="font-size: 11.5px; color: #5B5780;">Nov 4</span>
+<span style="margin-left: auto; padding: 1px 7px; border-radius: 999px; background: #FFD3EC; font-family: 'Geist Mono', ui-monospace, monospace; font-size: 10.5px; font-weight: 500; color: #16133A;">07</span>
+</span>
+<span style="font-size: 13.5px; line-height: 1.45;">[Experience placeholder] A note from a designer or creative director that changed my work, and what I did with it.</span>
+</button>
+<button class="cbtn" type="button" aria-pressed="{{ r7.pressed }}" onClick="{{ r7.jump }}" style="width: 100%; display: flex; flex-direction: column; gap: 6px; padding: 11px 12px 12px; border: 1px solid {{ r7.border }}; border-radius: 12px; background: #FFFFFF; box-shadow: {{ r7.shadow }}; transform: translateX({{ r7.shift }}); transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease; color: #2B2850; text-align: left; cursor: pointer;">
+<span style="display: flex; align-items: center; gap: 8px;">
+<span aria-hidden="true" style="flex: none; width: 22px; height: 22px; border-radius: 50%; background: #D63A16; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 9.5px; font-weight: 600;">AC</span>
+<span style="font-size: 12.5px; font-weight: 600; color: #16133A;">Ayanna Costley</span>
+<span style="font-size: 11.5px; color: #5B5780;">Nov 4</span>
+<span style="margin-left: auto; padding: 1px 7px; border-radius: 999px; background: #C4F2DC; font-family: 'Geist Mono', ui-monospace, monospace; font-size: 10.5px; font-weight: 500; color: #16133A;">08</span>
+</span>
+<span style="font-size: 13.5px; line-height: 1.45;">[Experience placeholder] A first answer that wasn't right, and the version that was.</span>
+</button>
+<button class="cbtn" type="button" aria-pressed="{{ r8.pressed }}" onClick="{{ r8.jump }}" style="width: 100%; display: flex; flex-direction: column; gap: 6px; padding: 11px 12px 12px; border: 1px solid {{ r8.border }}; border-radius: 12px; background: #FFFFFF; box-shadow: {{ r8.shadow }}; transform: translateX({{ r8.shift }}); transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease; color: #2B2850; text-align: left; cursor: pointer;">
+<span style="display: flex; align-items: center; gap: 8px;">
+<span aria-hidden="true" style="flex: none; width: 22px; height: 22px; border-radius: 50%; background: #D63A16; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 9.5px; font-weight: 600;">AC</span>
+<span style="font-size: 12.5px; font-weight: 600; color: #16133A;">Ayanna Costley</span>
+<span style="font-size: 11.5px; color: #5B5780;">Nov 4</span>
+<span style="margin-left: auto; padding: 1px 7px; border-radius: 999px; background: #D9DDFF; font-family: 'Geist Mono', ui-monospace, monospace; font-size: 10.5px; font-weight: 500; color: #16133A;">09</span>
+</span>
+<span style="font-size: 13.5px; line-height: 1.45;">[Experience placeholder] Tools I use now, AI included, and where they fit in my process.</span>
+</button>
+</div>
+</aside>
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div style="max-width: 1080px; margin: 24px auto 0; box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 12px 16px; padding: 0 4px;">
+<p style="margin: 0; font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 18px; color: #4A4670;">Proof is in the next tab.</p>
+<button class="cta" type="button" onClick="{{ goWeb }}" style="display: flex; align-items: center; gap: 8px; padding: 11px 18px; border: 0; border-radius: 999px; background: #3A4BFF; color: #FFFFFF; font-size: 14px; font-weight: 500; cursor: pointer; box-shadow: 0 6px 16px -6px rgba(58,75,255,0.6);">Open the portfolio<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg></button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ showWeb }}" hint-placeholder-val="{{ false }}">
+<div style="flex: none; width: 100%; max-width: 1040px; box-sizing: border-box; margin: 0 auto; padding: clamp(32px, 6vw, 72px) clamp(18px, 4vw, 40px) 64px; display: flex; flex-direction: column; gap: 32px;">
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 22px 32px;">
+<div style="flex: 1 1 420px; min-width: 0;">
+<p style="margin: 0 0 18px; display: flex; align-items: center; gap: 8px; font-family: 'Geist Mono', ui-monospace, monospace; font-size: 11.5px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #D63A16;"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 3px; background: #FF6A47;"></span>Portfolio</p>
+<h2 style="margin: 0; font-family: 'Newsreader', Georgia, serif; font-weight: 500; font-size: clamp(42px, 6.4vw, 78px); line-height: 1; letter-spacing: -0.02em; color: #16133A;">The work <em style="font-style: italic; color: #D63A16;">lives</em> here.</h2>
+<p style="margin: 16px 0 0; max-width: 46ch; font-size: 16.5px; line-height: 1.55; color: #4A4670;">My portfolio is live at ayannacostley.com. It opens in a new tab, so this one keeps your place.</p>
+</div>
+<a class="cta" data-guide="visit" href="https://www.ayannacostley.com" target="_blank" rel="noopener noreferrer" style="flex: none; display: flex; align-items: center; gap: 10px; padding: 15px 24px; border-radius: 999px; background: #3A4BFF; color: #FFFFFF; font-size: 15px; font-weight: 500; text-decoration: none; box-shadow: 0 10px 22px -8px rgba(58,75,255,0.6);">Visit ayannacostley.com<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"></path><path d="M8 7h9v9"></path></svg></a>
+</div>
+<a class="cta" href="https://www.ayannacostley.com" target="_blank" rel="noopener noreferrer" aria-label="Open ayannacostley.com in a new tab" style="display: block; border: 2px solid #16133A; border-radius: 16px; overflow: hidden; background: #FFFFC9; text-decoration: none; box-shadow: 10px 10px 0 #FFCB2E;">
+<img src="assets/site-home.jpg" alt="Homepage of ayannacostley.com: Home, Selected Works and Contact links, the tagline copywriter, creative, filmmaker, a handwritten About Me note and a polaroid photo" width="1600" height="833" style="display: block; width: 100%; height: auto; aspect-ratio: 1600 / 833;">
+</a>
+</div>
+</sc-if>
+
+<sc-if value="{{ showChat }}" hint-placeholder-val="{{ false }}">
+<div class="chat" style="flex: 1; min-height: 0;">
+<aside class="chat-side" style="flex: none; box-sizing: border-box; display: flex; flex-direction: column; gap: 22px; padding: 18px 12px; background: #2A21A6; color: #ECEAFF; overflow: auto;">
+<div style="display: flex; align-items: center; gap: 10px; padding: 0 8px;">
+<span aria-hidden="true" style="flex: none; width: 32px; height: 32px; border-radius: 9px; background: #FFCB2E; color: #16133A; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700;">A</span>
+<div style="min-width: 0;">
+<p style="margin: 0; font-size: 16px; font-weight: 600; color: #FFFFFF;">Ayanna HQ</p>
+<p style="margin: 2px 0 0; font-size: 12.5px; color: #D4D0FF;">Thinking out loud, mostly.</p>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<p style="margin: 0; padding: 0 8px; font-family: 'Geist Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #C9C4FF;">Channels</p>
+<nav aria-label="Channels" class="chat-list">
+<sc-for list="{{ channels }}" as="c" hint-placeholder-count="4">
+<button class="chan" data-guide="ch-{{ c.id }}" type="button" aria-pressed="{{ c.pressed }}" onClick="{{ c.pick }}" style="display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 0; border-radius: 9px; background: {{ c.bg }}; color: {{ c.fg }}; font-size: 14.5px; font-weight: {{ c.fw }}; text-align: left; cursor: pointer;">
+<span aria-hidden="true" style="font-weight: 700; color: {{ c.hashColor }};">#</span>
+<span>{{ c.name }}</span>
+</button>
+</sc-for>
+</nav>
+</div>
+</aside>
+<section class="chat-main" style="flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column; background: #FFFFFF;">
+<div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; padding: 14px 22px; border-bottom: 1px solid #EEEAF8;">
+<h2 style="margin: 0; font-size: 17px; font-weight: 700; color: #16133A;"><span aria-hidden="true" style="color: {{ ch.hashDark }};"># </span>{{ ch.name }}</h2>
+<p style="margin: 0; font-size: 13.5px; color: #5B5780;">{{ ch.topic }}</p>
+</div>
+<div ref="{{ setList }}" style="flex: 1; min-height: 0; overflow: auto; display: flex; flex-direction: column; padding: 14px 14px 8px;">
+<div aria-hidden="true" style="margin-top: auto;"></div>
+<sc-for list="{{ msgs }}" as="m" hint-placeholder-count="5">
+<sc-if value="{{ m.showDay }}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; align-items: center; gap: 12px; padding: 16px 8px 4px; font-size: 12px; font-weight: 600; color: #5B5780;">
+<span aria-hidden="true" style="flex: 1; height: 1px; background: #EEEAF8;"></span>
+<span style="padding: 3px 12px; border: 1px solid #EEEAF8; border-radius: 999px; background: #FFFFFF;">{{ m.day }}</span>
+<span aria-hidden="true" style="flex: 1; height: 1px; background: #EEEAF8;"></span>
+</div>
+</sc-if>
+<div style="display: flex; gap: 12px; padding: {{ m.pad }} 8px 2px;">
+<sc-if value="{{ m.showHead }}" hint-placeholder-val="{{ true }}">
+<span aria-hidden="true" style="flex: none; width: 36px; height: 36px; border-radius: 11px; background: {{ m.color }}; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 12.5px; font-weight: 600;">{{ m.initials }}</span>
+</sc-if>
+<sc-if value="{{ m.hideHead }}" hint-placeholder-val="{{ false }}">
+<span aria-hidden="true" style="flex: none; width: 36px;"></span>
+</sc-if>
+<div style="flex: 1; min-width: 0;">
+<sc-if value="{{ m.showHead }}" hint-placeholder-val="{{ true }}">
+<p style="margin: 0 0 2px; display: flex; align-items: baseline; gap: 8px;"><strong style="font-size: 14.5px; font-weight: 700; color: #16133A;">{{ m.name }}</strong><span style="font-size: 12px; color: #5B5780;">{{ m.time }}</span></p>
+</sc-if>
+<sc-if value="{{ m.hasText }}" hint-placeholder-val="{{ true }}">
+<p style="margin: 0; font-size: 15px; line-height: 1.5; color: #24204A; overflow-wrap: anywhere;">{{ m.text }}</p>
+</sc-if>
+<sc-if value="{{ m.hasImg }}" hint-placeholder-val="{{ false }}">
+<img src="{{ m.imgSrc }}" alt="{{ m.imgAlt }}" width="{{ m.imgW }}" height="{{ m.imgH }}" style="display: block; margin-top: 8px; width: {{ m.imgDw }}px; max-width: 100%; height: auto; aspect-ratio: {{ m.imgAr }}; border-radius: 12px; border: 1px solid #EEEAF8; background: #F5F2FF;">
+</sc-if>
+<sc-if value="{{ m.hasVid }}" hint-placeholder-val="{{ false }}">
+<video src="{{ m.vidSrc }}" poster="{{ m.vidPoster }}" aria-label="{{ m.vidLabel }}" controls="controls" playsinline="playsinline" preload="metadata" style="display: block; margin-top: 8px; width: 240px; max-width: 100%; height: auto; aspect-ratio: 576 / 1024; border-radius: 12px; background: #16133A; object-fit: cover;"></video>
+</sc-if>
+<sc-if value="{{ m.linkThumb }}" hint-placeholder-val="{{ false }}">
+<a href="{{ m.href }}" target="_blank" rel="noopener noreferrer" style="margin-top: 8px; display: flex; flex-direction: column; width: 100%; max-width: 400px; box-sizing: border-box; border: 1px solid #E4E0F5; border-radius: 14px; overflow: hidden; background: #FFFFFF; color: #16133A; text-decoration: none; box-shadow: 0 8px 18px -12px rgba(22,19,58,0.4);">
+<img src="{{ m.thumbSrc }}" alt="{{ m.thumbAlt }}" width="{{ m.thumbW }}" height="{{ m.thumbH }}" style="display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: {{ m.thumbFit }}; object-position: {{ m.thumbPos }}; background: {{ m.thumbBg }};">
+<span style="display: flex; flex-direction: column; gap: 6px; padding: 12px 16px 14px; border-top: 3px solid #19C37D;">
+<span style="font-family: 'Geist Mono', ui-monospace, monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #0B7A4C;">{{ m.linkDesc }}</span>
+<span style="font-family: 'Newsreader', Georgia, serif; font-size: 18px; font-weight: 500; line-height: 1.3; color: #16133A;">{{ m.linkTitle }}</span>
+</span>
+</a>
+</sc-if>
+<sc-if value="{{ m.linkPlain }}" hint-placeholder-val="{{ false }}">
+<a href="{{ m.href }}" target="_blank" rel="noopener noreferrer" style="margin-top: 8px; display: flex; align-items: center; gap: 12px; width: fit-content; max-width: 100%; box-sizing: border-box; padding: 10px 16px 10px 10px; border: 1px solid #E4E0F5; border-radius: 12px; background: #FBFAFF; color: #16133A; text-decoration: none;">
+<span aria-hidden="true" style="flex: none; width: 40px; height: 40px; border-radius: 10px; background: {{ m.linkColor }}; color: #16133A; display: flex; align-items: center; justify-content: center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"></path><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"></path></svg></span>
+<span style="min-width: 0; display: flex; flex-direction: column; gap: 1px;"><span style="font-size: 14px; font-weight: 600; color: #16133A;">{{ m.linkTitle }}</span><span style="font-size: 12.5px; color: #5B5780;">{{ m.linkDesc }}</span></span>
+</a>
+</sc-if>
+<sc-if value="{{ m.linkPh }}" hint-placeholder-val="{{ false }}">
+<span style="margin-top: 8px; display: flex; align-items: center; gap: 12px; width: fit-content; max-width: 100%; box-sizing: border-box; padding: 10px 16px 10px 10px; border: 1.5px dashed #D9D4EE; border-radius: 12px; background: #FBFAFF; color: #16133A;">
+<span aria-hidden="true" style="flex: none; width: 40px; height: 40px; border-radius: 10px; background: {{ m.linkColor }}; color: #16133A; display: flex; align-items: center; justify-content: center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"></path><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"></path></svg></span>
+<span style="min-width: 0; display: flex; flex-direction: column; gap: 1px;"><span style="font-size: 14px; font-weight: 600; color: #16133A;">{{ m.linkTitle }}</span><span style="font-family: 'Geist Mono', ui-monospace, monospace; font-size: 12px; color: #5B5780;">{{ m.linkDesc }}</span></span>
+</span>
+</sc-if>
+<sc-if value="{{ m.hasPhotos }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top: 8px; display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; max-width: 460px;">
+<sc-for list="{{ m.photos }}" as="ph" hint-placeholder-count="3">
+<span style="aspect-ratio: 4 / 5; box-sizing: border-box; display: flex; align-items: center; justify-content: center; padding: 10px; border: 1.5px dashed #C9C3EA; border-radius: 10px; background: {{ ph.bg }}; font-family: 'Geist Mono', ui-monospace, monospace; font-size: 11.5px; line-height: 1.35; color: #3A3666; text-align: center;">{{ ph.label }}</span>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ m.hasRecord }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top: 8px; display: flex; align-items: center; gap: 16px; width: fit-content; max-width: 100%; box-sizing: border-box; padding: 12px 18px 12px 12px; border: 1px solid #E4E0F5; border-radius: 14px; background: #FBFAFF;">
+<span aria-hidden="true" style="flex: none; position: relative; width: 118px; height: 84px;">
+<span style="position: absolute; left: 36px; top: 2px; width: 80px; height: 80px; border-radius: 50%; background: repeating-radial-gradient(circle, #1B1840 0 2px, #2C2766 2px 3px); box-shadow: 0 2px 6px rgba(22,19,58,0.3);"></span>
+<span style="position: absolute; left: 63px; top: 29px; width: 26px; height: 26px; border-radius: 50%; background: #FF6A47;"></span>
+<span style="position: absolute; left: 0; top: 0; width: 84px; height: 84px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; padding: 8px; border-radius: 6px; background: #FFCB2E; font-family: 'Geist Mono', ui-monospace, monospace; font-size: 10px; line-height: 1.3; color: #16133A; text-align: center; box-shadow: 2px 3px 8px rgba(22,19,58,0.22);">[album art]</span>
+</span>
+<span style="min-width: 0; display: flex; flex-direction: column; gap: 2px;">
+<span style="font-size: 15px; font-weight: 700; color: #16133A;">{{ m.recTitle }}</span>
+<span style="font-size: 13.5px; color: #3A3666;">{{ m.recArtist }}</span>
+<span style="font-family: 'Geist Mono', ui-monospace, monospace; font-size: 11.5px; color: #5B5780;">{{ m.recMeta }}</span>
+</span>
+</div>
+</sc-if>
+<sc-if value="{{ m.isGif }}" hint-placeholder-val="{{ false }}">
+<div class="gifbox" style="margin-top: 8px; position: relative; width: 100%; max-width: 380px; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; background-color: #FF6A47; display: flex; align-items: center; justify-content: center;">
+<span class="fah" style="display: inline-block; font-size: clamp(38px, 5vw, 60px); font-weight: 700; letter-spacing: -0.02em; color: #16133A; text-shadow: 3px 3px 0 #FFCB2E;">FAHHHHH</span>
+<span style="position: absolute; left: 10px; bottom: 10px; padding: 2px 7px; border-radius: 5px; background: #16133A; color: #FFFFFF; font-family: 'Geist Mono', ui-monospace, monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.04em;">GIF</span>
+</div>
+</sc-if>
+</div>
+</div>
+</sc-for>
+</div>
+<form onSubmit="{{ send }}" style="position: relative; padding: 10px 18px 18px;">
+<label for="chat-input" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;">Message #{{ ch.name }}</label>
+<div class="composer" data-guide="composer" style="display: flex; align-items: center; gap: 8px; padding: 6px 6px 6px 14px; border: 1.5px solid #DCD7F2; border-radius: 14px; background: #FFFFFF;">
+<input id="chat-input" type="text" value="{{ draft }}" onChange="{{ onDraft }}" placeholder="Message #{{ ch.name }}" autocomplete="off" style="flex: 1; min-width: 0; padding: 9px 0; border: 0; outline: none; background: transparent; font-size: 15px; color: #16133A;">
+<button class="cta" type="submit" aria-label="Send message" style="flex: none; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border: 0; border-radius: 10px; background: {{ sendBg }}; color: #FFFFFF; cursor: pointer; transition: background 140ms ease;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 3L10 14"></path><path d="M21 3l-7 18-4-7-7-4z"></path></svg></button>
+</div>
+</form>
+</section>
+</div>
+</sc-if>
+
+</main>
+</div>
+<div aria-hidden="true" style="flex: none; height: 26px; display: flex; align-items: center; justify-content: center;">
+<span style="width: min(220px, 40%); height: 8px; background-image: radial-gradient(circle, #3B3670 1.1px, transparent 1.6px); background-size: 6px 6px;"></span>
+</div>
+</div>
+
+<div ref="{{ setGuide }}" aria-hidden="true" style="position: absolute; left: 0; top: 0; z-index: 60; pointer-events: none; opacity: 0; transition: opacity 300ms ease; will-change: transform;">
+<svg width="24" height="24" viewBox="0 0 24 24" style="position: absolute; left: -2px; top: -2px; display: block; filter: drop-shadow(0 2px 3px rgba(10,8,40,0.35));"><path d="M2.5 2.2L2.5 18.6L6.9 14.5L9.8 21L13 19.6L10.2 13.2L16.4 13.2Z" fill="#D63A16" stroke="#FFFFFF" stroke-width="1.6" stroke-linejoin="round"></path></svg>
+<div class="mp-label">
+<span class="mp-pill" style="white-space: nowrap; padding: 4px 9px; border-radius: 3px 10px 10px 10px; background: #D63A16; color: #FFFFFF; font-size: 12.5px; font-weight: 600; box-shadow: 0 3px 8px rgba(10,8,40,0.3);">a great copywriter</span>
+<sc-if value="{{ guideSaying }}" hint-placeholder-val="{{ false }}">
+<span class="say" style="display: block; width: max-content; max-width: 230px; padding: 9px 13px; border-radius: 3px 16px 16px 16px; background: #FFFFFF; border: 2px solid #D63A16; color: #16133A; font-size: 14px; font-weight: 500; line-height: 1.35; box-shadow: 0 10px 22px -8px rgba(10,8,40,0.45);">{{ guideSay }}</span>
+</sc-if>
+</div>
+</div>
+
+<div ref="{{ setMe }}" class="mp-me" aria-hidden="true" style="position: absolute; left: 0; top: 0; z-index: 70; pointer-events: none; opacity: 0; will-change: transform;">
+<svg width="24" height="24" viewBox="0 0 24 24" style="position: absolute; left: -2px; top: -2px; display: block; filter: drop-shadow(0 2px 3px rgba(10,8,40,0.35));"><path d="M2.5 2.2L2.5 18.6L6.9 14.5L9.8 21L13 19.6L10.2 13.2L16.4 13.2Z" fill="#A21CAF" stroke="#FFFFFF" stroke-width="1.6" stroke-linejoin="round"></path></svg>
+<div class="mp-label">
+<span class="mp-pill" style="white-space: nowrap; padding: 4px 9px; border-radius: 3px 10px 10px 10px; background: #A21CAF; color: #FFFFFF; font-size: 12.5px; font-weight: 600; box-shadow: 0 3px 8px rgba(10,8,40,0.3);">looking for a great copywriter</span>
+</div>
+</div>
+
+</div>
+</template>
+<script>!function(n){"function"==typeof define&&define.amd?define(n):n()}(function(){var n,l,t,u,i,o,e,r,f,c,s,a,h,p=65536,v=1<<17,d={},y=[],w=/acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i,_=Array.isArray;function g(n,l){for(var t in l)n[t]=l[t];return n}function m(n){n&&n.parentNode&&n.parentNode.removeChild(n)}function b(l,t,u){var i,o,e,r={};for(e in t)"key"==e?i=t[e]:"ref"==e?o=t[e]:r[e]=t[e];if(arguments.length>2&&(r.children=arguments.length>3?n.call(arguments,2):u),"function"==typeof l&&null!=l.defaultProps)for(e in l.defaultProps)void 0===r[e]&&(r[e]=l.defaultProps[e]);return k(l,r,i,o,null)}function k(n,u,i,o,e){var r={type:n,props:u,key:i,ref:o,__k:null,__:null,__b:0,__e:null,__d:void 0,__c:null,constructor:void 0,__v:null==e?++t:e,__i:-1,__u:0};return null==e&&null!=l.vnode&&l.vnode(r),r}function C(n){return n.children}function x(n,l){this.props=n,this.context=l}function S(n,l){if(null==l)return n.__?S(n.__,n.__i+1):null;for(var t;l<n.__k.length;l++)if(null!=(t=n.__k[l])&&null!=t.__e)return t.__e;return"function"==typeof n.type?S(n):null}function M(n){var l,t;if(null!=(n=n.__)&&null!=n.__c){for(n.__e=n.__c.base=null,l=0;l<n.__k.length;l++)if(null!=(t=n.__k[l])&&null!=t.__e){n.__e=n.__c.base=t.__e;break}return M(n)}}function P(n){(!n.__d&&(n.__d=!0)&&i.push(n)&&!$.__r++||o!==l.debounceRendering)&&((o=l.debounceRendering)||e)($)}function $(){var n,t,u,o,e,f,c,s;for(i.sort(r);n=i.shift();)n.__d&&(t=i.length,o=void 0,f=(e=(u=n).__v).__e,c=[],s=[],u.__P&&((o=g({},e)).__v=e.__v+1,l.vnode&&l.vnode(o),O(u.__P,o,e,u.__n,u.__P.namespaceURI,32&e.__u?[f]:null,c,null==f?S(e):f,!!(32&e.__u),s),o.__v=e.__v,o.__.__k[o.__i]=o,V(c,o,s),o.__e!=f&&M(o)),i.length>t&&i.sort(r));$.__r=0}function I(n,l,t,u,i,o,e,r,f,c,s){var a,h,v,w,_,g=u&&u.__k||y,m=l.length;for(t.__d=f,A(t,l,g),f=t.__d,a=0;a<m;a++)null!=(v=t.__k[a])&&(h=-1===v.__i?d:g[v.__i]||d,v.__i=a,O(n,v,h,i,o,e,r,f,c,s),w=v.__e,v.ref&&h.ref!=v.ref&&(h.ref&&z(h.ref,null,v),s.push(v.ref,v.__c||w,v)),null==_&&null!=w&&(_=w),v.__u&p||h.__k===v.__k?f=E(v,f,n):"function"==typeof v.type&&void 0!==v.__d?f=v.__d:w&&(f=w.nextSibling),v.__d=void 0,v.__u&=-196609);t.__d=f,t.__e=_}function A(n,l,t){var u,i,o,e,r,f=l.length,c=t.length,s=c,a=0;for(n.__k=[],u=0;u<f;u++)null!=(i=l[u])&&"boolean"!=typeof i&&"function"!=typeof i?(e=u+a,(i=n.__k[u]="string"==typeof i||"number"==typeof i||"bigint"==typeof i||i.constructor==String?k(null,i,null,null,null):_(i)?k(C,{children:i},null,null,null):void 0===i.constructor&&i.__b>0?k(i.type,i.props,i.key,i.ref?i.ref:null,i.__v):i).__=n,i.__b=n.__b+1,o=null,-1!==(r=i.__i=F(i,t,e,s))&&(s--,(o=t[r])&&(o.__u|=v)),null==o||null===o.__v?(-1==r&&a--,"function"!=typeof i.type&&(i.__u|=p)):r!==e&&(r==e-1?a--:r==e+1?a++:(r>e?a--:a++,i.__u|=p))):i=n.__k[u]=null;if(s)for(u=0;u<c;u++)null!=(o=t[u])&&0==(o.__u&v)&&(o.__e==n.__d&&(n.__d=S(o)),N(o,o))}function E(n,l,t){var u,i;if("function"==typeof n.type){for(u=n.__k,i=0;u&&i<u.length;i++)u[i]&&(u[i].__=n,l=E(u[i],l,t));return l}n.__e!=l&&(l&&n.type&&!t.contains(l)&&(l=S(n)),t.insertBefore(n.__e,l||null),l=n.__e);do{l=l&&l.nextSibling}while(null!=l&&8===l.nodeType);return l}function F(n,l,t,u){var i=n.key,o=n.type,e=t-1,r=t+1,f=l[t];if(null===f||f&&i==f.key&&o===f.type&&0==(f.__u&v))return t;if(u>(null!=f&&0==(f.__u&v)?1:0))for(;e>=0||r<l.length;){if(e>=0){if((f=l[e])&&0==(f.__u&v)&&i==f.key&&o===f.type)return e;e--}if(r<l.length){if((f=l[r])&&0==(f.__u&v)&&i==f.key&&o===f.type)return r;r++}}return-1}function H(n,l,t){"-"===l[0]?n.setProperty(l,null==t?"":t):n[l]=null==t?"":"number"!=typeof t||w.test(l)?t:t+"px"}function L(n,l,t,u,i){var o;n:if("style"===l)if("string"==typeof t)n.style.cssText=t;else{if("string"==typeof u&&(n.style.cssText=u=""),u)for(l in u)t&&l in t||H(n.style,l,"");if(t)for(l in t)u&&t[l]===u[l]||H(n.style,l,t[l])}else if("o"===l[0]&&"n"===l[1])o=l!==(l=l.replace(/(PointerCapture)$|Capture$/i,"$1")),l=l.toLowerCase()in n||"onFocusOut"===l||"onFocusIn"===l?l.toLowerCase().slice(2):l.slice(2),n.l||(n.l={}),n.l[l+o]=t,t?u?t.t=u.t:(t.t=f,n.addEventListener(l,o?s:c,o)):n.removeEventListener(l,o?s:c,o);else{if("http://www.w3.org/2000/svg"==i)l=l.replace(/xlink(H|:h)/,"h").replace(/sName$/,"s");else if("width"!=l&&"height"!=l&&"href"!=l&&"list"!=l&&"form"!=l&&"tabIndex"!=l&&"download"!=l&&"rowSpan"!=l&&"colSpan"!=l&&"role"!=l&&"popover"!=l&&l in n)try{n[l]=null==t?"":t;break n}catch(n){}"function"==typeof t||(null==t||!1===t&&"-"!==l[4]?n.removeAttribute(l):n.setAttribute(l,"popover"==l&&1==t?"":t))}}function T(n){return function(t){if(this.l){var u=this.l[t.type+n];if(null==t.u)t.u=f++;else if(t.u<u.t)return;return u(l.event?l.event(t):t)}}}function O(n,t,u,i,o,e,r,f,c,s){var a,h,p,v,d,y,w,m,b,k,S,M,P,$,A,E,F=t.type;if(void 0!==t.constructor)return null;128&u.__u&&(c=!!(32&u.__u),e=[f=t.__e=u.__e]),(a=l.__b)&&a(t);n:if("function"==typeof F)try{if(m=t.props,b="prototype"in F&&F.prototype.render,k=(a=F.contextType)&&i[a.__c],S=a?k?k.props.value:a.__:i,u.__c?w=(h=t.__c=u.__c).__=h.__E:(b?t.__c=h=new F(m,S):(t.__c=h=new x(m,S),h.constructor=F,h.render=R),k&&k.sub(h),h.props=m,h.state||(h.state={}),h.context=S,h.__n=i,p=h.__d=!0,h.__h=[],h._sb=[]),b&&null==h.__s&&(h.__s=h.state),b&&null!=F.getDerivedStateFromProps&&(h.__s==h.state&&(h.__s=g({},h.__s)),g(h.__s,F.getDerivedStateFromProps(m,h.__s))),v=h.props,d=h.state,h.__v=t,p)b&&null==F.getDerivedStateFromProps&&null!=h.componentWillMount&&h.componentWillMount(),b&&null!=h.componentDidMount&&h.__h.push(h.componentDidMount);else{if(b&&null==F.getDerivedStateFromProps&&m!==v&&null!=h.componentWillReceiveProps&&h.componentWillReceiveProps(m,S),!h.__e&&(null!=h.shouldComponentUpdate&&!1===h.shouldComponentUpdate(m,h.__s,S)||t.__v===u.__v)){for(t.__v!==u.__v&&(h.props=m,h.state=h.__s,h.__d=!1),t.__e=u.__e,t.__k=u.__k,t.__k.some(function(n){n&&(n.__=t)}),M=0;M<h._sb.length;M++)h.__h.push(h._sb[M]);h._sb=[],h.__h.length&&r.push(h);break n}null!=h.componentWillUpdate&&h.componentWillUpdate(m,h.__s,S),b&&null!=h.componentDidUpdate&&h.__h.push(function(){h.componentDidUpdate(v,d,y)})}if(h.context=S,h.props=m,h.__P=n,h.__e=!1,P=l.__r,$=0,b){for(h.state=h.__s,h.__d=!1,P&&P(t),a=h.render(h.props,h.state,h.context),A=0;A<h._sb.length;A++)h.__h.push(h._sb[A]);h._sb=[]}else do{h.__d=!1,P&&P(t),a=h.render(h.props,h.state,h.context),h.state=h.__s}while(h.__d&&++$<25);h.state=h.__s,null!=h.getChildContext&&(i=g(g({},i),h.getChildContext())),b&&!p&&null!=h.getSnapshotBeforeUpdate&&(y=h.getSnapshotBeforeUpdate(v,d)),I(n,_(E=null!=a&&a.type===C&&null==a.key?a.props.children:a)?E:[E],t,u,i,o,e,r,f,c,s),h.base=t.__e,t.__u&=-161,h.__h.length&&r.push(h),w&&(h.__E=h.__=null)}catch(n){if(t.__v=null,c||null!=e){for(t.__u|=c?160:128;f&&8===f.nodeType&&f.nextSibling;)f=f.nextSibling;e[e.indexOf(f)]=null,t.__e=f}else t.__e=u.__e,t.__k=u.__k;l.__e(n,t,u)}else null==e&&t.__v===u.__v?(t.__k=u.__k,t.__e=u.__e):t.__e=j(u.__e,t,u,i,o,e,r,c,s);(a=l.diffed)&&a(t)}function V(n,t,u){t.__d=void 0;for(var i=0;i<u.length;i++)z(u[i],u[++i],u[++i]);l.__c&&l.__c(t,n),n.some(function(t){try{n=t.__h,t.__h=[],n.some(function(n){n.call(t)})}catch(n){l.__e(n,t.__v)}})}function j(t,u,i,o,e,r,f,c,s){var a,h,p,v,y,w,g,b=i.props,k=u.props,C=u.type;if("svg"===C?e="http://www.w3.org/2000/svg":"math"===C?e="http://www.w3.org/1998/Math/MathML":e||(e="http://www.w3.org/1999/xhtml"),null!=r)for(a=0;a<r.length;a++)if((y=r[a])&&"setAttribute"in y==!!C&&(C?y.localName===C:3===y.nodeType)){t=y,r[a]=null;break}if(null==t){if(null===C)return document.createTextNode(k);t=document.createElementNS(e,C,k.is&&k),c&&(l.__m&&l.__m(u,r),c=!1),r=null}if(null===C)b===k||c&&t.data===k||(t.data=k);else{if(r=r&&n.call(t.childNodes),b=i.props||d,!c&&null!=r)for(b={},a=0;a<t.attributes.length;a++)b[(y=t.attributes[a]).name]=y.value;for(a in b)if(y=b[a],"children"==a);else if("dangerouslySetInnerHTML"==a)p=y;else if(!(a in k)){if("value"==a&&"defaultValue"in k||"checked"==a&&"defaultChecked"in k)continue;L(t,a,null,y,e)}for(a in k)y=k[a],"children"==a?v=y:"dangerouslySetInnerHTML"==a?h=y:"value"==a?w=y:"checked"==a?g=y:c&&"function"!=typeof y||b[a]===y||L(t,a,y,b[a],e);if(h)c||p&&(h.__html===p.__html||h.__html===t.innerHTML)||(t.innerHTML=h.__html),u.__k=[];else if(p&&(t.innerHTML=""),I(t,_(v)?v:[v],u,i,o,"foreignObject"===C?"http://www.w3.org/1999/xhtml":e,r,f,r?r[0]:i.__k&&S(i,0),c,s),null!=r)for(a=r.length;a--;)m(r[a]);c||(a="value","progress"===C&&null==w?t.removeAttribute("value"):void 0!==w&&(w!==t[a]||"progress"===C&&!w||"option"===C&&w!==b[a])&&L(t,a,w,b[a],e),a="checked",void 0!==g&&g!==t[a]&&L(t,a,g,b[a],e))}return t}function z(n,t,u){try{if("function"==typeof n){var i="function"==typeof n.__u;i&&n.__u(),i&&null==t||(n.__u=n(t))}else n.current=t}catch(n){l.__e(n,u)}}function N(n,t,u){var i,o;if(l.unmount&&l.unmount(n),(i=n.ref)&&(i.current&&i.current!==n.__e||z(i,null,t)),null!=(i=n.__c)){if(i.componentWillUnmount)try{i.componentWillUnmount()}catch(n){l.__e(n,t)}i.base=i.__P=null}if(i=n.__k)for(o=0;o<i.length;o++)i[o]&&N(i[o],t,u||"function"!=typeof n.type);u||m(n.__e),n.__c=n.__=n.__e=n.__d=void 0}function R(n,l,t){return this.constructor(n,t)}function q(t,u,i){var o,e,r,f;l.__&&l.__(t,u),e=(o="function"==typeof i)?null:i&&i.__k||u.__k,r=[],f=[],O(u,t=(!o&&i||u).__k=b(C,null,[t]),e||d,d,u.namespaceURI,!o&&i?[i]:e?null:u.firstChild?n.call(u.childNodes):null,r,!o&&i?i:e?e.__e:u.firstChild,o,f),V(r,t,f)}n=y.slice,l={__e:function(n,l,t,u){for(var i,o,e;l=l.__;)if((i=l.__c)&&!i.__)try{if((o=i.constructor)&&null!=o.getDerivedStateFromError&&(i.setState(o.getDerivedStateFromError(n)),e=i.__d),null!=i.componentDidCatch&&(i.componentDidCatch(n,u||{}),e=i.__d),e)return i.__E=i}catch(l){n=l}throw n}},t=0,u=function(n){return null!=n&&null==n.constructor},x.prototype.setState=function(n,l){var t;t=null!=this.__s&&this.__s!==this.state?this.__s:this.__s=g({},this.state),"function"==typeof n&&(n=n(g({},t),this.props)),n&&g(t,n),null!=n&&this.__v&&(l&&this._sb.push(l),P(this))},x.prototype.forceUpdate=function(n){this.__v&&(this.__e=!0,n&&this.__h.push(n),P(this))},x.prototype.render=C,i=[],e="function"==typeof Promise?Promise.prototype.then.bind(Promise.resolve()):setTimeout,r=function(n,l){return n.__v.__b-l.__v.__b},$.__r=0,f=0,c=T(!1),s=T(!0),a=0,h={__proto__:null,render:q,hydrate:function n(l,t){q(l,t,n)},createElement:b,h:b,Fragment:C,createRef:function(){return{current:null}},isValidElement:u,Component:x,cloneElement:function(l,t,u){var i,o,e,r,f=g({},l.props);for(e in l.type&&l.type.defaultProps&&(r=l.type.defaultProps),t)"key"==e?i=t[e]:"ref"==e?o=t[e]:f[e]=void 0===t[e]&&void 0!==r?r[e]:t[e];return arguments.length>2&&(f.children=arguments.length>3?n.call(arguments,2):u),k(l.type,f,i||l.key,o||l.ref,null)},createContext:function(n,l){var t={__c:l="__cC"+a++,__:n,Consumer:function(n,l){return n.children(l)},Provider:function(n){var t,u;return this.getChildContext||(t=new Set,(u={})[l]=this,this.getChildContext=function(){return u},this.componentWillUnmount=function(){t=null},this.shouldComponentUpdate=function(n){this.props.value!==n.value&&t.forEach(function(n){n.__e=!0,P(n)})},this.sub=function(n){t.add(n);var l=n.componentWillUnmount;n.componentWillUnmount=function(){t&&t.delete(n),l&&l.call(n)}}),n.children}};return t.Provider.__=t.Consumer.contextType=t},toChildArray:function n(l,t){return t=t||[],null==l||"boolean"==typeof l||(_(l)?l.some(function(l){n(l,t)}):t.push(l)),t},options:l},typeof module<"u"?module.exports=h:self.preact=h});
+//# sourceMappingURL=preact.min.umd.js.map
+</script>
+<script>/* Tiny standalone runtime for the exported page: compiles the page template once,
+   then renders it with Preact on every state change. */
+(function () {
+  var h = preact.h, Fragment = preact.Fragment;
+  var WHOLE = /^\{\{\s*([^}]+?)\s*\}\}$/;
+  var HOLE = /\{\{\s*([^}]+?)\s*\}\}/g;
+  var EVENTS = {
+    onclick: "onClick",
+    onmouseover: "onMouseOver",
+    onmouseleave: "onMouseLeave",
+    onmousemove: "onMouseMove",
+    onfocus: "onFocusIn",
+    onblur: "onFocusOut",
+    onsubmit: "onSubmit",
+    onscroll: "onScroll",
+    onchange: "onInput",
+    oninput: "onInput",
+    onkeydown: "onKeyDown",
+    onload: "onLoad"
+  };
+
+  function lookup(scope, path) {
+    path = path.trim();
+    if (path === "true") return true;
+    if (path === "false") return false;
+    if (path === "null") return null;
+    if (/^-?\d+(\.\d+)?$/.test(path)) return Number(path);
+    if (/^(['"]).*\1$/.test(path)) return path.slice(1, -1);
+    var parts = path.split(".");
+    var v = scope;
+    for (var i = 0; i < parts.length; i++) {
+      if (v == null) return undefined;
+      v = v[parts[i]];
+    }
+    return v;
+  }
+
+  function interp(str, scope) {
+    return str.replace(HOLE, function (_, p) {
+      var v = lookup(scope, p);
+      return v == null ? "" : String(v);
+    });
+  }
+
+  function compile(node) {
+    if (node.nodeType === 3) {
+      var t = node.nodeValue;
+      if (/^\s*$/.test(t) && t.indexOf("\n") >= 0) return null;
+      return { t: "text", v: t, dyn: t.indexOf("{{") >= 0 };
+    }
+    if (node.nodeType !== 1) return null;
+    var attrs = [];
+    for (var i = 0; i < node.attributes.length; i++) {
+      attrs.push([node.attributes[i].name, node.attributes[i].value]);
+    }
+    var kids = [];
+    for (var c = node.firstChild; c; c = c.nextSibling) {
+      var k = compile(c);
+      if (k) kids.push(k);
+    }
+    return { t: "el", tag: node.localName, attrs: attrs, kids: kids };
+  }
+
+  function getAttr(d, name) {
+    for (var i = 0; i < d.attrs.length; i++) if (d.attrs[i][0] === name) return d.attrs[i][1];
+    return null;
+  }
+
+  function attrValue(raw, scope) {
+    var m = raw.match(WHOLE);
+    if (m) return lookup(scope, m[1]);
+    if (raw.indexOf("{{") >= 0) return interp(raw, scope);
+    return raw;
+  }
+
+  function rkids(kids, scope) {
+    var out = [];
+    for (var i = 0; i < kids.length; i++) out.push(rnode(kids[i], scope));
+    return out;
+  }
+
+  function rnode(d, scope) {
+    if (d.t === "text") return d.dyn ? interp(d.v, scope) : d.v;
+    if (d.tag === "sc-if") {
+      return attrValue(getAttr(d, "value") || "", scope) ? h(Fragment, null, rkids(d.kids, scope)) : null;
+    }
+    if (d.tag === "sc-for") {
+      var list = attrValue(getAttr(d, "list") || "", scope) || [];
+      var as = getAttr(d, "as") || "item";
+      return list.map(function (item, i) {
+        var s = Object.create(scope);
+        s[as] = item;
+        s.$index = i;
+        return h(Fragment, { key: i }, rkids(d.kids, s));
+      });
+    }
+    var props = {};
+    for (var i = 0; i < d.attrs.length; i++) {
+      var name = d.attrs[i][0];
+      var raw = d.attrs[i][1];
+      if (name.indexOf("hint-") === 0) continue;
+      var val = attrValue(raw, scope);
+      if (name === "ref") { props.ref = val; continue; }
+      if (name.indexOf("on") === 0) {
+        var ev = EVENTS[name];
+        if (!ev) continue;
+        if (name === "onchange" && d.tag !== "input" && d.tag !== "textarea") ev = "onChange";
+        if (typeof val === "function") props[ev] = val;
+        continue;
+      }
+      props[name] = val;
+    }
+    return h(d.tag, props, rkids(d.kids, scope));
+  }
+
+  var tpl = document.getElementById("dc-tpl");
+  var tree = [];
+  for (var c = tpl.content.firstChild; c; c = c.nextSibling) {
+    var k = compile(c);
+    if (k) tree.push(k);
+  }
+
+  window.DCLogic = class DCLogic extends preact.Component {
+    render() {
+      return h(Fragment, null, rkids(tree, this.renderVals() || {}));
+    }
+  };
+})();
+</script>
+<script>
+
+var PEOPLE = {
+  ayanna: { name: "Ayanna Costley", initials: "AC", color: "#D63A16" },
+  dee: { name: "Dee", initials: "D", color: "#3A4BFF" },
+  marcus: { name: "Marcus", initials: "M", color: "#0B7A4C" },
+  jo: { name: "Jo", initials: "J", color: "#B5258A" },
+  tracy: { name: "Tracy Clark", initials: "TC", color: "#3A4BFF" },
+  guest: { name: "You", initials: "Y", color: "#A21CAF" }
+};
+
+var CHANNELS = [
+  { id: "hello", name: "hello-sonos", topic: "Start here.", hash: "#FFCB2E", hashDark: "#B88A00" },
+  { id: "media", name: "physical-media", topic: "Things you can hold. Sides you can flip.", hash: "#FF9ED8", hashDark: "#D6449B" },
+  { id: "wnba", name: "wnba", topic: "Loud buildings. Louder opinions.", hash: "#FF9A7A", hashDark: "#E2541F" },
+  { id: "nj", name: "new-jersey", topic: "The Garden State, defended daily.", hash: "#5BE8A8", hashDark: "#12A066" }
+];
+
+var TILES = ["#FFF3CC", "#FFE3F3", "#E3F7EC", "#E8EBFF"];
+
+var IMG = {
+  liberty: { src: "assets/wnba-7d722b36.webp", w: 266, h: 200, alt: "Dream player giving a sideways look with Atlanta up 82-75 on New York late in the semifinals" },
+  shock: { src: "assets/wnba-10dde555.webp", w: 452, h: 480, alt: "Dream player on the bench with both hands on her head, mouth open in shock" },
+  celebrate: { src: "assets/wnba-952e9e19.webp", w: 266, h: 200, alt: "Dream players celebrating on the court" },
+  bench: { src: "assets/wnba-b9e2b9a1.webp", w: 266, h: 200, alt: "Dream bench jumping and cheering" },
+  disbelief: { src: "assets/wnba-c03cb495.webp", w: 480, h: 480, alt: "Dream bench reacting in disbelief to a call" },
+  unbothered: { src: "assets/wnba-b7f7bbad.webp", w: 422, h: 480, alt: "Dream player sitting on the bench, completely unimpressed" },
+  lockedin: { src: "assets/wnba-e180a459.webp", w: 480, h: 480, alt: "Dream player staring ahead, locked in, as the home crowd cheers behind her" },
+  tunnel: { src: "assets/wnba-b19604b8.webp", w: 360, h: 480, alt: "Two Dream players dancing down the tunnel in red warmups" }
+};
+
+var VID = {
+  crate: { src: "assets/media-51adc2fa.mp4", poster: "assets/poster-51adc2fa.jpg", label: "Video: crate digging through a bin of CDs instead of shuffling a streaming app" },
+  room: { src: "assets/media-43be8451.mp4", poster: "assets/poster-43be8451.jpg", label: "Video: tour of a retro media room with a CRT TV, VHS tapes, books and records" },
+  shift: { src: "assets/media-b03179b8.mp4", poster: "assets/poster-b03179b8.jpg", label: "Video: opening shift, loading a CD into a stereo next to the espresso machine" },
+  finds: { src: "assets/media-2d2dbdcc.mp4", poster: "assets/poster-2d2dbdcc.jpg", label: "Video: archive finds from around the way, flipping through CDs from a crate" }
+};
+
+var MESSAGES = {
+  hello: [
+    { who: "ayanna", day: "Today", time: "10:14 AM", text: "Hi, BPM. Thanks for opening a tab on me." },
+    { who: "ayanna", day: "Today", time: "10:14 AM", text: "Quick tour. Tab 1 is your job post with my notes in the margins. Tab 2 is my portfolio. This tab is where I post about the things I'd write about for free." },
+    { who: "ayanna", day: "Today", time: "10:15 AM", text: "See the coral cursor? That's me. Follow it if you get lost." },
+    { who: "ayanna", day: "Today", time: "10:16 AM", text: "Pick a channel and turn it up. You can post too. I usually answer." },
+    { who: "tracy", day: "Today", time: "10:21 AM", text: "When can you start?" },
+    { who: "ayanna", day: "Today", time: "10:21 AM", text: "Yesterday, ideally. Let's talk." }
+  ],
+  media: [
+    { who: "ayanna", day: "Monday, October 5", time: "9:12 AM", text: "Thought of the day: a playlist is a suggestion. An album is an argument." },
+    { who: "ayanna", day: "Monday, October 5", time: "9:12 AM", text: "Which is why I listen front to back. Side A, no skipping. Somebody sequenced that record on purpose." },
+    { who: "ayanna", day: "Monday, October 5", time: "9:20 AM", text: "Today's shuffle algorithm: my own two hands.", video: VID.crate },
+    { who: "ayanna", day: "Monday, October 12", time: "8:40 PM", text: "Still working on how to explain this room to people who aren't obsessed.", video: VID.room },
+    { who: "ayanna", day: "Saturday, October 17", time: "2:40 PM", text: "Cassette haul from [STORE NAME]. [#] tapes for $[#].", photos: ["[Cassette haul photo 1]", "[Cassette haul photo 2]", "[Cassette haul photo 3]"] },
+    { who: "ayanna", day: "Saturday, October 17", time: "2:44 PM", text: "J-cards, liner notes, handwritten tracklists. That's all copy, and somebody cared about every word." },
+    { who: "ayanna", day: "Wednesday, October 21", time: "7:48 AM", text: "Opening shift: espresso, a CD, and a book. In that order.", video: VID.shift },
+    { who: "ayanna", day: "Sunday, October 25", time: "11:05 AM", text: "If you ever thanked your barber in your liner notes, you're one of my favorite writers." },
+    { who: "ayanna", day: "Sunday, October 25", time: "11:05 AM", text: "A shelf is a playlist you can dust." },
+    { who: "ayanna", day: "Sunday, October 25", time: "11:31 AM", text: "Underrated CD feature: four minutes of silence, then a hidden track. Patience, rewarded." },
+    { who: "ayanna", day: "Thursday, October 29", time: "6:12 PM", text: "Archive finds from around the way. The Roots and Sade in one crate is a good day.", video: VID.finds },
+    { who: "ayanna", day: "Monday, November 2", time: "7:55 PM", text: "New record in the house.", record: { title: "[Album title]", artist: "[Artist]", meta: "[Label · Year · Format]" } },
+    { who: "ayanna", day: "Monday, November 2", time: "7:57 PM", text: "First listen: [three words on side A]. Liner notes before the needle drops, always." },
+    { who: "ayanna", day: "Monday, November 2", time: "8:02 PM", text: "Unboxing is up on my TikTok.", link: { title: "TikTok · @aroundthewayarchive", desc: "tiktok.com/@aroundthewayarchive", href: "https://www.tiktok.com/@aroundthewayarchive" } }
+  ],
+  wnba: [
+    { who: "ayanna", day: "Saturday, October 10", time: "10:02 AM", text: "Atlanta Dream. WNBA Finals. First time since 2013." },
+    { who: "ayanna", day: "Saturday, October 10", time: "10:02 AM", text: "Swept the Liberty to get there. Sorry to my New York people, shoutout the Knicks though!", img: IMG.liberty },
+    { who: "ayanna", day: "Sunday, October 18", time: "9:30 AM", text: "Game 1: Valkyries 68, Dream 64. Four points. We're fine." },
+    { who: "ayanna", day: "Sunday, October 18", time: "9:31 AM", text: "I'm not fine.", img: IMG.shock },
+    { who: "ayanna", day: "Tuesday, October 20", time: "8:47 AM", text: "Game 2: Dream 79, Valkyries 65. Series tied 1-1." },
+    { who: "ayanna", day: "Tuesday, October 20", time: "8:49 AM", text: "Angel Reese: 30 points, 16 rebounds, in their building. Some players rise to the moment. She rearranges it.", img: IMG.celebrate },
+    { who: "ayanna", day: "Thursday, October 22", time: "8:15 AM", text: "Game 3: Dream 97, Valkyries 71. A 26-point win in front of our people. Up 2-1.", img: IMG.bench },
+    { who: "ayanna", day: "Sunday, October 25", time: "10:20 AM", text: "Game 4: Valkyries 67, Dream 62. Tied 2-2. Their defense earned that one.", img: IMG.disbelief },
+    { who: "ayanna", day: "Tuesday, October 27", time: "9:05 AM", text: "Game 5: Valkyries 64, Dream 55. Down 3-2. Doing breathing exercises.", img: IMG.unbothered },
+    { who: "ayanna", day: "Friday, October 30", time: "8:30 AM", text: "Game 6: Dream 80, Valkyries 69. We're going to the first Game 7 in WNBA Finals history.", img: IMG.lockedin },
+    { who: "ayanna", day: "Friday, October 30", time: "8:32 AM", text: "Angel Reese: 15 points, 14 rebounds, 6 assists, and the Finals rebounding record. 78 for the series, passing Sylvia Fowles. Put it in the Hall now." },
+    { who: "ayanna", day: "Saturday, October 31", time: "1:15 PM", text: "Before tonight: tunnel moment of the series. Joy is the best accessory.", img: IMG.tunnel },
+    { who: "ayanna", day: "Saturday, October 31", time: "1:16 PM", text: "Angel Reese walks a tunnel like it's a cover shoot. Every game, a new campaign." },
+    { who: "ayanna", day: "Sunday, November 1", time: "12:14 AM", text: "Game 7: Valkyries 68, Dream 63. Congrats, Golden State." },
+    { who: "ayanna", day: "Sunday, November 1", time: "12:15 AM", text: "Proud of this team. First Finals in 13 years, and they took it the distance." },
+    { who: "ayanna", day: "Sunday, November 1", time: "12:16 AM", text: "", gif: true }
+  ],
+  nj: [
+    { who: "ayanna", day: "Thursday, October 8", time: "6:10 PM", text: "Fact I bring up too often: recorded sound was invented in New Jersey. Edison's phonograph, Menlo Park, 1877." },
+    { who: "ayanna", day: "Thursday, October 8", time: "6:10 PM", text: "So technically every speaker owes us one." },
+    { who: "ayanna", day: "Wednesday, October 14", time: "7:30 PM", text: "Jersey's creative résumé, abridged: Whitney Houston and Queen Latifah, Newark and East Orange. Lauryn Hill, South Orange. SZA, Maplewood. Sarah Vaughan, Newark. Sinatra, Hoboken. Springsteen, the Shore." },
+    { who: "ayanna", day: "Wednesday, October 14", time: "7:31 PM", text: "Queen Latifah is the blueprint. Rapper, actor, producer, and she gave us \"U.N.I.T.Y.\" Range is a Jersey trait." },
+    { who: "ayanna", day: "Wednesday, October 14", time: "7:33 PM", text: "Also: Sugar Hill Records was in Englewood. \"Rapper's Delight\" is a Jersey record. No further questions." },
+    { who: "ayanna", day: "Monday, November 2", time: "8:05 AM", text: "Morning soundtrack: WBGO, Jazz 88.3 out of Newark. It makes any commute feel like opening credits.", link: { title: "WBGO · Jazz 88.3 FM", desc: "wbgo.org · Newark, NJ", href: "https://www.wbgo.org", thumb: { src: "assets/thumb-wbgo.png", w: 390, h: 390, pos: "center", fit: "contain", bg: "#FFFFFF", alt: "WBGO 88.3 FM 45th anniversary logo" } } },
+    { who: "ayanna", day: "Tuesday, November 3", time: "6:45 PM", text: "I wrote about Jersey club. Twice.", link: { title: "Jersey Sound and Jersey Club Music: Two Generations of New Jersey Culture", desc: "The Gumbo · Jan 4, 2021", href: "https://thegumbo.net/blog/2021/1/4/jersey-sound-and-jersey-club-music-two-generations-of-new-jersey-culture", thumb: { src: "assets/thumb-2021-newark.jpg", w: 800, h: 600, pos: "center", alt: "Article thumbnail: a busy intersection on Market Street in downtown Newark" } } },
+    { who: "ayanna", day: "Tuesday, November 3", time: "6:45 PM", text: "", link: { title: "How \"Jersey Anniversary\" Creator Tenaja (AKA Kia BHN) Helped Reignite Jersey Club Music", desc: "The Gumbo · Jan 17, 2024", href: "https://thegumbo.net/blog/2024/1/17/how-jersey-anniversary-creator-tenaja-aka-kia-bhn-helped-reignite-jersey-club-music", thumb: { src: "assets/thumb-2024-tenaja.jpg", w: 438, h: 618, pos: "center 28%", alt: "Article thumbnail: portrait of a smiling woman in a blue and tan plaid shirt" } } },
+    { who: "ayanna", day: "Tuesday, November 3", time: "6:47 PM", text: "Short version: Club Zanzibar gave Newark the Jersey Sound. A generation later, Jersey club took Baltimore's blueprint and made it ours. Triplet kicks, bed squeaks, no brakes." }
+  ]
+};
+
+var REPLIES = {
+  hello: "Message received. Let's pick this up in the interview.",
+  media: "Adding this to the liner notes.",
+  wnba: "Noted. Bring that energy to tip-off.",
+  nj: "Spoken like someone who knows their exit."
+};
+
+var ROWS = [
+  { soft: "#FFE89A", on: "#FFD23F", strong: "#D9A400", glow: "rgba(217,164,0,0.38)" },
+  { soft: "#FFD3EC", on: "#FFA8DA", strong: "#D6449B", glow: "rgba(214,68,155,0.34)" },
+  { soft: "#C4F2DC", on: "#86E6B9", strong: "#12A066", glow: "rgba(18,160,102,0.34)" },
+  { soft: "#D9DDFF", on: "#AEB7FF", strong: "#3A4BFF", glow: "rgba(58,75,255,0.32)" },
+  { soft: "#FFD9C7", on: "#FFB08A", strong: "#E2541F", glow: "rgba(226,84,31,0.34)" },
+  { soft: "#FFE89A", on: "#FFD23F", strong: "#D9A400", glow: "rgba(217,164,0,0.38)" },
+  { soft: "#FFD3EC", on: "#FFA8DA", strong: "#D6449B", glow: "rgba(214,68,155,0.34)" },
+  { soft: "#C4F2DC", on: "#86E6B9", strong: "#12A066", glow: "rgba(18,160,102,0.34)" },
+  { soft: "#D9DDFF", on: "#AEB7FF", strong: "#3A4BFF", glow: "rgba(58,75,255,0.32)" }
+];
+
+var TAB_ORDER = ["doc", "web", "chat"];
+
+var PLAN = {
+  doc: [{ sel: "note", fx: 0.86, fy: 0.84, say: "Click a note to jump to its line." }],
+  web: [{ sel: "visit", fx: 0.78, fy: 0.8, say: "The full portfolio opens from here." }],
+  chat: [
+    { sel: "ch-media", fx: 0.82, fy: 0.72, say: "Start with #physical-media." },
+    { sel: "composer", fx: 0.3, fy: 0.62, say: "Type something. I'll answer." }
+  ]
+};
+
+var NUDGE = {
+  doc: ["Start with my margin notes.", "Back to the job post?"],
+  web: ["My portfolio's in this tab.", "One more look at the work?"],
+  chat: ["Come hang out in the chat.", "The group chat misses you."]
+};
+
+function nowTime() {
+  try {
+    return new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+  } catch (e) {
+    return "Now";
+  }
+}
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    var self = this;
+    var start = props && props.startTab;
+    var tab = start === "web" || start === "chat" ? start : "doc";
+    this.state = { tab: tab, active: -1, hover: -1, channel: "hello", draft: "", sent: {}, replied: {}, nudge: "", say: "" };
+    this.timers = [];
+    this.gTimers = [];
+    this.visited = {};
+    this.visited[tab] = true;
+    this.stepIdx = {};
+    this.lastNudge = false;
+    this.finaleShown = false;
+    this.g = { x: 0, y: 0, ready: false, moving: false, restAt: 0 };
+    this.mx = 0;
+    this.my = 0;
+    this.meOn = false;
+    this.meDirty = false;
+    this.rootW = 9999;
+    this.setRoot = function (el) { self.rootEl = el; };
+    this.setMe = function (el) { self.meEl = el; };
+    this.setGuide = function (el) { self.guideEl = el; };
+    this.setList = function (el) { self.listEl = el; };
+    this.setContent = function (el) { self.contentEl = el; };
+    this.onMove = function (e) {
+      var m = self.metrics();
+      if (!m || !e) return;
+      self.mx = (e.clientX - m.rect.left) / m.sx;
+      self.my = (e.clientY - m.rect.top) / m.sy;
+      self.rootW = m.w;
+      self.meOn = true;
+      self.meDirty = true;
+    };
+    this.onLeave = function () {
+      self.meOn = false;
+      self.meDirty = true;
+    };
+    this.onScroll = function () {
+      if (self.lineTipped || !self.g.ready || self.state.tab !== "doc") return;
+      if (self.scrollTimer) clearTimeout(self.scrollTimer);
+      self.scrollTimer = setTimeout(function () {
+        self.scrollTimer = null;
+        if (!self.alive || self.lineTipped || self.state.tab !== "doc") return;
+        var el = self.visibleNote(".hit");
+        var p = el ? self.pointFor(el, 0.3, 0.72) : null;
+        if (!p) return;
+        self.lineTipped = true;
+        self.clearGuide();
+        self.g.onArrive = null;
+        self.guideMove(p.x, p.y, 0, function () {
+          self.say("Hover a line. Its note lights up.", 4200);
+          self.guideLater(function () { self.guideRest(); }, 4700);
+          self.guideLater(function () { self.guideStep(); }, 9000);
+        });
+      }, 450);
+    };
+  }
+
+  componentDidMount() {
+    var self = this;
+    this.alive = true;
+    try {
+      this.reduced = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    } catch (e) {
+      this.reduced = false;
+    }
+    var tick = function (now) {
+      if (!self.alive) return;
+      self.frame(now);
+      self.raf = requestAnimationFrame(tick);
+    };
+    this.raf = requestAnimationFrame(tick);
+    this.guideLater(function () { self.guideEnter(); }, 1400);
+  }
+
+  componentWillUnmount() {
+    this.alive = false;
+    if (this.raf) cancelAnimationFrame(this.raf);
+    this.timers.forEach(function (t) { clearTimeout(t); });
+    this.clearGuide();
+    if (this.sayTimer) clearTimeout(this.sayTimer);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps && this.props && prevProps.startTab !== this.props.startTab && this.props.startTab) {
+      this.setState({ tab: this.props.startTab });
+    }
+    if (!prevState) return;
+    if (prevState.tab !== this.state.tab) {
+      if (this.contentEl) this.contentEl.scrollTop = 0;
+      this.onTabChange(this.state.tab);
+    }
+    if (this.listEl && (prevState.sent !== this.state.sent || prevState.channel !== this.state.channel || prevState.tab !== this.state.tab)) {
+      this.listEl.scrollTop = this.listEl.scrollHeight;
+    }
+  }
+
+  metrics() {
+    var r = this.rootEl;
+    if (!r || !r.getBoundingClientRect) return null;
+    var rect = r.getBoundingClientRect();
+    var w = r.offsetWidth || rect.width;
+    var h = r.offsetHeight || rect.height;
+    if (!w || !h) return null;
+    return { rect: rect, w: w, h: h, sx: rect.width / w || 1, sy: rect.height / h || 1 };
+  }
+
+  jumpTo(i) {
+    var self = this;
+    var n = ((this.state.flash && this.state.flash.n) || 0) + 1;
+    this.setState({ active: i, flash: { i: i, n: n } });
+    if (this.flashTimer) clearTimeout(this.flashTimer);
+    this.flashTimer = setTimeout(function () {
+      self.flashTimer = null;
+      if (self.alive) self.setState({ flash: null });
+    }, 1400);
+    var main = this.contentEl;
+    var host = this.rootEl && this.rootEl.querySelector ? this.rootEl.querySelector("article") : null;
+    if (!main || !host) return;
+    var el = host.querySelectorAll(".hit")[i];
+    if (!el) return;
+    var m = this.metrics();
+    var sy = m ? m.sy : 1;
+    var box = main.getBoundingClientRect();
+    var b = el.getBoundingClientRect();
+    var top = main.scrollTop + (b.top - box.top) / sy - (main.clientHeight - b.height / sy) / 2;
+    top = Math.max(0, top);
+    try {
+      main.scrollTo({ top: top, behavior: this.reduced ? "auto" : "smooth" });
+    } catch (e) {
+      main.scrollTop = top;
+    }
+  }
+
+  visibleNote(sel) {
+    if (!this.rootEl || !this.contentEl || !this.rootEl.querySelectorAll) return null;
+    var box = this.contentEl.getBoundingClientRect();
+    var list = this.rootEl.querySelectorAll(sel || ".cbtn");
+    for (var i = 0; i < list.length; i++) {
+      var b = list[i].getBoundingClientRect();
+      if (b.top >= box.top + 20 && b.bottom <= box.bottom - 60) return list[i];
+    }
+    return null;
+  }
+
+  findGuide(key) {
+    if (!this.rootEl || !this.rootEl.querySelector) return null;
+    return this.rootEl.querySelector('[data-guide="' + key + '"]');
+  }
+
+  pointFor(el, fx, fy) {
+    var m = this.metrics();
+    if (!m || !el) return null;
+    var b = el.getBoundingClientRect();
+    if (!b.width && !b.height) return null;
+    return {
+      x: (b.left - m.rect.left + b.width * fx) / m.sx,
+      y: (b.top - m.rect.top + b.height * fy) / m.sy
+    };
+  }
+
+  frame(now) {
+    if (this.meDirty && this.meEl) {
+      this.meDirty = false;
+      this.meEl.style.transform = "translate3d(" + this.mx.toFixed(1) + "px," + this.my.toFixed(1) + "px,0)";
+      this.meEl.style.opacity = this.meOn ? "1" : "0";
+      this.meEl.setAttribute("data-flip", this.mx > this.rootW - 250 ? "1" : "0");
+    }
+    var g = this.g;
+    if (!this.guideEl || !g.ready) return;
+    if (g.moving) {
+      var t = Math.min(1, (now - g.t0) / g.dur);
+      var e = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      var u = 1 - e;
+      g.x = u * u * g.fx + 2 * u * e * g.cx + e * e * g.tx;
+      g.y = u * u * g.fy + 2 * u * e * g.cy + e * e * g.ty;
+      if (t >= 1) {
+        g.moving = false;
+        g.restAt = now;
+        var cb = g.onArrive;
+        g.onArrive = null;
+        if (cb) cb();
+      }
+    }
+    var dx = 0;
+    var dy = 0;
+    if (!g.moving && !this.reduced) {
+      var k = Math.min(1, (now - g.restAt) / 700);
+      dx = Math.sin(now / 820) * 3 * k;
+      dy = Math.cos(now / 1040) * 2.2 * k;
+    }
+    this.guideEl.style.transform = "translate3d(" + (g.x + dx).toFixed(1) + "px," + (g.y + dy).toFixed(1) + "px,0)";
+    var w = this.rootEl ? this.rootEl.offsetWidth : 9999;
+    var flip = g.x > w - 260 ? "1" : "0";
+    if (this.guideEl.getAttribute("data-flip") !== flip) this.guideEl.setAttribute("data-flip", flip);
+  }
+
+  guideLater(fn, ms) {
+    var self = this;
+    var t = setTimeout(function () { if (self.alive) fn(); }, ms);
+    this.gTimers.push(t);
+  }
+
+  clearGuide() {
+    this.gTimers.forEach(function (t) { clearTimeout(t); });
+    this.gTimers = [];
+  }
+
+  say(text, ms) {
+    var self = this;
+    if (this.sayTimer) clearTimeout(this.sayTimer);
+    this.setState({ say: text });
+    this.sayTimer = setTimeout(function () {
+      self.sayTimer = null;
+      if (self.alive) self.setState({ say: "" });
+    }, ms || 4000);
+  }
+
+  guideMove(tx, ty, dur, cb) {
+    var g = this.g;
+    g.fx = g.x;
+    g.fy = g.y;
+    g.tx = tx;
+    g.ty = ty;
+    var ddx = tx - g.fx;
+    var ddy = ty - g.fy;
+    var len = Math.sqrt(ddx * ddx + ddy * ddy) || 1;
+    var bend = (Math.random() < 0.5 ? -1 : 1) * Math.min(90, len * 0.22);
+    g.cx = (g.fx + tx) / 2 + (-ddy / len) * bend;
+    g.cy = (g.fy + ty) / 2 + (ddx / len) * bend;
+    g.dur = this.reduced ? 1 : (dur || Math.max(750, Math.min(1800, len * 2.2)));
+    g.t0 = performance.now();
+    g.moving = true;
+    g.onArrive = cb || null;
+  }
+
+  restPoint() {
+    var m = this.metrics();
+    if (!m) return null;
+    var spots = { doc: { x: 0.9, y: 0.72 }, web: { x: 0.74, y: 0.52 }, chat: { x: 0.72, y: 0.3 } };
+    var base = m.w < 760 ? { x: 0.55, y: 0.86 } : (spots[this.state.tab] || { x: 0.7, y: 0.6 });
+    return {
+      x: m.w * base.x + (Math.random() - 0.5) * 80,
+      y: m.h * base.y + (Math.random() - 0.5) * 60
+    };
+  }
+
+  guideRest() {
+    var p = this.restPoint();
+    if (p) this.guideMove(p.x, p.y, 0, null);
+  }
+
+  guideEnter() {
+    var self = this;
+    var m = this.metrics();
+    if (!m || !this.guideEl) {
+      this.guideLater(function () { self.guideEnter(); }, 600);
+      return;
+    }
+    this.g.x = m.w + 30;
+    this.g.y = m.h * 0.72;
+    this.g.restAt = performance.now();
+    this.g.ready = true;
+    this.guideEl.style.opacity = "1";
+    this.guideStep();
+  }
+
+  pickTab() {
+    var cur = this.state.tab;
+    var v = this.visited;
+    var fresh = TAB_ORDER.filter(function (t) { return t !== cur && !v[t]; });
+    if (fresh.length) return fresh[0];
+    return TAB_ORDER[(TAB_ORDER.indexOf(cur) + 1) % TAB_ORDER.length];
+  }
+
+  onTabChange(tab) {
+    var self = this;
+    this.visited[tab] = true;
+    this.clearGuide();
+    this.g.onArrive = null;
+    if (!this.g.ready) return;
+    if (this.state.nudge === tab) {
+      this.setState({ nudge: "" });
+      this.say("There you go.", 2000);
+    } else if (this.state.nudge) {
+      this.setState({ nudge: "" });
+    }
+    this.guideLater(function () { self.guideStep(); }, 2600);
+  }
+
+  guideStep() {
+    var self = this;
+    if (!this.g.ready || !this.alive) return;
+    var tab = this.state.tab;
+    var plan = PLAN[tab] || [];
+    var i = this.stepIdx[tab] || 0;
+    var all = TAB_ORDER.every(function (t) { return self.visited[t]; });
+
+    if (i < plan.length) {
+      this.stepIdx[tab] = i + 1;
+      var step = plan[i];
+      var target = null;
+      var line = step.say;
+      var fx = step.fx;
+      var fy = step.fy;
+      if (step.sel === "note") {
+        target = this.visibleNote();
+        if (target) {
+          this.noteTipped = true;
+        } else {
+          target = this.findGuide("notes-chip");
+          line = "My notes start at What You Bring. Scroll down.";
+          fx = 0.5;
+          fy = 0.85;
+        }
+      } else {
+        target = this.findGuide(step.sel);
+      }
+      var p = this.pointFor(target, fx, fy);
+      if (!p) {
+        this.guideLater(function () { self.guideStep(); }, 1500);
+        return;
+      }
+      this.guideMove(p.x, p.y, 0, function () {
+        self.say(line, 4200);
+        self.guideLater(function () { self.guideRest(); }, 4700);
+        self.guideLater(function () { self.guideStep(); }, 8500 + Math.random() * 2000);
+      });
+      return;
+    }
+
+    if (all && !this.finaleShown) {
+      this.finaleShown = true;
+      var m = this.metrics();
+      if (!m) return;
+      this.guideMove(m.w * 0.5, m.h * 0.42, 0, function () {
+        self.say("That's the whole tour. I'd love to talk.", 5200);
+        self.guideLater(function () { self.guideRest(); }, 5800);
+        self.guideLater(function () { self.guideStep(); }, 20000);
+      });
+      return;
+    }
+
+    if (this.lastNudge) {
+      this.lastNudge = false;
+      this.guideRest();
+      this.guideLater(function () { self.guideStep(); }, all ? 16000 : 9000);
+      return;
+    }
+
+    this.lastNudge = true;
+    var target = this.pickTab();
+    var tp = this.pointFor(this.findGuide("tab-" + target), 0.5, 0.72);
+    if (!tp) {
+      this.guideLater(function () { self.guideStep(); }, 4000);
+      return;
+    }
+    this.guideMove(tp.x, tp.y, 0, function () {
+      self.setState({ nudge: target });
+      self.say(NUDGE[target][self.visited[target] ? 1 : 0], 4800);
+      self.guideLater(function () { self.guideRest(); }, 5400);
+      self.guideLater(function () { if (self.state.nudge === target) self.setState({ nudge: "" }); }, 9500);
+      self.guideLater(function () { self.guideStep(); }, all ? 18000 : 12000);
+    });
+  }
+
+  sendMessage(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    var text = (this.state.draft || "").trim();
+    if (!text) return;
+    var self = this;
+    var id = this.state.channel;
+    var sent = Object.assign({}, this.state.sent);
+    sent[id] = (sent[id] || []).concat([{ who: "guest", time: nowTime(), text: text }]);
+    var first = !this.state.replied[id];
+    var replyText = id === "hello" && /start/i.test(text) ? "Still yesterday. Let's talk." : REPLIES[id];
+    var replied = Object.assign({}, this.state.replied);
+    replied[id] = true;
+    this.setState({ sent: sent, draft: "", replied: replied });
+    if (first) {
+      var t = setTimeout(function () {
+        if (!self.alive) return;
+        var cur = Object.assign({}, self.state.sent);
+        cur[id] = (cur[id] || []).concat([{ who: "ayanna", time: nowTime(), text: replyText }]);
+        self.setState({ sent: cur });
+      }, 1200);
+      this.timers.push(t);
+    }
+  }
+
+  renderVals() {
+    var s = this.state;
+    var self = this;
+
+    function tabLook(id) {
+      var on = s.tab === id;
+      return {
+        bg: on ? "#FFFDF7" : "transparent",
+        fg: on ? "#16133A" : "#CFCBF2",
+        pressed: on ? "true" : "false",
+        cls: s.nudge === id && !on ? "nudge" : ""
+      };
+    }
+
+    function row(i) {
+      var on = s.hover === i || (s.hover < 0 && s.active === i);
+      var c = ROWS[i];
+      return {
+        pick: function () { self.setState({ active: self.state.active === i ? -1 : i }); },
+        jump: function () { self.jumpTo(i); },
+        flash: s.flash && s.flash.i === i ? (s.flash.n % 2 ? "flashA" : "flashB") : "",
+        hl: on ? c.on : c.soft,
+        border: on ? c.strong : "#E4E0F5",
+        shadow: on ? "0 0 0 1px " + c.strong + ", 0 14px 28px -12px " + c.glow : "0 1px 2px rgba(22,19,58,0.06)",
+        shift: on ? "-6px" : "0px",
+        line: on ? c.strong : "#D9D4EE",
+        pressed: s.active === i ? "true" : "false"
+      };
+    }
+
+    var channels = CHANNELS.map(function (c) {
+      var on = c.id === s.channel;
+      return {
+        id: c.id,
+        name: c.name,
+        pick: function () { self.setState({ channel: c.id, draft: "" }); },
+        bg: on ? "#FFCB2E" : "transparent",
+        fg: on ? "#16133A" : "#ECEAFF",
+        hashColor: on ? "#16133A" : c.hash,
+        fw: on ? "600" : "500",
+        pressed: on ? "true" : "false"
+      };
+    });
+
+    var ch = CHANNELS.filter(function (c) { return c.id === s.channel; })[0] || CHANNELS[0];
+    var all = (MESSAGES[ch.id] || []).concat(s.sent[ch.id] || []);
+    var msgs = all.map(function (m, i) {
+      var p = PEOPLE[m.who] || PEOPLE.guest;
+      var prev = all[i - 1];
+      var day = m.day || "Today";
+      var newDay = !prev || (prev.day || "Today") !== day;
+      var head = newDay || prev.who !== m.who || prev.time !== m.time;
+      var link = m.link || null;
+      var rec = m.record || null;
+      return {
+        name: p.name,
+        initials: p.initials,
+        color: p.color,
+        time: m.time,
+        text: m.text || "",
+        hasText: !!m.text,
+        showHead: head,
+        hideHead: !head,
+        pad: head ? "10px" : "2px",
+        showDay: newDay,
+        day: day,
+        linkLive: !!(link && link.href),
+        linkThumb: !!(link && link.href && link.thumb),
+        linkPlain: !!(link && link.href && !link.thumb),
+        thumbSrc: link && link.thumb ? link.thumb.src : "",
+        thumbAlt: link && link.thumb ? link.thumb.alt : "",
+        thumbW: link && link.thumb ? link.thumb.w : 0,
+        thumbH: link && link.thumb ? link.thumb.h : 0,
+        thumbPos: link && link.thumb ? link.thumb.pos : "center",
+        thumbFit: link && link.thumb && link.thumb.fit ? link.thumb.fit : "cover",
+        thumbBg: link && link.thumb && link.thumb.bg ? link.thumb.bg : "#F5F2FF",
+        linkPh: !!(link && !link.href),
+        href: link && link.href ? link.href : "",
+        linkTitle: link ? link.title : "",
+        linkDesc: link ? link.desc : "",
+        linkColor: link && link.href ? "#C4F2DC" : "#FFE89A",
+        hasPhotos: !!(m.photos && m.photos.length),
+        photos: (m.photos || []).map(function (label, k) { return { label: label, bg: TILES[k % TILES.length] }; }),
+        hasRecord: !!rec,
+        recTitle: rec ? rec.title : "",
+        recArtist: rec ? rec.artist : "",
+        recMeta: rec ? rec.meta : "",
+        isGif: !!m.gif,
+        hasImg: !!m.img,
+        imgSrc: m.img ? m.img.src : "",
+        imgAlt: m.img ? m.img.alt : "",
+        imgW: m.img ? m.img.w : 0,
+        imgH: m.img ? m.img.h : 0,
+        imgDw: m.img ? Math.round(m.img.w * Math.min(300 / m.img.w, 300 / m.img.h, 1.25)) : 0,
+        imgAr: m.img ? m.img.w + " / " + m.img.h : "auto",
+        hasVid: !!m.video,
+        vidSrc: m.video ? m.video.src : "",
+        vidPoster: m.video ? m.video.poster : "",
+        vidLabel: m.video ? m.video.label : ""
+      };
+    });
+
+    var bg = { doc: "#FFF3CC", web: "#F1EEFF", chat: "#FFFFFF" };
+
+    return {
+      t1: tabLook("doc"),
+      t2: tabLook("web"),
+      t3: tabLook("chat"),
+      goDoc: function () { self.setState({ tab: "doc" }); },
+      goWeb: function () { self.setState({ tab: "web" }); },
+      goChat: function () { self.setState({ tab: "chat" }); },
+      showDoc: s.tab === "doc",
+      showWeb: s.tab === "web",
+      showChat: s.tab === "chat",
+      contentBg: bg[s.tab] || bg.doc,
+      r0: row(0),
+      r1: row(1),
+      r2: row(2),
+      r3: row(3),
+      r4: row(4),
+      r5: row(5),
+      r6: row(6),
+      r7: row(7),
+      r8: row(8),
+      overDoc: function (e) {
+        var t = e && e.target;
+        var host = e && e.currentTarget && e.currentTarget.querySelectorAll ? e.currentTarget : (self.rootEl ? self.rootEl.querySelector("article") : null);
+        var el = t && t.closest ? t.closest(".hit, .cbtn") : null;
+        var idx = -1;
+        if (el && host) {
+          var list = host.querySelectorAll(el.classList.contains("hit") ? ".hit" : ".cbtn");
+          idx = Array.prototype.indexOf.call(list, el);
+        }
+        if (self.state.hover !== idx) self.setState({ hover: idx });
+      },
+      leave: function () { if (self.state.hover !== -1) self.setState({ hover: -1 }); },
+      channels: channels,
+      ch: ch,
+      msgs: msgs,
+      draft: s.draft,
+      onDraft: function (e) { self.setState({ draft: e && e.target ? e.target.value : "" }); },
+      send: function (e) { self.sendMessage(e); },
+      sendBg: (s.draft || "").trim() ? "#3A4BFF" : "#B9B4DA",
+      guideSay: s.say,
+      guideSaying: !!s.say,
+      setRoot: this.setRoot,
+      setMe: this.setMe,
+      setGuide: this.setGuide,
+      setList: this.setList,
+      setContent: this.setContent,
+      onMove: this.onMove,
+      onLeave: this.onLeave,
+      onScroll: this.onScroll
+    };
+  }
+}
+
+</script>
+<script>
+preact.render(preact.h(Component, {"startTab": "doc"}), document.getElementById("app"));
+</script>
+</body>
+</html>
