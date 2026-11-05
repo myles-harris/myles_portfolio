@@ -28,6 +28,10 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60,
   },
+  // shortcut: temporary static page from public/sonos, delete both when done hosting
+  async rewrites() {
+    return [{ source: '/sonos', destination: '/sonos/index.html' }]
+  },
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
